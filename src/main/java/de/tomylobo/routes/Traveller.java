@@ -19,41 +19,32 @@
 
 package de.tomylobo.routes;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.bukkit.entity.Entity;
 
-import org.bukkit.Location;
-import org.bukkit.World;
+public class Traveller {
+	private final TravelAgency travelAgent;
+	private final Entity entity;
+	private final Route route;
+	private double position = 0.0;
 
-public final class Route {
-	private final List<Node> nodes = new ArrayList<Node>();
-	private World world;
-
-	public List<Node> getNodes() {
-		return nodes;
+	public Traveller(TravelAgency travelAgent, Entity entity, Route route) {
+		this.travelAgent = travelAgent;
+		this.entity = entity;
+		this.route = route;
 	}
 
-	public void addNodes(Location... locations) {
-		for (Location location : locations) {
-			addNode(new Node(location));
-		}
-	}
-
-	public void addNodes(Node... nodes) {
-		for (Node node : nodes) {
-			addNode(node);
+	public void tick() {
+		position += 0.02;
+		if (position > route.getNodes().size()) {
+			travelAgent.travellers.remove(entity);
 		}
 	}
 
-	private void addNode(Node node) {
-		World world = node.getLocation().getWorld();
-		if (this.world == null) {
-			this.world = world;
-		}
-		else if (this.world != world) {
-			throw new IllegalArgumentException("New node must be in the same world.");
-		}
+	public Entity getEntity() {
+		return entity;
+	}
 
-		this.nodes.add(node);
+	public Route getRoute() {
+		return route;
 	}
 }

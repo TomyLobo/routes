@@ -24,25 +24,24 @@ import java.util.Map;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import de.tomylobo.routes.commands.Commands;
 
-public class Routes extends JavaPlugin implements Runnable {
-	public final Map<Entity, Route> routedEntities = new HashMap<Entity, Route>();
+public class Routes extends JavaPlugin {
+	public final Commands commands = new Commands(this);
+
+	public final Map<String, Route> routes = new HashMap<String, Route>();
+
+	public TravelAgency travelAgent;
 
 	@Override
 	public void onEnable() {
-		getServer().getScheduler().scheduleSyncRepeatingTask(this, this, 0, 1);
+		travelAgent = new TravelAgency(this);
 	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		return Commands.dispatch(this, sender, command, label, args);
-	}
-
-	@Override
-	public void run() {
+		return commands.dispatch(sender, command, label, args);
 	}
 }

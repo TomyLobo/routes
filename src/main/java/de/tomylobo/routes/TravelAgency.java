@@ -19,41 +19,34 @@
 
 package de.tomylobo.routes;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.entity.Entity;
 
-public final class Route {
-	private final List<Node> nodes = new ArrayList<Node>();
-	private World world;
+public class TravelAgency implements Runnable {
+	@SuppressWarnings("unused")
+	private final Routes plugin;
+	public final Map<Entity, Traveller> travellers = new HashMap<Entity, Traveller>();
 
-	public List<Node> getNodes() {
-		return nodes;
+	public TravelAgency(Routes plugin) {
+		this.plugin = plugin;
+
+		plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, this, 0, 1);
 	}
 
-	public void addNodes(Location... locations) {
-		for (Location location : locations) {
-			addNode(new Node(location));
-		}
+	public void addTraveller(Entity entity, Route route) {
+		addTraveller(new Traveller(this, entity, route));
 	}
 
-	public void addNodes(Node... nodes) {
-		for (Node node : nodes) {
-			addNode(node);
-		}
+	public void addTraveller(Traveller traveller) {
+		travellers.put(traveller.getEntity(), traveller);
 	}
 
-	private void addNode(Node node) {
-		World world = node.getLocation().getWorld();
-		if (this.world == null) {
-			this.world = world;
+	@Override
+	public void run() {
+		for (Traveller traveller : travellers.values()) {
+			traveller.tick();
 		}
-		else if (this.world != world) {
-			throw new IllegalArgumentException("New node must be in the same world.");
-		}
-
-		this.nodes.add(node);
 	}
 }

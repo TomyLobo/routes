@@ -49,16 +49,25 @@ public class Commands {
 		}
 	}
 
-	public static boolean dispatch(Routes plugin, CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
+	@SuppressWarnings("unused")
+	private Routes plugin;
+
+	public Commands(Routes plugin) {
+		this.plugin = plugin;
+	}
+
+	public boolean dispatch(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
 		Method method = commands.get(command.getName());
 		if (method == null)
 			return false;
 
 		try {
-			method.invoke(null, plugin, sender, label, args);
-		} catch (IllegalAccessException e) {
+			method.invoke(this, sender, label, args);
+		}
+		catch (IllegalAccessException e) {
 			return false;
-		} catch (InvocationTargetException e) {
+		}
+		catch (InvocationTargetException e) {
 			final Throwable cause = e.getCause();
 			if (cause instanceof CommandException) {
 				sender.sendMessage("\u00a73"+cause.getMessage());
@@ -67,13 +76,13 @@ public class Commands {
 				sender.sendMessage("\u00a73Exception caught while executing command.");
 			}
 
-			return false;
+			return true;
 		}
 		return true;
 	}
 
 	@Command
-	public static void routes(Routes plugin, CommandSender sender, String label, String[] args) {
+	public void routes(CommandSender sender, String label, String[] args) {
 		throw new CommandException("hello");
 	}
 }
