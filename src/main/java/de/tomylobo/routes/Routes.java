@@ -19,7 +19,30 @@
 
 package de.tomylobo.routes;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class Routes extends JavaPlugin {
+import de.tomylobo.routes.commands.Commands;
+
+public class Routes extends JavaPlugin implements Runnable {
+	public final Map<Entity, Route> routedEntities = new HashMap<Entity, Route>();
+
+	@Override
+	public void onEnable() {
+		getServer().getScheduler().scheduleSyncRepeatingTask(this, this, 0, 1);
+	}
+
+	@Override
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		return Commands.dispatch(this, sender, command, label, args);
+	}
+
+	@Override
+	public void run() {
+	}
 }
