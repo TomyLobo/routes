@@ -83,6 +83,7 @@ public class Commands {
 			}
 			else {
 				sender.sendMessage("\u00a7cException caught while executing command.");
+				cause.printStackTrace();
 			}
 
 			return true;
