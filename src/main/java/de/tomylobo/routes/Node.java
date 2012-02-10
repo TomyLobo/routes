@@ -19,20 +19,20 @@
 
 package de.tomylobo.routes;
 
-import org.bukkit.Location;
+import org.bukkit.util.Vector;
 
 public class Node {
-	private Location location;
+	private Vector position;
 
-	public Node(Location location) {
-		this.location = location;
+	public Node(Vector position) {
+		this.position = position;
 	}
 
-	public Location getLocation() {
-		return location;
+	public Vector getPosition() {
+		return position;
 	}
 
-	public void setLocation(Location location) {
-		this.location = location;
+	public void setPosition(Vector position) {
+		this.position = position;
 	}
 }

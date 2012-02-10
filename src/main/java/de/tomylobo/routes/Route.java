@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.util.Vector;
 
 public final class Route {
 	private final List<Node> nodes = new ArrayList<Node>();
@@ -35,25 +36,38 @@ public final class Route {
 
 	public void addNodes(Location... locations) {
 		for (Location location : locations) {
-			addNode(new Node(location));
+			World world = location.getWorld();
+			if (this.world == null) {
+				this.world = world;
+			}
+			else if (this.world != world) {
+				throw new IllegalArgumentException("New node must be in the same world.");
+			}
+
+			this.nodes.add(new Node(location.toVector()));
 		}
 	}
 
 	public void addNodes(Node... nodes) {
 		for (Node node : nodes) {
-			addNode(node);
+			this.nodes.add(node);
 		}
 	}
 
-	private void addNode(Node node) {
-		World world = node.getLocation().getWorld();
-		if (this.world == null) {
-			this.world = world;
-		}
-		else if (this.world != world) {
-			throw new IllegalArgumentException("New node must be in the same world.");
-		}
+	public Vector getPosition(double position) {
+		if (position >= nodes.size()-1)
+			return null;
 
-		this.nodes.add(node);
+		final int index1 = (int) Math.floor(position);
+		final double remainder = position - index1;
+
+		final Vector position1 = nodes.get(index1).getPosition().clone();
+		final Vector position2 = nodes.get(index1 + 1).getPosition().clone();
+
+		return position1.multiply(1.0 - remainder).add(position2.multiply(remainder));
+	}
+
+	public Location getLocation(double position) {
+		return getPosition(position).toLocation(world);
 	}
 }
