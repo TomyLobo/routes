@@ -29,6 +29,7 @@ import org.bukkit.util.Vector;
 public final class Route {
 	private final List<Node> nodes = new ArrayList<Node>();
 	private World world;
+	private Interpolation interpolation = new LinearInterpolation();
 
 	public List<Node> getNodes() {
 		return nodes;
@@ -54,20 +55,11 @@ public final class Route {
 		}
 	}
 
-	public Vector getPosition(double position) {
-		if (position >= nodes.size()-1)
+	public Location getLocation(double position) {
+		final Vector vec = interpolation.getPosition(position, nodes);
+		if (vec == null)
 			return null;
 
-		final int index1 = (int) Math.floor(position);
-		final double remainder = position - index1;
-
-		final Vector position1 = nodes.get(index1).getPosition().clone();
-		final Vector position2 = nodes.get(index1 + 1).getPosition().clone();
-
-		return position1.multiply(1.0 - remainder).add(position2.multiply(remainder));
-	}
-
-	public Location getLocation(double position) {
-		return getPosition(position).toLocation(world);
+		return vec.toLocation(world);
 	}
 }
