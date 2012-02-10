@@ -101,7 +101,7 @@ public class Commands {
 	public void test(CommandSender sender, String commandName, String label, String[] args) {
 		Player player = (Player) sender;
 
-		Route route = new Route();
+		Route route = new Route(plugin);
 
 		final Location location = player.getLocation();
 
@@ -116,6 +116,7 @@ public class Commands {
 		final LivingEntity creature = player.getWorld().spawnCreature(location, CreatureType.PIG);
 		creature.setPassenger(player);
 		plugin.travelAgent.addTraveller(creature, route);
+		route.visualize(100);
 		sender.sendMessage("Created a Pig, put you on it and made it travel in an 8x8 square.");
 	}
 }

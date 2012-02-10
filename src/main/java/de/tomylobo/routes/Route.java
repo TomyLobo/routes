@@ -26,10 +26,19 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 
+import de.tomylobo.routes.fakeentity.FakeEnderEye;
+import de.tomylobo.routes.fakeentity.FakeEntity;
+
 public final class Route {
+	private final Routes plugin;
+
 	private final List<Node> nodes = new ArrayList<Node>();
 	private World world;
 	private Interpolation interpolation = new LinearInterpolation();
+
+	public Route(Routes plugin) {
+		this.plugin = plugin;
+	}
 
 	public List<Node> getNodes() {
 		return nodes;
@@ -61,5 +70,29 @@ public final class Route {
 			return null;
 
 		return vec.toLocation(world);
+	}
+
+	public void visualize(int points) {
+		final List<FakeEntity> entities = new ArrayList<FakeEntity>();
+
+		for (int i = 0; i < points; ++i) {
+			final double position = ((double) i) / points;
+			final Location location = getLocation(position);
+
+			final FakeEntity a = new FakeEnderEye(location);
+			a.send();
+			a.teleport(location);
+
+			entities.add(a);
+		}
+
+		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+			@Override
+			public void run() {
+				for (FakeEntity entity : entities) {
+					entity.remove();
+				}
+			}
+		}, 400);
 	}
 }
