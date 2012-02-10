@@ -19,6 +19,9 @@
 
 package de.tomylobo.routes;
 
+import java.util.List;
+
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 
 public class Traveller {
@@ -35,9 +38,27 @@ public class Traveller {
 
 	public void tick() {
 		position += 0.02;
-		if (position > route.getNodes().size()) {
+		if (position >= route.getNodes().size()-1) {
 			travelAgent.travellers.remove(entity);
+			entity.remove();
+			return;
 		}
+
+		int index1 = (int) Math.floor(position);
+		int index2 = index1 + 1;
+		double remainder = position - index1;
+
+		List<Node> nodes = route.getNodes();
+
+		Location location1 = nodes.get(index1).getLocation().clone();
+		Location location2 = nodes.get(index2).getLocation().clone();
+
+		location1.multiply(1.0 - remainder);
+		location2.multiply(remainder);
+
+		Location location = location1.add(location2);
+
+		entity.teleport(location);
 	}
 
 	public Entity getEntity() {
