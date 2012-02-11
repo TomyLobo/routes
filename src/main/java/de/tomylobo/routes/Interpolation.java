@@ -24,5 +24,7 @@ import java.util.List;
 import org.bukkit.util.Vector;
 
 public interface Interpolation {
-	public Vector getPosition(double position, List<Node> nodes);
+	public void setNodes(List<Node> nodes);
+	public Vector getPosition(double position);
+	public Vector getEye(double position);
 }

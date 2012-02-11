@@ -65,11 +65,12 @@ public final class Route {
 	}
 
 	public Location getLocation(double position) {
-		final Vector vec = interpolation.getPosition(position, nodes);
+		interpolation.setNodes(nodes);
+		final Vector vec = interpolation.getPosition(position);
 		if (vec == null)
 			return null;
 
-		return vec.toLocation(world);
+		return Utils.locationFromEye(world, vec, interpolation.getEye(position));
 	}
 
 	public void visualize(int points) {

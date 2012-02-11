@@ -24,9 +24,16 @@ import java.util.List;
 import org.bukkit.util.Vector;
 
 public class LinearInterpolation implements Interpolation {
+	List<Node> nodes;
+
 	@Override
-	public Vector getPosition(double position, List<Node> nodes) {
-		if (position >= 1)
+	public void setNodes(List<Node> nodes) {
+		this.nodes = nodes;
+	}
+
+	@Override
+	public Vector getPosition(double position) {
+		if (position > 1)
 			return null;
 
 		position *= nodes.size() - 1;
@@ -38,5 +45,20 @@ public class LinearInterpolation implements Interpolation {
 		final Vector position2 = nodes.get(index1 + 1).getPosition().clone();
 
 		return position1.multiply(1.0 - remainder).add(position2.multiply(remainder));
+	}
+
+	@Override
+	public Vector getEye(double position) {
+		if (position > 1)
+			return null;
+
+		position *= nodes.size() - 1;
+
+		final int index1 = (int) Math.floor(position);
+
+		final Vector position1 = nodes.get(index1).getPosition();
+		final Vector position2 = nodes.get(index1 + 1).getPosition();
+
+		return position2.clone().subtract(position1);
 	}
 }
