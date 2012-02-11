@@ -121,6 +121,6 @@ public final class Route {
 					entity.remove();
 				}
 			}
-		}, 400);
+		}, 600);
 	}
 }

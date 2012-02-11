@@ -106,18 +106,34 @@ public class Commands {
 
 		final Location location = player.getLocation();
 
-		final Location location2 = location.clone().add(8,0,0);
-		final Location location3 = location.clone().add(8,0,8);
-		final Location location4 = location.clone().add(0,0,8);
+		route.addNodes(
+				location,
+				location.clone().add(8,0,0),
+				location.clone().add(8,0,8),
 
-		route.addNodes(location, location2, location3, location4, location);
+				location.clone().add(8,8,8),
+				location.clone().add(8,8,0),
+				location.clone().add(0,8,0),
+				location.clone().add(0,8,8),
+				location.clone().add(8,8,8),
+
+				location.clone().add(8,0,8),
+				location.clone().add(0,0,8),
+				location
+		);
+
 
 		//plugin.routes.put("test", route);
 
 		final LivingEntity creature = player.getWorld().spawnCreature(location, CreatureType.PIG);
-		creature.setPassenger(player);
-		plugin.travelAgent.addTraveller(creature, route);
-		route.visualize(100);
+		//creature.setPassenger(player);
+		plugin.travelAgent.addTraveller(player, route, new Runnable() {
+			@Override
+			public void run() {
+				creature.remove();
+			}
+		});
+		route.visualize(400);
 		sender.sendMessage("Created a Pig, put you on it and made it travel in an 8x8 square.");
 	}
 }

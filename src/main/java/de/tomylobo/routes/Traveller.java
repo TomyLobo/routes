@@ -23,29 +23,33 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 
 public class Traveller {
+	@SuppressWarnings("unused")
 	private final TravelAgency travelAgent;
 	private final Entity entity;
 	private final Route route;
 	private double position = 0.0;
 	private double increment;
+	private Runnable finalizer;
 
-	public Traveller(TravelAgency travelAgent, Entity entity, Route route) {
+	public Traveller(TravelAgency travelAgent, Entity entity, Route route, Runnable finalizer) {
 		this.travelAgent = travelAgent;
 		this.entity = entity;
 		this.route = route;
 		this.increment = 0.02 / route.getNodes().size();
+		this.finalizer = finalizer;
 	}
 
-	public void tick() {
+	public boolean tick() {
 		position += increment;
+
 		Location location = route.getLocation(position);
 		if (location == null) {
-			travelAgent.travellers.remove(entity);
-			entity.remove();
-			return;
+			finalizer.run();
+			return false;
 		}
 
 		entity.teleport(location);
+		return true;
 	}
 
 	public Entity getEntity() {

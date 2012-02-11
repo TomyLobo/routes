@@ -20,6 +20,7 @@
 package de.tomylobo.routes;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.bukkit.entity.Entity;
@@ -35,8 +36,8 @@ public class TravelAgency implements Runnable {
 		plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, this, 0, 1);
 	}
 
-	public void addTraveller(Entity entity, Route route) {
-		addTraveller(new Traveller(this, entity, route));
+	public void addTraveller(Entity entity, Route route, Runnable finalizer) {
+		addTraveller(new Traveller(this, entity, route, finalizer));
 	}
 
 	public void addTraveller(Traveller traveller) {
@@ -45,8 +46,10 @@ public class TravelAgency implements Runnable {
 
 	@Override
 	public void run() {
-		for (Traveller traveller : travellers.values()) {
-			traveller.tick();
+		for (Iterator<Traveller> it = travellers.values().iterator(); it.hasNext(); ) {
+			Traveller traveller = it.next();
+			if (!traveller.tick())
+				it.remove();
 		}
 	}
 }
