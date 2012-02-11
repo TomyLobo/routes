@@ -125,9 +125,9 @@ public class Commands {
 
 		//plugin.routes.put("test", route);
 
-		final LivingEntity creature = player.getWorld().spawnCreature(location, CreatureType.PIG);
+		final LivingEntity creature = player.getWorld().spawnCreature(location, CreatureType.CHICKEN);
 		//creature.setPassenger(player);
-		plugin.travelAgent.addTraveller(player, route, new Runnable() {
+		plugin.travelAgent.addTraveller(creature, route, new Runnable() {
 			@Override
 			public void run() {
 				creature.remove();
