@@ -32,8 +32,11 @@ import de.tomylobo.routes.fakeentity.FakeEntity;
 public final class Route {
 	private final Routes plugin;
 
-	private final List<Node> nodes = new ArrayList<Node>();
 	private World world;
+
+	private final List<Node> nodes = new ArrayList<Node>();
+	private boolean nodesDirty = false;
+
 	//private Interpolation interpolation = new LinearInterpolation();
 	private Interpolation interpolation = new KochanekBartelsInterpolation(0, 0, 0);
 
@@ -57,16 +60,22 @@ public final class Route {
 
 			this.nodes.add(new Node(location.toVector()));
 		}
+		this.nodesDirty = true;
 	}
 
 	public void addNodes(Node... nodes) {
 		for (Node node : nodes) {
 			this.nodes.add(node);
 		}
+		this.nodesDirty = true;
 	}
 
 	public Location getLocation(double position) {
-		interpolation.setNodes(nodes);
+		if (nodesDirty) {
+			interpolation.setNodes(nodes);
+			nodesDirty = false;
+		}
+
 		final Vector vec = interpolation.getPosition(position);
 		if (vec == null)
 			return null;
