@@ -34,7 +34,8 @@ public final class Route {
 
 	private final List<Node> nodes = new ArrayList<Node>();
 	private World world;
-	private Interpolation interpolation = new LinearInterpolation();
+	//private Interpolation interpolation = new LinearInterpolation();
+	private Interpolation interpolation = new KochanekBartelsInterpolation(0, 0, 0);
 
 	public Route(Routes plugin) {
 		this.plugin = plugin;
