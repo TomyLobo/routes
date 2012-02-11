@@ -75,10 +75,28 @@ public final class Route {
 
 	public void visualize(int points) {
 		final List<FakeEntity> entities = new ArrayList<FakeEntity>();
+		Location lastLocation = null;
+		final List<Double> distances = new ArrayList<Double>();
+		double sum = 0;
+		double min = Double.MAX_VALUE;
+		double max = Double.MIN_VALUE;
 
 		for (int i = 0; i < points; ++i) {
 			final double position = ((double) i) / points;
 			final Location location = getLocation(position);
+			if (lastLocation != null) {
+				final double distance = lastLocation.distance(location);
+
+				distances.add(distance);
+				sum += distance;
+
+				if (distance > max)
+					max = distance;
+
+				if (distance < min)
+					min = distance;
+			}
+			lastLocation = location;
 
 			final FakeEntity a = new FakeEnderEye(location);
 			a.send();
@@ -86,6 +104,15 @@ public final class Route {
 
 			entities.add(a);
 		}
+
+		final double mean = sum/distances.size();
+		double sumSqErrors = 0;
+		for (double distance : distances) {
+			distance -= mean;
+			sumSqErrors += distance * distance;
+		}
+
+		System.out.println(String.format("min/mean/max/rmse: %f/%f/%f/%f\n", min, mean, max, Math.sqrt(sumSqErrors / distances.size())));
 
 		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
 			@Override
