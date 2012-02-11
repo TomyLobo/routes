@@ -28,6 +28,8 @@ import org.bukkit.util.Vector;
 
 import de.tomylobo.routes.fakeentity.FakeEnderEye;
 import de.tomylobo.routes.fakeentity.FakeEntity;
+import de.tomylobo.routes.interpolation.Interpolation;
+import de.tomylobo.routes.interpolation.KochanekBartelsInterpolation;
 
 public final class Route {
 	private final Routes plugin;

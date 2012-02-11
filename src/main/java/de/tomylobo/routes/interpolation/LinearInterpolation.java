@@ -17,11 +17,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tomylobo.routes;
+package de.tomylobo.routes.interpolation;
 
 import java.util.List;
 
 import org.bukkit.util.Vector;
+
+import de.tomylobo.routes.Node;
 
 public class LinearInterpolation implements Interpolation {
 	List<Node> nodes;
