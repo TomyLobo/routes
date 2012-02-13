@@ -59,6 +59,7 @@ public class Commands {
 	}
 
 	private Routes plugin;
+	private Route route;
 
 	public Commands(Routes plugin) {
 		this.plugin = plugin;
@@ -103,9 +104,15 @@ public class Commands {
 
 	@Command
 	public void test(CommandSender sender, String commandName, String label, String[] args) {
+		test1(sender, commandName, label, args);
+		test2(sender, commandName, label, args);
+	}
+
+	@Command
+	public void test1(CommandSender sender, String commandName, String label, String[] args) {
 		Player player = (Player) sender;
 
-		Route route = new Route(plugin);
+		route = new Route(plugin);
 
 		final Location location = player.getLocation();
 
@@ -125,9 +132,14 @@ public class Commands {
 				location
 		);
 
-
 		//plugin.routes.put("test", route);
+	}
+	
+	@Command
+	public void test2(CommandSender sender, String commandName, String label, String[] args) {
+		Player player = (Player) sender;
 
+		Location location = route.getLocation(0);
 		//final Entity creature = player.getWorld().spawnCreature(location, CreatureType.PIG);
 		//final Entity creature = player.getWorld().spawn(location, Minecart.class);
 		final Entity creature = new FakeEnderEye(location);
