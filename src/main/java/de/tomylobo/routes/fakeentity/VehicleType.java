@@ -19,26 +19,30 @@
 
 package de.tomylobo.routes.fakeentity;
 
-import net.minecraft.server.MathHelper;
-import net.minecraft.server.Packet23VehicleSpawn;
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
+public enum VehicleType {
+	BOAT(1),
+	MINECART(10),
+	PRIMED_TNT(50),
+	ENDER_CRYSTAL(51),
+	ARROW(60),
+	SNOWBALL(61),
+	EGG(62),
+	FIREBALL(63),
+	SMALL_FIREBALL(64),
+	ENDER_PEARL(65),
+	FALLING_BLOCK(70),
+	ENDER_EYE(72),
+	POTION(73),
+	FISHING_HOOK(90);
 
-public class FakeEnderEye extends FakeEntity {
-	public FakeEnderEye(Location location) {
-		super(location);
+	private final int id;
+
+	private VehicleType(int id) {
+		this.id = id;
+		// TODO Auto-generated constructor stub
 	}
 
-	@Override
-	public void send(Player player) {
-		final Packet23VehicleSpawn p23 = new Packet23VehicleSpawn();
-		p23.a = entityId;
-		p23.b = MathHelper.floor(location.getX() * 32.0D);
-		p23.c = MathHelper.floor(location.getY() * 32.0D);
-		p23.d = MathHelper.floor(location.getZ() * 32.0D);
-		p23.h = 72;
-		p23.i = 0;
-
-		sendPacketToPlayer(player, p23);
+	public int getId() {
+		return id;
 	}
 }

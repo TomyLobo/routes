@@ -31,15 +31,14 @@ import java.util.Map;
 
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 
 import de.tomylobo.routes.Route;
 import de.tomylobo.routes.Routes;
-import de.tomylobo.routes.fakeentity.FakeEnderEye;
+import de.tomylobo.routes.fakeentity.FakeVehicle;
 import de.tomylobo.routes.fakeentity.FakeEntity;
+import de.tomylobo.routes.fakeentity.VehicleType;
 
 public class Commands {
 	@Retention(RetentionPolicy.RUNTIME)
@@ -110,10 +109,9 @@ public class Commands {
 
 	@Command
 	public void test1(CommandSender sender, String commandName, String label, String[] args) {
-		Player player = (Player) sender;
-
 		route = new Route(plugin);
 
+		Player player = (Player) sender;
 		final Location location = player.getLocation();
 
 		route.addNodes(
@@ -134,21 +132,17 @@ public class Commands {
 
 		//plugin.routes.put("test", route);
 	}
-	
+
 	@Command
 	public void test2(CommandSender sender, String commandName, String label, String[] args) {
-		Player player = (Player) sender;
-
 		Location location = route.getLocation(0);
-		//final Entity creature = player.getWorld().spawnCreature(location, CreatureType.PIG);
-		//final Entity creature = player.getWorld().spawn(location, Minecart.class);
-		final Entity creature = new FakeEnderEye(location);
-		((FakeEntity) creature).send();
+		final Entity entity = new FakeVehicle(location, VehicleType.MINECART);
+		((FakeEntity) entity).send();
 		//creature.setPassenger(player);
-		plugin.travelAgency.addTraveller(creature, route, new Runnable() {
+		plugin.travelAgency.addTraveller(entity, route, new Runnable() {
 			@Override
 			public void run() {
-				creature.remove();
+				entity.remove();
 			}
 		});
 		route.visualize(200);

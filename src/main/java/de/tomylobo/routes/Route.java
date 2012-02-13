@@ -26,8 +26,9 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 
-import de.tomylobo.routes.fakeentity.FakeEnderEye;
+import de.tomylobo.routes.fakeentity.FakeVehicle;
 import de.tomylobo.routes.fakeentity.FakeEntity;
+import de.tomylobo.routes.fakeentity.VehicleType;
 import de.tomylobo.routes.interpolation.Interpolation;
 import de.tomylobo.routes.interpolation.KochanekBartelsInterpolation;
 import de.tomylobo.routes.interpolation.ReparametrisingInterpolation;
@@ -120,7 +121,7 @@ public final class Route {
 			}
 			lastPosition = position;
 
-			final FakeEntity a = new FakeEnderEye(location);
+			final FakeEntity a = new FakeVehicle(location, VehicleType.ENDER_EYE);
 			a.send();
 			a.teleport(location);
 
