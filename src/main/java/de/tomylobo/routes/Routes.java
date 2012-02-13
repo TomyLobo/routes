@@ -19,9 +19,6 @@
 
 package de.tomylobo.routes;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -31,13 +28,11 @@ import de.tomylobo.routes.commands.Commands;
 public class Routes extends JavaPlugin {
 	public final Commands commands = new Commands(this);
 
-	public final Map<String, Route> routes = new HashMap<String, Route>();
-
-	public TravelAgency travelAgent;
+	public TravelAgency travelAgency;
 
 	@Override
 	public void onEnable() {
-		travelAgent = new TravelAgency(this);
+		travelAgency = new TravelAgency(this);
 	}
 
 	@Override

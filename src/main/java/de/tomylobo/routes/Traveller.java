@@ -39,6 +39,7 @@ public class Traveller {
 		this.finalizer = finalizer;
 	}
 
+	int index = 0;
 	public boolean tick() {
 		position += increment;
 
@@ -49,6 +50,9 @@ public class Traveller {
 		}
 
 		entity.teleport(location);
+		entity.setVelocity(route.getVelocity(position).multiply(increment));
+
+		++index;
 		return true;
 	}
 
