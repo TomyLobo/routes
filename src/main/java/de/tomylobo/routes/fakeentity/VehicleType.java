@@ -20,8 +20,8 @@
 package de.tomylobo.routes.fakeentity;
 
 public enum VehicleType {
-	BOAT(1),
-	MINECART(10),
+	BOAT(1, 270),
+	MINECART(10, 270),
 	PRIMED_TNT(50),
 	ENDER_CRYSTAL(51),
 	ARROW(60),
@@ -36,13 +36,22 @@ public enum VehicleType {
 	FISHING_HOOK(90);
 
 	private final int id;
+	private final float yawOffset;
+
+	private VehicleType(int id, float yawOffset) {
+		this.id = id;
+		this.yawOffset = yawOffset;
+	}
 
 	private VehicleType(int id) {
-		this.id = id;
-		// TODO Auto-generated constructor stub
+		this(id, 0);
 	}
 
 	public int getId() {
 		return id;
+	}
+
+	public float getYawOffset() {
+		return yawOffset;
 	}
 }

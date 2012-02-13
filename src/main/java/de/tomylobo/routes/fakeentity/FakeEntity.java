@@ -23,6 +23,8 @@ import net.minecraft.server.MathHelper;
 import net.minecraft.server.Packet28EntityVelocity;
 import net.minecraft.server.Packet29DestroyEntity;
 import net.minecraft.server.Packet34EntityTeleport;
+import net.minecraft.server.Packet38EntityStatus;
+
 import org.bukkit.Bukkit;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
@@ -49,12 +51,21 @@ public abstract class FakeEntity implements Entity {
 	public final int entityId;
 	public Location location;
 	private boolean isDead;
+	private final float yawOffset;
 
+	@Override
 	public void playEffect(EntityEffect effect) {
-		//TODO: Implement?
+		for (Player player : location.getWorld().getPlayers()) {
+			sendPacketToPlayer(player, new Packet38EntityStatus(entityId, effect.getData()));
+		}
 	}
 
 	public FakeEntity(Location location) {
+		this(location, 0);
+	}
+
+	public FakeEntity(Location location, float yawOffset) {
+		this.yawOffset = yawOffset;
 		if (location == null)
 			throw new IllegalArgumentException("A null Location was passed to the FakeEntity ctor.");
 
@@ -91,7 +102,14 @@ public abstract class FakeEntity implements Entity {
 	public boolean teleport(Location location) {
 		this.location = location;
 		for (Player player : location.getWorld().getPlayers()) {
-			sendPacketToPlayer(player, new Packet34EntityTeleport(entityId, MathHelper.floor(location.getX()*32.0D), MathHelper.floor(location.getY()*32.0D), MathHelper.floor(location.getZ()*32.0D), (byte)0, (byte)0));
+			sendPacketToPlayer(player, new Packet34EntityTeleport(
+					entityId,
+					MathHelper.floor(location.getX()*32.0D),
+					MathHelper.floor(location.getY()*32.0D),
+					MathHelper.floor(location.getZ()*32.0D),
+					(byte) ((int) ((location.getYaw()+yawOffset) * 256.0F / 360.0F)),
+					(byte) ((int) (location.getPitch() * 256.0F / 360.0F))
+			));
 		}
 		return true;
 	}
@@ -227,13 +245,11 @@ public abstract class FakeEntity implements Entity {
 
 	@Override
 	public boolean teleport(Entity destination, TeleportCause cause) {
-		// TODO Auto-generated method stub
-		return false;
+		return teleport(destination);
 	}
 
 	@Override
 	public boolean teleport(Location location, TeleportCause cause) {
-		// TODO Auto-generated method stub
-		return false;
+		return teleport(location);
 	}
 }
