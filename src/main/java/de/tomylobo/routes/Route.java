@@ -30,6 +30,7 @@ import de.tomylobo.routes.fakeentity.FakeEnderEye;
 import de.tomylobo.routes.fakeentity.FakeEntity;
 import de.tomylobo.routes.interpolation.Interpolation;
 import de.tomylobo.routes.interpolation.KochanekBartelsInterpolation;
+import de.tomylobo.routes.interpolation.ReparametrisingInterpolation;
 
 public final class Route {
 	private final Routes plugin;
@@ -40,7 +41,7 @@ public final class Route {
 	private boolean nodesDirty = false;
 
 	//private Interpolation interpolation = new LinearInterpolation();
-	private Interpolation interpolation = new KochanekBartelsInterpolation(0, 0, 0);
+	private Interpolation interpolation = new ReparametrisingInterpolation(new KochanekBartelsInterpolation(0, 0, 0));
 
 	public Route(Routes plugin) {
 		this.plugin = plugin;
@@ -82,12 +83,21 @@ public final class Route {
 		if (vec == null)
 			return null;
 
-		return Utils.locationFromEye(world, vec, interpolation.getEye(position));
+		return Utils.locationFromEye(world, vec, interpolation.get1stDerivative(position));
+	}
+
+	public Vector getVelocity(double position) {
+		if (nodesDirty) {
+			interpolation.setNodes(nodes);
+			nodesDirty = false;
+		}
+
+		return interpolation.get1stDerivative(position);
 	}
 
 	public void visualize(int points) {
 		final List<FakeEntity> entities = new ArrayList<FakeEntity>();
-		Location lastLocation = null;
+		double lastPosition = -1;
 		final List<Double> distances = new ArrayList<Double>();
 		double sum = 0;
 		double min = Double.MAX_VALUE;
@@ -96,8 +106,8 @@ public final class Route {
 		for (int i = 0; i < points; ++i) {
 			final double position = ((double) i) / points;
 			final Location location = getLocation(position);
-			if (lastLocation != null) {
-				final double distance = lastLocation.distance(location);
+			if (lastPosition != -1) {
+				final double distance = interpolation.arcLength(lastPosition, position);
 
 				distances.add(distance);
 				sum += distance;
@@ -108,7 +118,7 @@ public final class Route {
 				if (distance < min)
 					min = distance;
 			}
-			lastLocation = location;
+			lastPosition = position;
 
 			final FakeEntity a = new FakeEnderEye(location);
 			a.send();

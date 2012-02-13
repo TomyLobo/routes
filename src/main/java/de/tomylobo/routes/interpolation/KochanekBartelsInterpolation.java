@@ -35,6 +35,7 @@ public class KochanekBartelsInterpolation implements Interpolation {
 	private Vector[] coeffB;
 	private Vector[] coeffC;
 	private Vector[] coeffD;
+	private double scaling;
 
 	public KochanekBartelsInterpolation(double tension, double bias, double continuity) {
 		this.tension = tension;
@@ -56,49 +57,6 @@ public class KochanekBartelsInterpolation implements Interpolation {
 		final double tc = (1-tension)*(1+bias)*(1-continuity)/2; // Factor for lhs of d[i+1]
 		final double td = (1-tension)*(1-bias)*(1+continuity)/2; // Factor for rhs of d[i+1]
 
-		/*
-		Kochanek-Bartels tangents (from http://en.wikipedia.org/wiki/Kochanek%E2%80%93Bartels_spline):
-		d[i  ] = ta*(p[i  ]-p[i-1]) + tb*(p[i+1]-p[i  ])
-		d[i+1] = tc*(p[i+1]-p[i  ]) + td*(p[i+2]-p[i+1])
-
-		Cubic Hermite spline (from http://en.wikipedia.org/wiki/Cubic_Hermite_spline#Unit_interval_.280.2C_1.29):
-		p(t) =
-			h_00(t)*p[i  ] + h_10(t)*d[i  ] +
-			h_01(t)*p[i+1] + h_11(t)*d[i+1]
-
-		Inserting the tangents:
-		p(t) =
-			h_00(t)*p[i  ] + h_10(t)*(ta*(p[i  ]-p[i-1]) + tb*(p[i+1]-p[i  ])) +
-			h_01(t)*p[i+1] + h_11(t)*(tc*(p[i+1]-p[i  ]) + td*(p[i+2]-p[i+1]))
-
-		Inserting the Hermite basis functions:
-		p(t) =
-			( 2*t^3 - 3t^2 + 1)*p[i  ] + (t^3-2*t^2+t)*(ta*(p[i  ]-p[i-1]) + tb*(p[i+1]-p[i  ])) +
-			(-2*t^3 + 3*t^2   )*p[i+1] + (t^3-  t^2  )*(tc*(p[i+1]-p[i  ]) + td*(p[i+2]-p[i+1]))
-
-		Sorting the formula for node indexes:
-		p(t) =
-			(t^3-2*t^2+t)*ta*(-p[i-1]) +
-			( 2*t^3 - 3t^2 + 1)*p[i  ] + (t^3-2*t^2+t)*(ta*p[i  ] - tb*p[i  ]) - (t^3-t^2)*tc*p[i  ] +
-			(t^3-2*t^2+t)*tb*p[i+1] + (-2*t^3 + 3*t^2   )*p[i+1] + (t^3-  t^2  )*(tc*p[i+1] - td*p[i+1]) +
-			(t^3-  t^2  )*td*p[i+2]
-
-		Factoring out the nodes p[i-1..i+2]:
-		p(t) =
-			p[i-1]*((-ta           )*t^3 + ( 2*ta             )*t^2 + (-ta   )*t      ) +
-			p[i  ]*(( ta-tb-tc   +2)*t^3 + (-2*ta+2*tb+tc   -3)*t^2 + ( ta-tb)*t + (1)) +
-			p[i+1]*((    tb+tc-td-2)*t^3 + (     -2*tb-tc+td+3)*t^2 + (    tb)*t      ) +
-			p[i+2]*((          td  )*t^3 + (             -td  )*t^2                   )
-
-		matrix representation:
-			    | p[i-1] |      p[i  ]     | p[i+1]        | p[i+2] |
-			----+--------+-----------------+---------------+--------+
-			t^3 |    -ta |    ta-  tb-tc+2 |    tb+tc-td-2 |     td |
-			t^2 |   2*ta | -2*ta+2*tb+tc-3 | -2*tb-tc+td+3 |    -td |
-			t   |    -ta |    ta-  tb      |    tb         |      0 |
-			1   |      0 |               1 |             0 |      0 |
-		*/
-
 		final int nNodes = nodes.size();
 		coeffA = new Vector[nNodes];
 		coeffB = new Vector[nNodes];
@@ -109,9 +67,11 @@ public class KochanekBartelsInterpolation implements Interpolation {
 			coeffA[i] = linearCombination(i,  -ta,    ta-  tb-tc+2,    tb+tc-td-2,  td);
 			coeffB[i] = linearCombination(i, 2*ta, -2*ta+2*tb+tc-3, -2*tb-tc+td+3, -td);
 			coeffC[i] = linearCombination(i,  -ta,    ta-  tb     ,    tb        ,   0);
-			coeffD[i] = retrieve(i); // linearCombination(i,    0,               1,             0,   0);
-
+			//coeffD[i] = linearCombination(i,    0,               1,             0,   0);
+			coeffD[i] = retrieve(i); // this is an optimization
 		}
+
+		scaling = nodes.size() - 1;
 	}
 
 	/**
@@ -158,7 +118,7 @@ public class KochanekBartelsInterpolation implements Interpolation {
 		if (position > 1)
 			return null;
 
-		position *= nodes.size() - 1;
+		position *= scaling;
 
 		final int index = (int) Math.floor(position);
 		final double remainder = position - index;
@@ -171,28 +131,82 @@ public class KochanekBartelsInterpolation implements Interpolation {
 		return a.clone().multiply(remainder).add(b).multiply(remainder).add(c).multiply(remainder).add(d);
 	}
 
-	/*
-	Formula for position in monomial form:
-		a*t^3 + b*t^2 + c*t + d
-	1st derivative in monomial form:
-		a*3*t^2 + 2*b*t + c
-	1st derivative in (modified) Horner form:
-		(a*1.5*t + b)*2*t + c
-	*/
 	@Override
-	public Vector getEye(double position) {
+	public Vector get1stDerivative(double position) {
 		if (position > 1)
 			return null;
 
-		position *= nodes.size() - 1;
+		position *= scaling;
 
 		final int index = (int) Math.floor(position);
-		final double remainder = position - index;
+		//final double remainder = position - index;
 
 		final Vector a = coeffA[index];
 		final Vector b = coeffB[index];
 		final Vector c = coeffC[index];
 
-		return a.clone().multiply(1.5*remainder).add(b).multiply(2*remainder).add(c);
+		return a.clone().multiply(1.5*position - 3.0*index).add(b).multiply(2.0*position).add(a.clone().multiply(1.5*index).subtract(b).multiply(2.0*index)).add(c).multiply(scaling);
+	}
+
+	@Override
+	public double arcLength(double positionA, double positionB) {
+		if (positionA > positionB)
+			return arcLength(positionB, positionA);
+
+		positionA *= scaling;
+		positionB *= scaling;
+
+		final int indexA = (int) Math.floor(positionA);
+		final double remainderA = positionA - indexA;
+
+		final int indexB = (int) Math.floor(positionB);
+		final double remainderB = positionB - indexB;
+
+		return arcLengthRecursive(indexA, remainderA, indexB, remainderB);
+	}
+
+	/**
+	 * Assumes a < b
+	 * 
+	 * @param indexLeft
+	 * @param remainderLeft
+	 * @param indexRight
+	 * @param remainderRight
+	 * @return
+	 */
+	private double arcLengthRecursive(int indexLeft, double remainderLeft, int indexRight, double remainderRight) {
+		switch (indexRight - indexLeft) {
+		case 0:
+			return arcLengthRecursive(indexLeft, remainderLeft, remainderRight);
+
+		case 1:
+			// This case is merely a speed-up for a very common case
+			return
+					arcLengthRecursive(indexLeft, remainderLeft, 1.0) + 
+					arcLengthRecursive(indexRight, 0.0, remainderRight);
+
+		default:
+			return
+					arcLengthRecursive(indexLeft, remainderLeft, indexRight - 1, 1.0) + 
+					arcLengthRecursive(indexRight, 0.0, remainderRight);
+		}
+	}
+
+	private double arcLengthRecursive(int index, double remainderLeft, double remainderRight) {
+		final Vector a = coeffA[index].clone().multiply(3.0);
+		final Vector b = coeffB[index].clone().multiply(2.0);
+		final Vector c = coeffC[index];
+
+		final int nPoints = 8;
+
+		double accum = a.clone().multiply(remainderLeft).add(b).multiply(remainderLeft).add(c).length() / 2.0;
+		for (int i = 1; i < nPoints-1; ++i) {
+			double t = ((double) i) / nPoints;
+			t = (remainderRight-remainderLeft)*t + remainderLeft;
+			accum += a.clone().multiply(t).add(b).multiply(t).add(c).length();
+		}
+
+		accum += a.clone().multiply(remainderRight).add(b).multiply(remainderRight).add(c).length() / 2.0;
+		return accum * (remainderRight - remainderLeft) / nPoints;
 	}
 }

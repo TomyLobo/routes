@@ -1,0 +1,93 @@
+----- derivation -----
+// Kochanek-Bartels tangent coefficients
+ta = (1-tension)*(1+bias)*(1+continuity)/2;
+tb = (1-tension)*(1-bias)*(1-continuity)/2;
+tc = (1-tension)*(1+bias)*(1-continuity)/2;
+td = (1-tension)*(1-bias)*(1+continuity)/2;
+
+// Kochanek-Bartels tangents (from http://en.wikipedia.org/wiki/Kochanek%E2%80%93Bartels_spline):
+d[i  ] = ta*(p[i  ]-p[i-1]) + tb*(p[i+1]-p[i  ])
+d[i+1] = tc*(p[i+1]-p[i  ]) + td*(p[i+2]-p[i+1])
+
+// Cubic Hermite spline (from http://en.wikipedia.org/wiki/Cubic_Hermite_spline#Unit_interval_.280.2C_1.29):
+p(t) =
+	h_00(t)*p[i  ] + h_10(t)*d[i  ] +
+	h_01(t)*p[i+1] + h_11(t)*d[i+1]
+
+// Inserting the tangents:
+p(t) =
+	h_00(t)*p[i  ] + h_10(t)*(ta*(p[i  ]-p[i-1]) + tb*(p[i+1]-p[i  ])) +
+	h_01(t)*p[i+1] + h_11(t)*(tc*(p[i+1]-p[i  ]) + td*(p[i+2]-p[i+1]))
+
+// Inserting the Hermite basis functions:
+p(t) =
+	( 2*t^3 - 3t^2 + 1)*p[i  ] + (t^3-2*t^2+t)*(ta*(p[i  ]-p[i-1]) + tb*(p[i+1]-p[i  ])) +
+	(-2*t^3 + 3*t^2   )*p[i+1] + (t^3-  t^2  )*(tc*(p[i+1]-p[i  ]) + td*(p[i+2]-p[i+1]))
+
+// Sorting the formula for node indexes:
+p(t) =
+	(t^3-2*t^2+t)*ta*(-p[i-1]) +
+	( 2*t^3 - 3t^2 + 1)*p[i  ] + (t^3-2*t^2+t)*(ta*p[i  ] - tb*p[i  ]) - (t^3-t^2)*tc*p[i  ] +
+	(t^3-2*t^2+t)*tb*p[i+1] + (-2*t^3 + 3*t^2   )*p[i+1] + (t^3-  t^2  )*(tc*p[i+1] - td*p[i+1]) +
+	(t^3-  t^2  )*td*p[i+2]
+
+// Factoring out the nodes p[i-1..i+2]:
+p(t) =
+	p[i-1]*((-ta           )*t^3 + ( 2*ta             )*t^2 + (-ta   )*t      ) +
+	p[i  ]*(( ta-tb-tc   +2)*t^3 + (-2*ta+2*tb+tc   -3)*t^2 + ( ta-tb)*t + (1)) +
+	p[i+1]*((    tb+tc-td-2)*t^3 + (     -2*tb-tc+td+3)*t^2 + (    tb)*t      ) +
+	p[i+2]*((          td  )*t^3 + (             -td  )*t^2                   )
+
+// matrix representation:
+	    | p[i-1] |      p[i  ]     | p[i+1]        | p[i+2] |
+	----+--------+-----------------+---------------+--------+
+	t^3 |    -ta |    ta-  tb-tc+2 |    tb+tc-td-2 |     td |
+	t^2 |   2*ta | -2*ta+2*tb+tc-3 | -2*tb-tc+td+3 |    -td |
+	t   |    -ta |    ta-  tb      |    tb         |      0 |
+	1   |      0 |               1 |             0 |      0 |
+
+
+----- differentiation -----
+a*x^3 + b*x^2 + c*x + d
+
+=> substitute t*f-i for x =>
+a*(t*f - i)^3 + b*(t*f - i)^2 + c*(t*f-i) + d
+(a*(t*f - i)^2 + b*(t*f - i) + c)*(t*f-i) + d
+((a*(t*f - i) + b)*(t*f - i) + c)*(t*f-i) + d
+((a*t*f - a*i + b)*(t*f - i) + c)*(t*f-i) + d
+((a*t*f - a*i + b)*t*f - i*(a*t*f - a*i + b) + c)*(t*f-i) + d
+(a*t²*f² - a*i*t*f + b*t*f - a*t*f*i + a*i² - b*i + c)*(t*f-i) + d
+(a*t²*f² - a*i*t*f + b*t*f - a*t*f*i + a*i² - b*i + c)*t*f-i*(a*t²*f² - a*i*t*f + b*t*f - a*t*f*i + a*i² - b*i + c) + d
+a*t³*f³ - a*i*t²*f² + b*t²*f² - a*t²*f²*i + a*i²*t*f - b*i*t*f + c*t*f - a*t²*f²*i + a*i²*t*f - b*t*f*i + a*t*f*i² - a*i³ + b*i² - c*i + d
+=> differentiate(t) =>
+a*3*t²*f³ - a*i*2*t*f² + b*2*t*f² - a*2*t*f²*i + a*i²*f - b*i*f + c*f - a*2*t*f²*i + a*i²*f - b*f*i + a*f*i²
+
+a*3*f*(t*f)²   -   a*i*2*f*(t*f) + b*2*f*(t*f) - a*2*i*f*(t*f) - a*2*i*f*(t*f)   +   a*i²*f - b*i*f + a*i²*f + a*i²*f - b*i*f + c*f
+a*3*f*(t*f)²   +   (-a*i + b - a*i - a*i)*2*f*(t*f)   +   ((a*i - b + a*i + a*i - b)*i + c)*f
+a*3*f*(t*f)²   +   (-3*a*i + b)*2*f*(t*f)   +   ((3*a*i - 2*b)*i + c)*f
+(a*1.5*(t*f) - 3*a*i + b)*2*f*(t*f) + ((1.5*a*i - b)*2*i + c)*f
+((a*1.5*(t*f) - 3*a*i + b)*2*(t*f) + (1.5*a*i - b)*2*i + c)*f
+((a*(1.5*(t*f) - 3*i) + b)*2*(t*f) + (a*1.5*i - b)*2*i + c)*f
+
+=> resubstitute position for t*f =>
+((a*(1.5*position - 3*i) + b)*2*position + (a*1.5*i - b)*2*i + c)*f
+
+=> convert to java =>
+  a.clone()
+   .multiply(1.5*position - 3*i)
+                         .add(b)
+                             .multiply(2*position)
+                                         .add(
+                                            a.clone()
+                                             .multiply(1.5*i)
+                                                    .subtract(b)
+                                                        .multiply(2*i)
+                                         )
+                                                             .add(c)
+                                                                 .multiply(f)
+
+=> in one line =>
+a.clone().multiply(1.5*position - 3*i).add(b).multiply(2*position).add(a.clone().multiply(1.5*i).subtract(b).multiply(2*i)).add(c).multiply(f)
+
+=> name changes: f -> scaling, i -> index, constant data types =>
+a.clone().multiply(1.5*position - 3.0*index).add(b).multiply(2.0*position).add(a.clone().multiply(1.5*index).subtract(b).multiply(2.0*index)).add(c).multiply(scaling)

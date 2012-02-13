@@ -26,7 +26,7 @@ import org.bukkit.util.Vector;
 import de.tomylobo.routes.Node;
 
 public class LinearInterpolation implements Interpolation {
-	List<Node> nodes;
+	private List<Node> nodes;
 
 	@Override
 	public void setNodes(List<Node> nodes) {
@@ -49,8 +49,23 @@ public class LinearInterpolation implements Interpolation {
 		return position1.multiply(1.0 - remainder).add(position2.multiply(remainder));
 	}
 
+	/*
+	Formula for position:
+		p1*(1-t) + p2*t
+	Formula for position in Horner/monomial form:
+		(p2-p1)*t + p1
+	1st Derivative:
+		p2-p1
+	2nd Derivative:
+		0
+	Integral:
+		(p2-p1)/2*t^2 + p1*t + constant
+	Integral in Horner form:
+		((p2-p1)/2*t + p1)*t + constant
+	*/
+
 	@Override
-	public Vector getEye(double position) {
+	public Vector get1stDerivative(double position) {
 		if (position > 1)
 			return null;
 
@@ -62,5 +77,56 @@ public class LinearInterpolation implements Interpolation {
 		final Vector position2 = nodes.get(index1 + 1).getPosition();
 
 		return position2.clone().subtract(position1);
+	}
+
+	@Override
+	public double arcLength(double positionA, double positionB) {
+		if (positionA > positionB)
+			return arcLength(positionB, positionA);
+
+		positionA *= nodes.size() - 1;
+		positionB *= nodes.size() - 1;
+
+		final int indexA = (int) Math.floor(positionA);
+		final double remainderA = positionA - indexA;
+
+		final int indexB = (int) Math.floor(positionB);
+		final double remainderB = positionB - indexB;
+
+		return arcLengthRecursive(indexA, remainderA, indexB, remainderB);
+	}
+
+	/**
+	 * Assumes a < b
+	 * 
+	 * @param indexA
+	 * @param remainderA
+	 * @param indexB
+	 * @param remainderB
+	 * @return
+	 */
+	private double arcLengthRecursive(int indexA, double remainderA, int indexB, double remainderB) {
+		switch (indexB - indexA) {
+		case 0:
+			return arcLengthRecursive(indexA, remainderA, remainderB);
+
+		case 1:
+			// This case is merely a speed-up for a very common case
+			return
+					arcLengthRecursive(indexA, remainderA, 1.0) + 
+					arcLengthRecursive(indexB, 0.0, remainderB);
+
+		default:
+			return
+					arcLengthRecursive(indexA, remainderA, indexB - 1, 1.0) + 
+					arcLengthRecursive(indexB, 0.0, remainderB);
+		}
+	}
+
+	private double arcLengthRecursive(int index, double remainderA, double remainderB) {
+		final Vector position1 = nodes.get(index).getPosition();
+		final Vector position2 = nodes.get(index + 1).getPosition();
+
+		return position1.distance(position2) * (remainderB - remainderA);
 	}
 }

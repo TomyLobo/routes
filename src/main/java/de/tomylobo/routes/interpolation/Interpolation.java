@@ -28,5 +28,6 @@ import de.tomylobo.routes.Node;
 public interface Interpolation {
 	public void setNodes(List<Node> nodes);
 	public Vector getPosition(double position);
-	public Vector getEye(double position);
+	public Vector get1stDerivative(double position);
+	double arcLength(double positionA, double positionB);
 }
