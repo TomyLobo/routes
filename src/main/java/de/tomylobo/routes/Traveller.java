@@ -44,12 +44,16 @@ public class Traveller {
 
 		Location location = route.getLocation(position);
 		if (location == null) {
-			finalizer.run();
+			runFinalizer();
 			return false;
 		}
 
 		entity.teleport(location);
 		return true;
+	}
+
+	public void runFinalizer() {
+		finalizer.run();
 	}
 
 	public Entity getEntity() {

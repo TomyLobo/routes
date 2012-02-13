@@ -48,8 +48,16 @@ public class TravelAgency implements Runnable {
 	public void run() {
 		for (Iterator<Traveller> it = travellers.values().iterator(); it.hasNext(); ) {
 			Traveller traveller = it.next();
-			if (!traveller.tick())
+			try {
+				if (!traveller.tick())
+					it.remove();
+			}
+			catch (Exception e) {
+				System.err.println("Caught exception in traveller tick, will run finalizer now.");
+				e.printStackTrace();
+				traveller.runFinalizer();
 				it.remove();
+			}
 		}
 	}
 }
