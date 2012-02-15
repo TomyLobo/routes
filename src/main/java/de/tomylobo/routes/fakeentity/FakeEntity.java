@@ -41,6 +41,14 @@ import org.bukkit.util.Vector;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * A client-side-only entity.
+ * 
+ * This class only implements part of the bukkit Entity interface and doesn't
+ * simulate movement beyond what is explicitly set.
+ * 
+ * @author TomyLobo
+ */
 public abstract class FakeEntity implements Entity {
 	static int lastFakeEntityId = 1000000000;
 

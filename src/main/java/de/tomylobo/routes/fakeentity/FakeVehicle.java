@@ -24,6 +24,11 @@ import net.minecraft.server.Packet23VehicleSpawn;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+/**
+ * A client-side-only entity spawned through {@link Packet23VehicleSpawn}.
+ *
+ * @author TomyLobo
+ */
 public class FakeVehicle extends FakeEntity {
 	private final int vehicleTypeId;
 
