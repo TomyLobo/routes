@@ -36,9 +36,9 @@ import org.bukkit.entity.Player;
 
 import de.tomylobo.routes.Route;
 import de.tomylobo.routes.Routes;
-import de.tomylobo.routes.fakeentity.FakeVehicle;
+import de.tomylobo.routes.fakeentity.FakeMob;
 import de.tomylobo.routes.fakeentity.FakeEntity;
-import de.tomylobo.routes.fakeentity.VehicleType;
+import de.tomylobo.routes.fakeentity.MobType;
 
 public class Commands {
 	@Retention(RetentionPolicy.RUNTIME)
@@ -111,41 +111,44 @@ public class Commands {
 	public void test1(CommandSender sender, String commandName, String label, String[] args) {
 		route = new Route(plugin);
 
-		Player player = (Player) sender;
+		final Player player = (Player) sender;
 		final Location location = player.getLocation();
 
+		final int routeScale = 32;
 		route.addNodes(
 				location,
-				location.clone().add(8,0,0),
-				location.clone().add(8,0,8),
+				location.clone().add(routeScale,0,0),
+				location.clone().add(routeScale,0,routeScale),
 
-				location.clone().add(8,8,8),
-				location.clone().add(8,8,0),
-				location.clone().add(0,8,0),
-				location.clone().add(0,8,8),
-				location.clone().add(8,8,8),
+				location.clone().add(routeScale,routeScale,routeScale),
+				location.clone().add(routeScale,routeScale,0),
+				location.clone().add(0,routeScale,0),
+				location.clone().add(0,routeScale,routeScale),
+				location.clone().add(routeScale,routeScale,routeScale),
 
-				location.clone().add(8,0,8),
-				location.clone().add(0,0,8),
+				location.clone().add(routeScale,0,routeScale),
+				location.clone().add(0,0,routeScale),
 				location
 		);
 
 		//plugin.routes.put("test", route);
+		sender.sendMessage("Created a test route.");
 	}
 
 	@Command
 	public void test2(CommandSender sender, String commandName, String label, String[] args) {
-		Location location = route.getLocation(0);
-		final Entity entity = new FakeVehicle(location, VehicleType.MINECART);
+		final Location location = route.getLocation(0);
+		//final Entity entity = new FakeVehicle(location, VehicleType.MINECART);
+		final Entity entity = new FakeMob(location, MobType.PIG);
 		((FakeEntity) entity).send();
-		//creature.setPassenger(player);
+		entity.setPassenger((Player) sender);
 		plugin.travelAgency.addTraveller(entity, route, new Runnable() {
 			@Override
 			public void run() {
 				entity.remove();
 			}
 		});
-		route.visualize(200);
-		sender.sendMessage("Created a Pig, put you on it and made it travel in an 8x8 square.");
+		route.visualize(400);
+		sender.sendMessage("Testing route.");
 	}
 }
