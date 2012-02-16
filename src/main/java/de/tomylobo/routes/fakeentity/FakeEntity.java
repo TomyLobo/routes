@@ -19,6 +19,7 @@
 
 package de.tomylobo.routes.fakeentity;
 
+import net.minecraft.server.DataWatcher;
 import net.minecraft.server.MathHelper;
 import net.minecraft.server.Packet28EntityVelocity;
 import net.minecraft.server.Packet29DestroyEntity;
@@ -56,16 +57,21 @@ public abstract class FakeEntity implements Entity {
 		((CraftPlayer)ply).getHandle().netServerHandler.sendPacket((net.minecraft.server.Packet) packet);
 	}
 
+	public void sendPacketToRelevantPlayers(final Packet packet) {
+		for (Player player : location.getWorld().getPlayers()) {
+			sendPacketToPlayer(player, packet);
+		}
+	}
+
 	public final int entityId;
 	public Location location;
 	private boolean isDead;
-	private final float yawOffset;
+	protected final float yawOffset;
+	protected final DataWatcher datawatcher;
 
 	@Override
 	public void playEffect(EntityEffect effect) {
-		for (Player player : location.getWorld().getPlayers()) {
-			sendPacketToPlayer(player, new Packet38EntityStatus(entityId, effect.getData()));
-		}
+		sendPacketToRelevantPlayers(new Packet38EntityStatus(entityId, effect.getData()));
 	}
 
 	public FakeEntity(Location location) {
@@ -79,6 +85,7 @@ public abstract class FakeEntity implements Entity {
 
 		entityId = ++lastFakeEntityId;
 		this.location = location;
+		this.datawatcher = new DataWatcher();
 	}
 
 	public void send() {
@@ -101,24 +108,20 @@ public abstract class FakeEntity implements Entity {
 
 	@Override
 	public void setVelocity(Vector velocity) {
-		for (Player player : location.getWorld().getPlayers()) {
-			sendPacketToPlayer(player, new Packet28EntityVelocity(entityId, velocity.getX(), velocity.getY(), velocity.getZ()));
-		}
+		sendPacketToRelevantPlayers(new Packet28EntityVelocity(entityId, velocity.getX(), velocity.getY(), velocity.getZ()));
 	}
 
 	@Override
 	public boolean teleport(Location location) {
 		this.location = location;
-		for (Player player : location.getWorld().getPlayers()) {
-			sendPacketToPlayer(player, new Packet34EntityTeleport(
-					entityId,
-					MathHelper.floor(location.getX()*32.0D),
-					MathHelper.floor(location.getY()*32.0D),
-					MathHelper.floor(location.getZ()*32.0D),
-					(byte) ((int) ((location.getYaw()+yawOffset) * 256.0F / 360.0F)),
-					(byte) ((int) (location.getPitch() * 256.0F / 360.0F))
-			));
-		}
+		sendPacketToRelevantPlayers(new Packet34EntityTeleport(
+				entityId,
+				MathHelper.floor(location.getX()*32.0D),
+				MathHelper.floor(location.getY()*32.0D),
+				MathHelper.floor(location.getZ()*32.0D),
+				(byte) ((int) ((location.getYaw()+yawOffset) * 256.0F / 360.0F)),
+				(byte) ((int) (location.getPitch() * 256.0F / 360.0F))
+		));
 		return true;
 	}
 
