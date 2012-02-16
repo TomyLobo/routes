@@ -26,10 +26,8 @@ import java.util.Map;
 import org.bukkit.entity.Entity;
 
 public class TravelAgency implements Runnable {
-	@SuppressWarnings("unused")
 	private final Routes plugin;
 
-	private final Map<String, Route> routes = new HashMap<String, Route>();
 	private final Map<Entity, Traveller> travellers = new HashMap<Entity, Traveller>();
 
 	public TravelAgency(Routes plugin) {
@@ -39,7 +37,7 @@ public class TravelAgency implements Runnable {
 	}
 
 	public void addTraveller(Entity entity, String routeName, Runnable finalizer) {
-		addTraveller(entity, routes.get(routeName), finalizer);
+		addTraveller(entity, plugin.transportSystem.getRoute(routeName), finalizer);
 	}
 
 	public void addTraveller(Entity entity, Route route, Runnable finalizer) {

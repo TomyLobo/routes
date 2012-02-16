@@ -39,6 +39,8 @@ public class Routes extends JavaPlugin {
 
 	public TravelAgency travelAgency;
 
+	public final TransportSystem transportSystem = new TransportSystem(this);
+
 	@Override
 	public void onEnable() {
 		travelAgency = new TravelAgency(this);
