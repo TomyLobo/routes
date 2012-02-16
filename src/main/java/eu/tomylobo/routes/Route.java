@@ -22,6 +22,7 @@ package eu.tomylobo.routes;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
@@ -35,8 +36,6 @@ import eu.tomylobo.routes.interpolation.ReparametrisingInterpolation;
 import eu.tomylobo.routes.util.Utils;
 
 public final class Route {
-	private final Routes plugin;
-
 	private World world;
 
 	private final List<Node> nodes = new ArrayList<Node>();
@@ -44,10 +43,6 @@ public final class Route {
 
 	//private Interpolation interpolation = new LinearInterpolation();
 	private Interpolation interpolation = new ReparametrisingInterpolation(new KochanekBartelsInterpolation(0, 0, 0));
-
-	public Route(Routes plugin) {
-		this.plugin = plugin;
-	}
 
 	public List<Node> getNodes() {
 		return nodes;
@@ -138,7 +133,7 @@ public final class Route {
 
 		System.out.println(String.format("min/mean/max/rmse: %f/%f/%f/%f\n", min, mean, max, Math.sqrt(sumSqErrors / distances.size())));
 
-		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Routes.getInstance(), new Runnable() {
 			@Override
 			public void run() {
 				for (FakeEntity entity : entities) {

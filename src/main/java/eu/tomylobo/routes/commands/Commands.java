@@ -108,7 +108,7 @@ public class Commands {
 
 	@Command
 	public void test1(CommandSender sender, String commandName, String label, String[] args) {
-		Route route = new Route(plugin);
+		Route route = new Route();
 
 		final Player player = (Player) sender;
 		final Location location = player.getLocation();
