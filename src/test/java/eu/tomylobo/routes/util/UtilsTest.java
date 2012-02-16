@@ -17,12 +17,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tomylobo.routes;
+package eu.tomylobo.routes.util;
 
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 import org.junit.*;
+
+import eu.tomylobo.routes.util.Utils;
 import static org.junit.Assert.*;
 
 public class UtilsTest {

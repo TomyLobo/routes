@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tomylobo.routes.interpolation;
+package eu.tomylobo.routes.interpolation;
 
 import java.util.List;
 import java.util.Map.Entry;
@@ -25,7 +25,7 @@ import java.util.TreeMap;
 
 import org.bukkit.util.Vector;
 
-import de.tomylobo.routes.Node;
+import eu.tomylobo.routes.Node;
 
 public class ReparametrisingInterpolation implements Interpolation {
 	private final Interpolation baseInterpolation;

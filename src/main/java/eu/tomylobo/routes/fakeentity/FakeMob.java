@@ -17,37 +17,43 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tomylobo.routes.fakeentity;
+package eu.tomylobo.routes.fakeentity;
 
 import net.minecraft.server.MathHelper;
 import net.minecraft.server.Packet23VehicleSpawn;
+import net.minecraft.server.Packet24MobSpawn;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+
+import eu.tomylobo.routes.util.Utils;
 
 /**
  * A client-side-only entity spawned through {@link Packet23VehicleSpawn}.
  *
  * @author TomyLobo
  */
-public class FakeVehicle extends FakeEntity {
-	private final int vehicleTypeId;
+public class FakeMob extends FakeEntity {
+	private final int mobTypeId;
 
-	public FakeVehicle(Location location, VehicleType vehicleType) {
-		super(location, vehicleType.getYawOffset());
+	public FakeMob(Location location, MobType mobType) {
+		super(location, mobType.getYawOffset());
 
-		this.vehicleTypeId = vehicleType.getId();
+		this.mobTypeId = mobType.getId();
 	}
 
 	@Override
 	public void sendImplementation(Player player) {
-		final Packet23VehicleSpawn p23 = new Packet23VehicleSpawn();
-		p23.a = entityId;
-		p23.b = MathHelper.floor(location.getX() * 32.0D);
-		p23.c = MathHelper.floor(location.getY() * 32.0D);
-		p23.d = MathHelper.floor(location.getZ() * 32.0D);
-		p23.h = vehicleTypeId;
-		p23.i = 0;
+		final Packet24MobSpawn p24 = new Packet24MobSpawn();
+		p24.a = entityId;
+		p24.b = mobTypeId;
+		p24.c = MathHelper.floor(location.getX() * 32.0D);
+		p24.d = MathHelper.floor(location.getY() * 32.0D);
+		p24.e = MathHelper.floor(location.getZ() * 32.0D);
+		p24.f = (byte) ((int) ((location.getYaw() + yawOffset) * 256.0F / 360.0F));
+		p24.g = (byte) ((int) (location.getPitch() * 256.0F / 360.0F));
+		Utils.setPrivateValue(Packet24MobSpawn.class, p24, "h", datawatcher);
 
-		sendPacketToPlayer(player, p23);
+		sendPacketToPlayer(player, p24);
 	}
 }

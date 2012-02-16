@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tomylobo.routes;
+package eu.tomylobo.routes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +26,13 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 
-import de.tomylobo.routes.fakeentity.FakeVehicle;
-import de.tomylobo.routes.fakeentity.FakeEntity;
-import de.tomylobo.routes.fakeentity.VehicleType;
-import de.tomylobo.routes.interpolation.Interpolation;
-import de.tomylobo.routes.interpolation.KochanekBartelsInterpolation;
-import de.tomylobo.routes.interpolation.ReparametrisingInterpolation;
+import eu.tomylobo.routes.fakeentity.FakeEntity;
+import eu.tomylobo.routes.fakeentity.FakeVehicle;
+import eu.tomylobo.routes.fakeentity.VehicleType;
+import eu.tomylobo.routes.interpolation.Interpolation;
+import eu.tomylobo.routes.interpolation.KochanekBartelsInterpolation;
+import eu.tomylobo.routes.interpolation.ReparametrisingInterpolation;
+import eu.tomylobo.routes.util.Utils;
 
 public final class Route {
 	private final Routes plugin;

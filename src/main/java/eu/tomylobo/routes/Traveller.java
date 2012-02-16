@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tomylobo.routes;
+package eu.tomylobo.routes;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;

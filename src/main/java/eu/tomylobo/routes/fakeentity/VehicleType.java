@@ -17,22 +17,41 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tomylobo.routes;
+package eu.tomylobo.routes.fakeentity;
 
-import org.bukkit.util.Vector;
+public enum VehicleType {
+	BOAT(1, 270),
+	MINECART(10, 270),
+	PRIMED_TNT(50),
+	ENDER_CRYSTAL(51),
+	ARROW(60),
+	SNOWBALL(61),
+	EGG(62),
+	FIREBALL(63),
+	SMALL_FIREBALL(64),
+	ENDER_PEARL(65),
+	FALLING_BLOCK(70),
+	ENDER_EYE(72),
+	POTION(73),
+	FISHING_HOOK(90);
 
-public class Node {
-	private Vector position;
+	private final int id;
+	private final float yawOffset;
 
-	public Node(Vector position) {
-		this.position = position;
+	private VehicleType(int id, float yawOffset) {
+		this.id = id;
+		this.yawOffset = yawOffset;
 	}
 
-	public Vector getPosition() {
-		return position;
+	private VehicleType(int id) {
+		this(id, 0);
 	}
 
-	public void setPosition(Vector position) {
-		this.position = position;
+	public int getId() {
+		return id;
+	}
+
+	public float getYawOffset() {
+		return yawOffset;
 	}
 }

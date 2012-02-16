@@ -17,12 +17,50 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tomylobo.routes.commands;
+package eu.tomylobo.routes.fakeentity;
 
-public class CommandException extends RuntimeException {
-	private static final long serialVersionUID = 1L;
+public enum MobType {
+	CREEPER(50),
+	SKELETON(51),
+	SPIDER(52),
+	GIANT(53),
+	ZOMBIE(54),
+	SLIME(55),
+	GHAST(56),
+	PIG_ZOMBIE(57),
+	ENDERMAN(58),
+	CAVE_SPIDER(59),
+	SILVERFISH(60),
+	BLAZE(61),
+	LAVA_SLIME(62),
+	ENDER_DRAGON(63, 180),
+	PIG(90),
+	SHEEP(91),
+	COW(92),
+	CHICKEN(93),
+	SQUID(94),
+	WOLF(95),
+	MUSHROOM_COW(96),
+	SNOW_MAN(97),
+	VILLAGER(120);
 
-	public CommandException(String message) {
-		super(message);
+	private final int id;
+	private final float yawOffset;
+
+	private MobType(int id, float yawOffset) {
+		this.id = id;
+		this.yawOffset = yawOffset;
+	}
+
+	private MobType(int id) {
+		this(id, 0);
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public float getYawOffset() {
+		return yawOffset;
 	}
 }

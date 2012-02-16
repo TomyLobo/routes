@@ -17,15 +17,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tomylobo.routes;
+package eu.tomylobo.routes;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import de.tomylobo.routes.commands.Commands;
+import eu.tomylobo.routes.commands.Commands;
 
 public class Routes extends JavaPlugin {
+	private static Routes instance;
+	{
+		instance = this;
+	}
+
+	public static Routes getInstance() {
+		return instance;
+	}
+
 	public final Commands commands = new Commands(this);
 
 	public TravelAgency travelAgency;
@@ -39,4 +48,5 @@ public class Routes extends JavaPlugin {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		return commands.dispatch(sender, command, label, args);
 	}
+
 }

@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tomylobo.routes.commands;
+package eu.tomylobo.routes.commands;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -34,11 +34,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-import de.tomylobo.routes.Route;
-import de.tomylobo.routes.Routes;
-import de.tomylobo.routes.fakeentity.FakeMob;
-import de.tomylobo.routes.fakeentity.FakeEntity;
-import de.tomylobo.routes.fakeentity.MobType;
+import eu.tomylobo.routes.Route;
+import eu.tomylobo.routes.Routes;
+import eu.tomylobo.routes.fakeentity.FakeEntity;
+import eu.tomylobo.routes.fakeentity.FakeMob;
+import eu.tomylobo.routes.fakeentity.MobType;
 
 public class Commands {
 	@Retention(RetentionPolicy.RUNTIME)

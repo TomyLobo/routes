@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.tomylobo.routes.fakeentity;
+package eu.tomylobo.routes.fakeentity;
 
 import net.minecraft.server.DataWatcher;
 import net.minecraft.server.MathHelper;
