@@ -58,7 +58,6 @@ public class Commands {
 	}
 
 	private Routes plugin;
-	private Route route;
 
 	public Commands(Routes plugin) {
 		this.plugin = plugin;
@@ -109,7 +108,7 @@ public class Commands {
 
 	@Command
 	public void test1(CommandSender sender, String commandName, String label, String[] args) {
-		route = new Route(plugin);
+		Route route = new Route(plugin);
 
 		final Player player = (Player) sender;
 		final Location location = player.getLocation();
@@ -131,12 +130,13 @@ public class Commands {
 				location
 		);
 
-		//plugin.routes.put("test", route);
+		plugin.transportSystem.addRoute("test", route);
 		sender.sendMessage("Created a test route.");
 	}
 
 	@Command
 	public void test2(CommandSender sender, String commandName, String label, String[] args) {
+		Route route = plugin.transportSystem.getRoute("test");
 		final Location location = route.getLocation(0);
 		//final Entity entity = new FakeVehicle(location, VehicleType.MINECART);
 		final Entity entity = new FakeMob(location, MobType.PIG);
