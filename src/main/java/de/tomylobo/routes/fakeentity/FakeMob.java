@@ -43,7 +43,7 @@ public class FakeMob extends FakeEntity {
 	}
 
 	@Override
-	public void send(Player player) {
+	public void sendImplementation(Player player) {
 		final Packet24MobSpawn p24 = new Packet24MobSpawn();
 		p24.a = entityId;
 		p24.b = mobTypeId;

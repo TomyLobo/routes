@@ -39,7 +39,7 @@ public class FakeVehicle extends FakeEntity {
 	}
 
 	@Override
-	public void send(Player player) {
+	public void sendImplementation(Player player) {
 		final Packet23VehicleSpawn p23 = new Packet23VehicleSpawn();
 		p23.a = entityId;
 		p23.b = MathHelper.floor(location.getX() * 32.0D);

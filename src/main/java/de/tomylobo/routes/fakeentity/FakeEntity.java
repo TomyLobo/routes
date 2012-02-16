@@ -25,6 +25,7 @@ import net.minecraft.server.Packet28EntityVelocity;
 import net.minecraft.server.Packet29DestroyEntity;
 import net.minecraft.server.Packet34EntityTeleport;
 import net.minecraft.server.Packet38EntityStatus;
+import net.minecraft.server.Packet39AttachEntity;
 
 import org.bukkit.Bukkit;
 import org.bukkit.EntityEffect;
@@ -68,6 +69,7 @@ public abstract class FakeEntity implements Entity {
 	private boolean isDead;
 	protected final float yawOffset;
 	protected final DataWatcher datawatcher;
+	private Entity passenger;
 
 	@Override
 	public void playEffect(EntityEffect effect) {
@@ -94,7 +96,12 @@ public abstract class FakeEntity implements Entity {
 		}
 	}
 
-	abstract public void send(Player player);
+	private void send(Player player) {
+		sendImplementation(player);
+		setPassenger(passenger);
+	}
+
+	abstract public void sendImplementation(Player player);
 
 	private void delete() {
 		for (Player player : location.getWorld().getPlayers()) {
@@ -198,14 +205,29 @@ public abstract class FakeEntity implements Entity {
 
 	@Override
 	public Entity getPassenger() {
-		// TODO Auto-generated method stub
-		return null;
+		return passenger;
 	}
 
 	@Override
 	public boolean setPassenger(Entity passenger) {
-		// TODO Auto-generated method stub
-		return false;
+		Packet39AttachEntity p39 = new Packet39AttachEntity();
+
+		if (passenger == null)  {
+			if (this.passenger == null)
+				return true;
+
+			p39.a = this.passenger.getEntityId();
+			p39.b = -1;
+		}
+		else {
+			p39.a = passenger.getEntityId();
+			p39.b = entityId;
+		}
+
+		sendPacketToRelevantPlayers(p39);
+		this.passenger = passenger;
+
+		return true;
 	}
 
 	@Override
