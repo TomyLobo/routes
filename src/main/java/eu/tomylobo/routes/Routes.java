@@ -51,4 +51,16 @@ public class Routes extends JavaPlugin {
 		return commands.dispatch(sender, command, label, args);
 	}
 
+	public void save() {
+		transportSystem.save();
+	}
+
+	public void load() {
+		transportSystem.load();
+	}
+
+	public String getConfigFileName(String baseFileName) {
+		return getDataFolder() + "/" + baseFileName;
+	}
+
 }

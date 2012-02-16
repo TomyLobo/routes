@@ -21,6 +21,11 @@ package eu.tomylobo.routes;
 
 import org.bukkit.util.Vector;
 
+import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.Multimap;
+
+import eu.tomylobo.routes.util.Ini;
+
 public class Node {
 	private Vector position;
 
@@ -34,5 +39,14 @@ public class Node {
 
 	public void setPosition(Vector position) {
 		this.position = position;
+	}
+
+	public void save(Multimap<String, Multimap<String, String>> sections, String nodeName) {
+		final String nodeSectionName = "node " + nodeName;
+		final Multimap<String, String> nodeSection = LinkedListMultimap.create();
+
+		Ini.saveVector(nodeSection, "position.%s", position);
+
+		sections.put(nodeSectionName, nodeSection);
 	}
 }

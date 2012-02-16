@@ -21,6 +21,13 @@ package eu.tomylobo.routes;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+
+import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.Multimap;
+
+
+import eu.tomylobo.routes.util.Ini;
 
 /**
  * Contains the transport network, i.e. all routes and their names.
@@ -29,7 +36,6 @@ import java.util.Map;
  *
  */
 public class TransportSystem {
-	@SuppressWarnings("unused")
 	private final Routes plugin;
 	private final Map<String, Route> routes = new HashMap<String, Route>();
 
@@ -43,5 +49,18 @@ public class TransportSystem {
 
 	public void addRoute(String routeName, Route route) {
 		routes.put(routeName, route);
+	}
+
+	public void save() {
+		Multimap<String, Multimap<String, String>> sections = LinkedListMultimap.create();
+		for (Entry<String, Route> entry : routes.entrySet()) {
+			entry.getValue().save(sections, entry.getKey());
+		}
+
+		Ini.save(plugin.getConfigFileName("routes.txt"), sections);
+	}
+
+	public void load() {
+
 	}
 }

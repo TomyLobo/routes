@@ -27,12 +27,16 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 
+import com.google.common.collect.LinkedListMultimap;
+import com.google.common.collect.Multimap;
+
 import eu.tomylobo.routes.fakeentity.FakeEntity;
 import eu.tomylobo.routes.fakeentity.FakeVehicle;
 import eu.tomylobo.routes.fakeentity.VehicleType;
 import eu.tomylobo.routes.interpolation.Interpolation;
 import eu.tomylobo.routes.interpolation.KochanekBartelsInterpolation;
 import eu.tomylobo.routes.interpolation.ReparametrisingInterpolation;
+import eu.tomylobo.routes.util.Ini;
 import eu.tomylobo.routes.util.Utils;
 
 public final class Route {
@@ -141,5 +145,22 @@ public final class Route {
 				}
 			}
 		}, 600);
+	}
+
+	public void save(Multimap<String, Multimap<String, String>> sections, String routeName) {
+		final String routeSectionName = "route "+routeName;
+		final Multimap<String, String> routeSection = LinkedListMultimap.create();
+
+		Ini.saveWorld(routeSection, "%s", world);
+		routeSection.put("nodes", String.valueOf(nodes.size()));
+
+		sections.put(routeSectionName, routeSection);
+
+		for (int i = 0; i < nodes.size(); ++i) {
+			final Node node = nodes.get(i);
+
+			final String nodeName = routeName + "-" + i;
+			node.save(sections, nodeName);
+		}
 	}
 }
