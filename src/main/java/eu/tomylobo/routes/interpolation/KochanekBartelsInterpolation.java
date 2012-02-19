@@ -27,9 +27,6 @@ import org.bukkit.util.Vector;
 import eu.tomylobo.routes.Node;
 
 public class KochanekBartelsInterpolation implements Interpolation {
-	private double tension;
-	private double bias;
-	private double continuity;
 	private List<Node> nodes;
 	private Vector[] coeffA;
 	private Vector[] coeffB;
@@ -37,10 +34,7 @@ public class KochanekBartelsInterpolation implements Interpolation {
 	private Vector[] coeffD;
 	private double scaling;
 
-	public KochanekBartelsInterpolation(double tension, double bias, double continuity) {
-		this.tension = tension;
-		this.bias = bias;
-		this.continuity = continuity;
+	public KochanekBartelsInterpolation() {
 		setNodes(Collections.<Node>emptyList());
 	}
 
@@ -51,19 +45,37 @@ public class KochanekBartelsInterpolation implements Interpolation {
 	}
 
 	private void recalc() {
-		// Kochanek-Bartels tangent coefficients
-		final double ta = (1-tension)*(1+bias)*(1+continuity)/2; // Factor for lhs of d[i]
-		final double tb = (1-tension)*(1-bias)*(1-continuity)/2; // Factor for rhs of d[i]
-		final double tc = (1-tension)*(1+bias)*(1-continuity)/2; // Factor for lhs of d[i+1]
-		final double td = (1-tension)*(1-bias)*(1+continuity)/2; // Factor for rhs of d[i+1]
-
 		final int nNodes = nodes.size();
 		coeffA = new Vector[nNodes];
 		coeffB = new Vector[nNodes];
 		coeffC = new Vector[nNodes];
 		coeffD = new Vector[nNodes];
 
+		if (nNodes == 0)
+			return;
+
+		Node nodeB = nodes.get(0);
+		double tensionB = nodeB.getTension();
+		double biasB = nodeB.getBias();
+		double continuityB = nodeB.getContinuity();
 		for (int i = 0; i < nNodes; ++i) {
+			final double tensionA = tensionB;
+			final double biasA = biasB;
+			final double continuityA = continuityB;
+
+			if (i + 1 < nNodes) {
+				nodeB = nodes.get(i + 1);
+				tensionB = nodeB.getTension();
+				biasB = nodeB.getBias();
+				continuityB = nodeB.getContinuity();
+			}
+
+			// Kochanek-Bartels tangent coefficients
+			final double ta = (1-tensionA)*(1+biasA)*(1+continuityA)/2; // Factor for lhs of d[i]
+			final double tb = (1-tensionA)*(1-biasA)*(1-continuityA)/2; // Factor for rhs of d[i]
+			final double tc = (1-tensionB)*(1+biasB)*(1-continuityB)/2; // Factor for lhs of d[i+1]
+			final double td = (1-tensionB)*(1-biasB)*(1+continuityB)/2; // Factor for rhs of d[i+1]
+
 			coeffA[i] = linearCombination(i,  -ta,    ta-  tb-tc+2,    tb+tc-td-2,  td);
 			coeffB[i] = linearCombination(i, 2*ta, -2*ta+2*tb+tc-3, -2*tb-tc+td+3, -td);
 			coeffC[i] = linearCombination(i,  -ta,    ta-  tb     ,    tb        ,   0);

@@ -23,19 +23,24 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 
 public class Traveller {
-	@SuppressWarnings("unused")
-	private final TravelAgency travelAgent;
-	private final Entity entity;
 	private final Route route;
-	private double position = 0.0;
+	private final Entity entity;
 	private double increment;
 	private Runnable finalizer;
 
-	public Traveller(TravelAgency travelAgent, Entity entity, Route route, Runnable finalizer) {
-		this.travelAgent = travelAgent;
-		this.entity = entity;
+	private double position = 0.0;
+
+	/**
+	 * 
+	 * @param route The route to travel on
+	 * @param entity An entity to move along the route
+	 * @param speed Speed in m/s
+	 * @param finalizer A Runnable to invoke after the route was finished
+	 */
+	public Traveller(Route route, Entity entity, double speed, Runnable finalizer) {
 		this.route = route;
-		this.increment = 0.02 / route.getNodes().size();
+		this.entity = entity;
+		this.increment = speed * 0.05 / route.length();
 		this.finalizer = finalizer;
 	}
 

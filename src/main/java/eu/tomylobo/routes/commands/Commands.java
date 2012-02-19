@@ -142,7 +142,7 @@ public class Commands {
 		final Entity entity = new FakeMob(location, MobType.PIG);
 		((FakeEntity) entity).send();
 		entity.setPassenger((Player) sender);
-		plugin.travelAgency.addTraveller(entity, route, new Runnable() {
+		plugin.travelAgency.addTraveller(route, entity, 2.0, new Runnable() {
 			@Override
 			public void run() {
 				entity.remove();

@@ -29,9 +29,22 @@ import eu.tomylobo.routes.util.Ini;
 public class Node {
 	private Vector position;
 
+	private double tension;
+	private double bias;
+	private double continuity;
+
+	public Node() {
+		this(new Vector());
+	}
+
 	public Node(Vector position) {
 		this.position = position;
 	}
+
+	public Node(Multimap<String, Multimap<String, String>> sections, String nodeName) {
+		load(sections, nodeName);
+	}
+
 
 	public Vector getPosition() {
 		return position;
@@ -41,12 +54,50 @@ public class Node {
 		this.position = position;
 	}
 
+	public double getTension() {
+		return tension;
+	}
+
+	public void setTension(double tension) {
+		this.tension = tension;
+	}
+
+	public double getBias() {
+		return bias;
+	}
+
+	public void setBias(double bias) {
+		this.bias = bias;
+	}
+
+	public double getContinuity() {
+		return continuity;
+	}
+
+	public void setContinuity(double continuity) {
+		this.continuity = continuity;
+	}
+
+
 	public void save(Multimap<String, Multimap<String, String>> sections, String nodeName) {
 		final String nodeSectionName = "node " + nodeName;
 		final Multimap<String, String> nodeSection = LinkedListMultimap.create();
 
 		Ini.saveVector(nodeSection, "position.%s", position);
+		nodeSection.put("tension", String.valueOf(tension));
+		nodeSection.put("bias", String.valueOf(bias));
+		nodeSection.put("continuity", String.valueOf(continuity));
 
 		sections.put(nodeSectionName, nodeSection);
+	}
+
+	public void load(Multimap<String, Multimap<String, String>> sections, String nodeName) {
+		final String nodeSectionName = "node " + nodeName;
+		final Multimap<String, String> nodeSection = Ini.getOnlyValue(sections.get(nodeSectionName));
+
+		position = Ini.loadVector(nodeSection, "position.%s");
+		tension = Ini.getOnlyDouble(nodeSection.get("tension"));
+		bias = Ini.getOnlyDouble(nodeSection.get("bias"));
+		continuity = Ini.getOnlyDouble(nodeSection.get("continuity"));
 	}
 }

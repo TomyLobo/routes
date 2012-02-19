@@ -46,7 +46,7 @@ public final class Route {
 	private boolean nodesDirty = false;
 
 	//private Interpolation interpolation = new LinearInterpolation();
-	private Interpolation interpolation = new ReparametrisingInterpolation(new KochanekBartelsInterpolation(0, 0, 0));
+	private Interpolation interpolation = new ReparametrisingInterpolation(new KochanekBartelsInterpolation());
 
 	public List<Node> getNodes() {
 		return nodes;
@@ -75,10 +75,7 @@ public final class Route {
 	}
 
 	public Location getLocation(double position) {
-		if (nodesDirty) {
-			interpolation.setNodes(nodes);
-			nodesDirty = false;
-		}
+		ensureClean();
 
 		final Vector vec = interpolation.getPosition(position);
 		if (vec == null)
@@ -87,11 +84,15 @@ public final class Route {
 		return Utils.locationFromEye(world, vec, interpolation.get1stDerivative(position));
 	}
 
-	public Vector getVelocity(double position) {
+	private void ensureClean() {
 		if (nodesDirty) {
 			interpolation.setNodes(nodes);
 			nodesDirty = false;
 		}
+	}
+
+	public Vector getVelocity(double position) {
+		ensureClean();
 
 		return interpolation.get1stDerivative(position);
 	}
@@ -162,5 +163,28 @@ public final class Route {
 			final String nodeName = routeName + "-" + i;
 			node.save(sections, nodeName);
 		}
+	}
+
+	public void load(Multimap<String, Multimap<String, String>> sections, String routeName) {
+		final String routeSectionName = "route "+routeName;
+		final Multimap<String, String> routeSection = Ini.getOnlyValue(sections.get(routeSectionName));
+
+		world = Ini.loadWorld(routeSection, "%s");
+		int nNodes = Ini.getOnlyInt(routeSection.get("nodes"));
+
+		nodes.clear();
+		((ArrayList<Node>) nodes).ensureCapacity(nNodes);
+		for (int i = 0; i < nNodes; ++i) {
+			final String nodeName = routeName + "-" + i;
+
+			nodes.add(new Node(sections, nodeName));
+		}
+		nodesDirty = true;
+	}
+
+	public double length() {
+		ensureClean();
+
+		return interpolation.arcLength(0, 1);
 	}
 }

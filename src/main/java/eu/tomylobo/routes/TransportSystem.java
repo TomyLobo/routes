@@ -49,6 +49,7 @@ public class TransportSystem {
 
 	public void addRoute(String routeName, Route route) {
 		routes.put(routeName, route);
+		save();
 	}
 
 	public void save() {
@@ -61,6 +62,19 @@ public class TransportSystem {
 	}
 
 	public void load() {
+		final Multimap<String, Multimap<String, String>> sections = Ini.load(plugin.getConfigFileName("routes.txt"));
 
+		for (Entry<String, Multimap<String, String>> entry : sections.entries()) {
+			final String sectionName = entry.getKey();
+			if (!sectionName.startsWith("route "))
+				continue;
+
+			final String routeName = sectionName.substring(6);
+			final Route route = new Route();
+
+			route.load(sections, routeName);
+
+			routes.put(routeName, route);
+		}
 	}
 }

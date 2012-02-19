@@ -36,12 +36,26 @@ public class TravelAgency implements Runnable {
 		plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, this, 0, 1);
 	}
 
-	public void addTraveller(Entity entity, String routeName, Runnable finalizer) {
-		addTraveller(entity, plugin.transportSystem.getRoute(routeName), finalizer);
+	/**
+	 * 
+	 * @param routeName The name of the route to travel on
+	 * @param entity An entity to move along the route
+	 * @param speed Speed in m/s
+	 * @param finalizer A Runnable to invoke after the route was finished
+	 */
+	public void addTraveller(String routeName, Entity entity, double speed, Runnable finalizer) {
+		addTraveller(plugin.transportSystem.getRoute(routeName), entity, speed, finalizer);
 	}
 
-	public void addTraveller(Entity entity, Route route, Runnable finalizer) {
-		addTraveller(new Traveller(this, entity, route, finalizer));
+	/**
+	 * 
+	 * @param route The route to travel on
+	 * @param entity An entity to move along the route
+	 * @param speed Speed in m/s
+	 * @param finalizer A Runnable to invoke after the route was finished
+	 */
+	public void addTraveller(Route route, Entity entity, double speed, Runnable finalizer) {
+		addTraveller(new Traveller(route, entity, speed, finalizer));
 	}
 
 	public void addTraveller(Traveller traveller) {
