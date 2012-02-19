@@ -19,6 +19,7 @@
 
 package eu.tomylobo.routes.util;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Server;
 import org.bukkit.World;
@@ -131,8 +132,9 @@ public final class Ini {
 		return iterable.iterator().next();
 	}
 
-	public static World loadWorld(Multimap<String, String> section, String format, Server server) {
-		return server.getWorld(getFirstValue(section.get(String.format(format, "world"))));
+
+	public static World loadWorld(Multimap<String, String> section, String format) {
+		return Bukkit.getServer().getWorld(getOnlyValue(section.get(String.format(format, "world"))));
 	}
 
 
@@ -147,7 +149,7 @@ public final class Ini {
 	public static Location loadLocation(Multimap<String, String> section, String format, Server server) {
 		try {
 			return loadVector(section, format).toLocation(
-					loadWorld(section, format, server),
+					loadWorld(section, format),
 					Float.valueOf(getFirstValue(section.get(String.format(format, "yaw")))),
 					Float.valueOf(getFirstValue(section.get(String.format(format, "pitch"))))
 			);
