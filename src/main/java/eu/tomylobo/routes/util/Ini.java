@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -128,8 +129,23 @@ public final class Ini {
 	}
 
 
-	private static String getFirstValue(Iterable<String> iterable) {
-		return iterable.iterator().next();
+	public static <T> T getOnlyValue(Collection<T> collection) {
+		if (collection.size() != 1)
+			throw new RuntimeException("Tried to getOnlyValue of a collection with a different size than 1.");
+
+		return collection.iterator().next();
+	}
+
+	public static int getOnlyInt(Collection<String> collection) {
+		return Integer.parseInt(getOnlyValue(collection));
+	}
+
+	public static double getOnlyDouble(Collection<String> collection) {
+		return Double.parseDouble(getOnlyValue(collection));
+	}
+
+	public static float getOnlyFloat(Collection<String> collection) {
+		return Float.parseFloat(getOnlyValue(collection));
 	}
 
 
@@ -140,9 +156,9 @@ public final class Ini {
 
 	public static Vector loadVector(Multimap<String, String> section, String format) {
 		return new Vector(
-				Double.valueOf(getFirstValue(section.get(String.format(format, "x")))),
-				Double.valueOf(getFirstValue(section.get(String.format(format, "y")))),
-				Double.valueOf(getFirstValue(section.get(String.format(format, "z"))))
+				getOnlyDouble(section.get(String.format(format, "x"))),
+				getOnlyDouble(section.get(String.format(format, "y"))),
+				getOnlyDouble(section.get(String.format(format, "z")))
 		);
 	}
 
@@ -150,8 +166,8 @@ public final class Ini {
 		try {
 			return loadVector(section, format).toLocation(
 					loadWorld(section, format),
-					Float.valueOf(getFirstValue(section.get(String.format(format, "yaw")))),
-					Float.valueOf(getFirstValue(section.get(String.format(format, "pitch"))))
+					getOnlyFloat(section.get(String.format(format, "yaw"))),
+					getOnlyFloat(section.get(String.format(format, "pitch")))
 			);
 		}
 		catch(Exception e) {
