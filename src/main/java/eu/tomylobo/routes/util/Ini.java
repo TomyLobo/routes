@@ -29,6 +29,7 @@ import com.google.common.collect.Multimap;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -100,7 +101,9 @@ public final class Ini {
 
 	public static void save(String fileName, Multimap<String, Multimap<String, String>> sections) {
 		try {
-			BufferedWriter stream = new BufferedWriter(new FileWriter(fileName));
+			final File file = new File(fileName);
+			file.getParentFile().mkdirs();
+			BufferedWriter stream = new BufferedWriter(new FileWriter(file));
 			for (Entry<String, Multimap<String, String>> entry : sections.entries()) {
 				stream.write("["+entry.getKey()+"]");
 				stream.newLine();
