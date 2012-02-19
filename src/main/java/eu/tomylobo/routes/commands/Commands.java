@@ -142,13 +142,23 @@ public class Commands {
 		final Entity entity = new FakeMob(location, MobType.PIG);
 		((FakeEntity) entity).send();
 		entity.setPassenger((Player) sender);
-		plugin.travelAgency.addTraveller(route, entity, 2.0, new Runnable() {
-			@Override
-			public void run() {
-				entity.remove();
-			}
-		});
+		plugin.travelAgency.addTraveller(route, entity, 2.0, new Remover(entity));
 		route.visualize(400);
 		sender.sendMessage("Testing route.");
+	}
+
+	public class Remover implements Runnable {
+		private final Entity[] entities;
+
+		public Remover(Entity... entities) {
+			this.entities = entities;
+		}
+
+		@Override
+		public void run() {
+			for (Entity entity : entities) {
+				entity.remove();
+			}
+		}
 	}
 }
