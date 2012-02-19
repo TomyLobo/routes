@@ -22,6 +22,8 @@ package eu.tomylobo.routes.fakeentity;
 public enum VehicleType {
 	BOAT(1, 270),
 	MINECART(10, 270),
+	MINECART_CHEST(11, 270),
+	MINECART_FURNACE(12, 270),
 	PRIMED_TNT(50),
 	ENDER_CRYSTAL(51),
 	ARROW(60),
@@ -30,9 +32,11 @@ public enum VehicleType {
 	FIREBALL(63),
 	SMALL_FIREBALL(64),
 	ENDER_PEARL(65),
-	FALLING_BLOCK(70),
+	FALLING_SAND(70),
+	FALLING_GRAVEL(71),
 	ENDER_EYE(72),
 	POTION(73),
+	FALLING_DRAGON_EGG(74),
 	FISHING_HOOK(90);
 
 	private final int id;
