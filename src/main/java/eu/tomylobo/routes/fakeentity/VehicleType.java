@@ -19,6 +19,12 @@
 
 package eu.tomylobo.routes.fakeentity;
 
+/**
+ * Types of mobs, for use with {@link FakeVehicle}.
+ *
+ * @author TomyLobo
+ *
+ */
 public enum VehicleType {
 	BOAT(1, 270),
 	MINECART(10, 270),

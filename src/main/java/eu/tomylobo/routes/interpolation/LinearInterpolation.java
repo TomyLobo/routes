@@ -25,6 +25,12 @@ import org.bukkit.util.Vector;
 
 import eu.tomylobo.routes.Node;
 
+/**
+ * Simple linear interpolation. Mainly used for testing.
+ *
+ * @author TomyLobo
+ *
+ */
 public class LinearInterpolation implements Interpolation {
 	private List<Node> nodes;
 

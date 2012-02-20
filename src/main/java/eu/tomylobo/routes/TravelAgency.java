@@ -25,6 +25,13 @@ import java.util.Map;
 
 import org.bukkit.entity.Entity;
 
+/**
+ * The TravelAgency manages all current {@link Traveller}s and will invoke
+ * their {@link Traveller#tick() tick()} method each tick.
+ *
+ * @author TomyLobo
+ *
+ */
 public class TravelAgency implements Runnable {
 	private final Routes plugin;
 

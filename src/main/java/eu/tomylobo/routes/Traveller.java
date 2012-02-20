@@ -22,6 +22,14 @@ package eu.tomylobo.routes;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 
+/**
+ * A Traveller is an {@link #entity} travelling along a {@link #route}
+ * at the specified speed.<br />
+ * At the end of the route, a {@link #finalizer} is called.
+ *
+ * @author TomyLobo
+ *
+ */
 public class Traveller {
 	private final Route route;
 	private final Entity entity;
@@ -31,7 +39,8 @@ public class Traveller {
 	private double position = 0.0;
 
 	/**
-	 * 
+	 * Constructs a traveller
+	 *
 	 * @param route The route to travel on
 	 * @param entity An entity to move along the route
 	 * @param speed Speed in m/s

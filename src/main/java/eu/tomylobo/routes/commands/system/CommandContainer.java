@@ -17,12 +17,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.tomylobo.routes.commands;
+package eu.tomylobo.routes.commands.system;
 
-public class CommandException extends RuntimeException {
-	private static final long serialVersionUID = 1L;
+import eu.tomylobo.routes.Routes;
 
-	public CommandException(String message) {
-		super(message);
+/**
+ * Base class for all classes that contain commands.
+ *
+ * @author TomyLobo
+ *
+ */
+public class CommandContainer {
+	protected final Routes plugin;
+
+	public CommandContainer() {
+		this.plugin = Routes.getInstance();
 	}
 }

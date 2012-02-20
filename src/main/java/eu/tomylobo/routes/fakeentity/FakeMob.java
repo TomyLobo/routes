@@ -20,7 +20,6 @@
 package eu.tomylobo.routes.fakeentity;
 
 import net.minecraft.server.MathHelper;
-import net.minecraft.server.Packet23VehicleSpawn;
 import net.minecraft.server.Packet24MobSpawn;
 
 import org.bukkit.Location;
@@ -29,9 +28,10 @@ import org.bukkit.entity.Player;
 import eu.tomylobo.routes.util.Utils;
 
 /**
- * A client-side-only entity spawned through {@link Packet23VehicleSpawn}.
+ * A client-side-only entity spawned through {@link Packet24MobSpawn}.
  *
  * @author TomyLobo
+ *
  */
 public class FakeMob extends FakeEntity {
 	private final int mobTypeId;

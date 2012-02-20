@@ -3,6 +3,12 @@ package eu.tomylobo.routes.util;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Can be used to keep statistics on certain values.
+ *
+ * @author TomyLobo
+ *
+ */
 public class Statistics {
 	private final List<Double> distances = new ArrayList<Double>();
 	private double sum = 0;

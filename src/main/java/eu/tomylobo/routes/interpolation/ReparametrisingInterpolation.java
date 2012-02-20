@@ -27,6 +27,14 @@ import org.bukkit.util.Vector;
 
 import eu.tomylobo.routes.Node;
 
+/**
+ * Reparametrises another interpolation function by arc length.<br />
+ * This is done so entities travel at roughly the same speed across
+ * the whole route.
+ *
+ * @author TomyLobo
+ *
+ */
 public class ReparametrisingInterpolation implements Interpolation {
 	private final Interpolation baseInterpolation;
 	private double totalArcLength;

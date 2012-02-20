@@ -26,6 +26,15 @@ import org.bukkit.util.Vector;
 
 import eu.tomylobo.routes.Node;
 
+/**
+ * Kochanek-Bartels interpolation.<br />
+ * Continuous in the 2nd derivative.<br />
+ * Supports {@link Node#tension tension}, {@link Node#bias bias} and
+ * {@link Node#continuity continuity} parameters per {@link Node}
+ *
+ * @author TomyLobo
+ *
+ */
 public class KochanekBartelsInterpolation implements Interpolation {
 	private List<Node> nodes;
 	private Vector[] coeffA;

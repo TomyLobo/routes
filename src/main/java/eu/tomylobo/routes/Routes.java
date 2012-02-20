@@ -23,7 +23,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import eu.tomylobo.routes.commands.Commands;
+import eu.tomylobo.routes.commands.system.CommandSystem;
 
 public class Routes extends JavaPlugin {
 	private static Routes instance;
@@ -35,7 +35,7 @@ public class Routes extends JavaPlugin {
 		return instance;
 	}
 
-	public final Commands commands = new Commands(this);
+	public final CommandSystem commandSystem = new CommandSystem();
 
 	public TravelAgency travelAgency;
 
@@ -48,7 +48,7 @@ public class Routes extends JavaPlugin {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		return commands.dispatch(sender, command, label, args);
+		return commandSystem.dispatch(sender, command, label, args);
 	}
 
 	public void save() {

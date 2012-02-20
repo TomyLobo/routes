@@ -25,6 +25,12 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 
+/**
+ * Contains general purpose utility functions.
+ * 
+ * @author TomyLobo
+ *
+ */
 public class Utils {
 	public static Location locationFromLookAt(World world, Vector start, Vector lookAt) {
 		final Vector diff = lookAt.clone().subtract(start);
@@ -42,6 +48,7 @@ public class Utils {
 		return start.toLocation(world, yaw, pitch);
 	}
 
+	
 	@SuppressWarnings("unchecked")
 	public static <T, E> T getPrivateValue(Class<? super E> class1, E instance, String field) {
 		try

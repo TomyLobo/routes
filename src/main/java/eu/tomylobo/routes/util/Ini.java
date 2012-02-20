@@ -39,6 +39,12 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Loads and saves ini format files.
+ *
+ * @author TomyLobo
+ *
+ */
 public final class Ini {
 	private Ini() { }
 

@@ -40,6 +40,12 @@ import eu.tomylobo.routes.util.Ini;
 import eu.tomylobo.routes.util.Statistics;
 import eu.tomylobo.routes.util.Utils;
 
+/**
+ * Represents a route from one point to another, consisting of multiple nodes.
+ *
+ * @author TomyLobo
+ *
+ */
 public final class Route {
 	private World world;
 

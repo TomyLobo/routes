@@ -26,6 +26,14 @@ import com.google.common.collect.Multimap;
 
 import eu.tomylobo.routes.util.Ini;
 
+/**
+ * Represents a node on a route.<br />
+ * The {@link #tension}, {@link #bias} and {@link #continuity} fields
+ * are parameters for the Kochanek-Bartels interpolation algorithm.
+ *
+ * @author TomyLobo
+ *
+ */
 public class Node {
 	private Vector position;
 

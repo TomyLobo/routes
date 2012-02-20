@@ -1,0 +1,97 @@
+/*
+ * Copyright (C) 2012 TomyLobo
+ *
+ * This file is part of Routes.
+ *
+ * Routes is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package eu.tomylobo.routes.commands.system;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.bukkit.command.CommandSender;
+
+import eu.tomylobo.routes.commands.RoutesCommands;
+import eu.tomylobo.routes.commands.TestCommands;
+
+/**
+ * The framework for command invocation.<br />
+ * Command classes must be hardcoded for now.
+ *
+ * @author TomyLobo
+ *
+ */
+public class CommandSystem {
+	private final Map<String, Invoker> commands = new HashMap<String, Invoker>();
+
+	public CommandSystem() {
+		@SuppressWarnings("unchecked")
+		Class<? extends CommandContainer>[] classes = (Class<? extends CommandContainer>[]) new Class[] {
+			RoutesCommands.class,
+			TestCommands.class
+		};
+
+		for (Class<? extends CommandContainer> clazz : classes) {
+			try {
+				CommandContainer instance = clazz.newInstance();
+				for (Method method : clazz.getMethods()) {
+					if (method.isAnnotationPresent(Command.class)) {
+						commands.put(method.getName(), new Invoker(method, instance));
+					}
+					else if (method.isAnnotationPresent(NestedCommand.class)) {
+						commands.put(method.getName(), new NestedInvoker(method, instance));
+					}
+				}
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				continue;
+			}
+		}
+	}
+
+	public boolean dispatch(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
+		return dispatch(sender, command.getName(), label, args);
+	}
+
+	public boolean dispatch(CommandSender sender, final String commandName, String label, String[] args) {
+		Invoker closure = commands.get(commandName);
+		if (closure == null)
+			return false;
+
+		try {
+			closure.invoke(sender, commandName, label, args);
+		}
+		catch (IllegalAccessException e) {
+			return false;
+		}
+		catch (InvocationTargetException e) {
+			final Throwable cause = e.getCause();
+			if (cause instanceof CommandException) {
+				sender.sendMessage("\u00a7c"+cause.getMessage());
+			}
+			else {
+				sender.sendMessage("\u00a7cException caught while executing command.");
+				cause.printStackTrace();
+			}
+
+			return true;
+		}
+		return true;
+	}
+}
