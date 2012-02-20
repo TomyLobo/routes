@@ -143,7 +143,7 @@ public class Commands {
 		((FakeEntity) entity).send();
 		entity.setPassenger((Player) sender);
 		plugin.travelAgency.addTraveller(route, entity, 2.0, new Remover(entity));
-		route.visualize(400);
+		route.visualize(1.0);
 		sender.sendMessage("Testing route.");
 	}
 

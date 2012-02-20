@@ -37,6 +37,7 @@ import eu.tomylobo.routes.interpolation.Interpolation;
 import eu.tomylobo.routes.interpolation.KochanekBartelsInterpolation;
 import eu.tomylobo.routes.interpolation.ReparametrisingInterpolation;
 import eu.tomylobo.routes.util.Ini;
+import eu.tomylobo.routes.util.Statistics;
 import eu.tomylobo.routes.util.Utils;
 
 public final class Route {
@@ -47,6 +48,9 @@ public final class Route {
 
 	//private Interpolation interpolation = new LinearInterpolation();
 	private Interpolation interpolation = new ReparametrisingInterpolation(new KochanekBartelsInterpolation());
+
+	private List<FakeEntity> visualizationEntities = new ArrayList<FakeEntity>();
+	private int taskId = -1;
 
 	public List<Node> getNodes() {
 		return nodes;
@@ -97,13 +101,13 @@ public final class Route {
 		return interpolation.get1stDerivative(position);
 	}
 
-	public void visualize(int points) {
-		final List<FakeEntity> entities = new ArrayList<FakeEntity>();
+	public void visualize(double pointsPerMeter) {
+		clearVisualization();
+
+		int points = (int) Math.ceil(pointsPerMeter * length());
+
 		double lastPosition = -1;
-		final List<Double> distances = new ArrayList<Double>();
-		double sum = 0;
-		double min = Double.MAX_VALUE;
-		double max = Double.MIN_VALUE;
+		final Statistics stats = new Statistics();
 
 		for (int i = 0; i < points; ++i) {
 			final double position = ((double) i) / points;
@@ -111,14 +115,7 @@ public final class Route {
 			if (lastPosition != -1) {
 				final double distance = interpolation.arcLength(lastPosition, position);
 
-				distances.add(distance);
-				sum += distance;
-
-				if (distance > max)
-					max = distance;
-
-				if (distance < min)
-					min = distance;
+				stats.stat(distance);
 			}
 			lastPosition = position;
 
@@ -126,24 +123,15 @@ public final class Route {
 			a.send();
 			a.teleport(location);
 
-			entities.add(a);
+			visualizationEntities.add(a);
 		}
 
-		final double mean = sum/distances.size();
-		double sumSqErrors = 0;
-		for (double distance : distances) {
-			distance -= mean;
-			sumSqErrors += distance * distance;
-		}
+		System.out.println(stats.format());
 
-		System.out.println(String.format("min/mean/max/rmse: %f/%f/%f/%f\n", min, mean, max, Math.sqrt(sumSqErrors / distances.size())));
-
-		Bukkit.getServer().getScheduler().scheduleSyncDelayedTask(Routes.getInstance(), new Runnable() {
+		taskId = Bukkit.getScheduler().scheduleSyncDelayedTask(Routes.getInstance(), new Runnable() {
 			@Override
 			public void run() {
-				for (FakeEntity entity : entities) {
-					entity.remove();
-				}
+				clearVisualization();
 			}
 		}, 600);
 	}
@@ -186,5 +174,13 @@ public final class Route {
 		ensureClean();
 
 		return interpolation.arcLength(0, 1);
+	}
+
+	private void clearVisualization() {
+		Bukkit.getScheduler().cancelTask(taskId);
+		for (FakeEntity entity : visualizationEntities) {
+			entity.remove();
+		}
+		visualizationEntities.clear();
 	}
 }
