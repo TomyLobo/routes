@@ -127,7 +127,13 @@ public final class Route {
 
 			final FakeEntity a = new FakeVehicle(location, VehicleType.ENDER_EYE);
 			a.send();
-			a.teleport(location);
+
+			visualizationEntities.add(a);
+		}
+
+		for (Node node : nodes) {
+			final FakeEntity a = new FakeVehicle(node.getPosition().toLocation(world), VehicleType.ENDER_CRYSTAL);
+			a.send();
 
 			visualizationEntities.add(a);
 		}
