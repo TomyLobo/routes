@@ -156,7 +156,8 @@ public final class Ini {
 
 
 	public static World loadWorld(Multimap<String, String> section, String format) {
-		return Bukkit.getServer().getWorld(getOnlyValue(section.get(String.format(format, "world"))));
+		final String worldName = getOnlyValue(section.get(String.format(format, "world")));
+		return worldName.equals("null") ? null : Bukkit.getServer().getWorld(worldName);
 	}
 
 
@@ -184,7 +185,7 @@ public final class Ini {
 
 
 	public static void saveWorld(Multimap<String, String> section, String format, World world) {
-		section.put(String.format(format, "world"), world.getName());
+		section.put(String.format(format, "world"), world == null ? "null" : world.getName());
 	}
 
 	public static void saveVector(Multimap<String, String> section, String format, Vector vector) {
