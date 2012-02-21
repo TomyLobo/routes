@@ -20,6 +20,7 @@
 package eu.tomylobo.routes;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -63,6 +64,10 @@ public final class Route {
 	}
 
 	public void addNodes(Location... locations) {
+		addNodes(-1, locations);
+	}
+
+	public void addNodes(int index, Location... locations) {
 		Node[] nodes = new Node[locations.length];
 		for (int i = 0; i < locations.length; ++i) {
 			Location location = locations[i];
@@ -76,12 +81,19 @@ public final class Route {
 
 			nodes[i] = new Node(location.toVector());
 		}
-		addNodes(nodes);
+		addNodes(index, nodes);
 	}
 
 	public void addNodes(Node... nodes) {
+		addNodes(-1, nodes);
+	}
+
+	public void addNodes(int index, Node... nodes) {
+		if (index == -1) {
+			index = this.nodes.size();
+		}
+		this.nodes.addAll(index, Arrays.asList(nodes));
 		for (Node node : nodes) {
-			this.nodes.add(node);
 			node.setRoute(this);
 		}
 		nodesDirty = true;
