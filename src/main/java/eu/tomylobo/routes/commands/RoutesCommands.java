@@ -19,8 +19,18 @@
 
 package eu.tomylobo.routes.commands;
 
-import org.bukkit.command.CommandSender;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEvent;
+
+import eu.tomylobo.routes.Route;
+import eu.tomylobo.routes.commands.system.Command;
 import eu.tomylobo.routes.commands.system.CommandContainer;
 import eu.tomylobo.routes.commands.system.NestedCommand;
 
@@ -30,7 +40,11 @@ import eu.tomylobo.routes.commands.system.NestedCommand;
  * @author TomyLobo
  *
  */
-public class RoutesCommands extends CommandContainer {
+public class RoutesCommands extends CommandContainer implements Listener {
+	public RoutesCommands() {
+		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+	}
+
 	@NestedCommand
 	public void routes(CommandSender sender, String commandName, String label, String[] args) {
 		if (args.length < 1) {
@@ -38,6 +52,47 @@ public class RoutesCommands extends CommandContainer {
 		}
 		else {
 			sender.sendMessage("Could not find the specified /"+label+" sub-command.");
+		}
+	}
+
+	Material toolMaterial = Material.GOLD_SPADE;
+	@Command
+	public void routes_add(CommandSender sender, String commandName, String label, String[] args) {
+		if (!(sender instanceof Player))
+			return;
+
+		final Player player = (Player) sender;
+
+		final String routeName = args[0];
+
+		final Route route = new Route();
+		plugin.transportSystem.addRoute(routeName, route);
+
+		editedRoutes.put(player, route);
+
+		sender.sendMessage("Starting a route named '"+routeName+"' here. Right-click with "+toolMaterial+" to add a waypoint.");
+	}
+
+	Map<Player, Route> editedRoutes = new HashMap<Player, Route>();
+
+	@EventHandler
+	public void onPlayerInteract(PlayerInteractEvent event) {
+		switch (event.getAction()) {
+		case RIGHT_CLICK_AIR:
+		case RIGHT_CLICK_BLOCK:
+			final Player player = event.getPlayer();
+
+			if (player.getItemInHand().getType() != toolMaterial)
+				return;
+
+			final Route route = editedRoutes.get(player);
+			if (route == null)
+				return;
+
+			route.addNodes(player.getLocation());
+			route.visualize(1.0);
+
+			break;
 		}
 	}
 }
