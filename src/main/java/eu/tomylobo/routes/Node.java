@@ -35,6 +35,8 @@ import eu.tomylobo.routes.util.Ini;
  *
  */
 public class Node {
+	private Route route;
+
 	private Vector position;
 
 	private double tension;
@@ -60,6 +62,7 @@ public class Node {
 
 	public void setPosition(Vector position) {
 		this.position = position;
+		setRouteDirty();
 	}
 
 	public double getTension() {
@@ -68,6 +71,7 @@ public class Node {
 
 	public void setTension(double tension) {
 		this.tension = tension;
+		setRouteDirty();
 	}
 
 	public double getBias() {
@@ -76,6 +80,7 @@ public class Node {
 
 	public void setBias(double bias) {
 		this.bias = bias;
+		setRouteDirty();
 	}
 
 	public double getContinuity() {
@@ -84,6 +89,7 @@ public class Node {
 
 	public void setContinuity(double continuity) {
 		this.continuity = continuity;
+		setRouteDirty();
 	}
 
 
@@ -107,5 +113,14 @@ public class Node {
 		tension = Ini.getOnlyDouble(nodeSection.get("tension"));
 		bias = Ini.getOnlyDouble(nodeSection.get("bias"));
 		continuity = Ini.getOnlyDouble(nodeSection.get("continuity"));
+	}
+
+	public void setRoute(Route route) {
+		this.route = route;
+	}
+
+
+	private void setRouteDirty() {
+		route.setDirty();
 	}
 }

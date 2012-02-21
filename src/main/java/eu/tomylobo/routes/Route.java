@@ -63,7 +63,9 @@ public final class Route {
 	}
 
 	public void addNodes(Location... locations) {
-		for (Location location : locations) {
+		Node[] nodes = new Node[locations.length];
+		for (int i = 0; i < locations.length; ++i) {
+			Location location = locations[i];
 			World world = location.getWorld();
 			if (this.world == null) {
 				this.world = world;
@@ -72,16 +74,17 @@ public final class Route {
 				throw new IllegalArgumentException("New node must be in the same world.");
 			}
 
-			this.nodes.add(new Node(location.toVector()));
+			nodes[i] = new Node(location.toVector());
 		}
-		this.nodesDirty = true;
+		addNodes(nodes);
 	}
 
 	public void addNodes(Node... nodes) {
 		for (Node node : nodes) {
 			this.nodes.add(node);
+			node.setRoute(this);
 		}
-		this.nodesDirty = true;
+		nodesDirty = true;
 	}
 
 	public Location getLocation(double position) {
@@ -98,6 +101,7 @@ public final class Route {
 		if (nodesDirty) {
 			interpolation.setNodes(nodes);
 			nodesDirty = false;
+			Routes.getInstance().transportSystem.save();
 		}
 	}
 
@@ -194,5 +198,9 @@ public final class Route {
 			entity.remove();
 		}
 		visualizationEntities.clear();
+	}
+
+	void setDirty() {
+		nodesDirty = true;
 	}
 }
