@@ -35,7 +35,7 @@ public class Routes extends JavaPlugin {
 		return instance;
 	}
 
-	public final CommandSystem commandSystem = new CommandSystem();
+	public CommandSystem commandSystem;
 
 	public TravelAgency travelAgency;
 
@@ -43,6 +43,7 @@ public class Routes extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
+		commandSystem = new CommandSystem();
 		travelAgency = new TravelAgency(this);
 	}
 
