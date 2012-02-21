@@ -85,7 +85,7 @@ public class TestCommands extends CommandContainer {
 		entity.send();
 		entity2.send();
 		entity.setPassenger(entity2);
-		plugin.travelAgency.addTraveller("test", entity, 2.0, new Remover(entity, entity2));
+		plugin.travelAgency.addTraveller("test", entity, 5.0, new Remover(entity, entity2));
 		route.visualize(1.0);
 		sender.sendMessage("Testing route.");
 	}
