@@ -21,6 +21,7 @@ package eu.tomylobo.routes.fakeentity;
 
 import net.minecraft.server.DataWatcher;
 import net.minecraft.server.MathHelper;
+import net.minecraft.server.Packet;
 import net.minecraft.server.Packet28EntityVelocity;
 import net.minecraft.server.Packet29DestroyEntity;
 import net.minecraft.server.Packet34EntityTeleport;
@@ -37,7 +38,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
-import org.bukkit.event.server.Packet;
 import org.bukkit.util.Vector;
 
 import java.util.List;
