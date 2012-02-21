@@ -55,6 +55,20 @@ public class RoutesCommands extends CommandContainer implements Listener {
 		}
 	}
 
+	@Command
+	public void routes_load(CommandSender sender, String commandName, String label, String[] args) {
+		plugin.load();
+
+		sender.sendMessage("Reloaded routes.");
+	}
+
+	@Command
+	public void routes_save(CommandSender sender, String commandName, String label, String[] args) {
+		plugin.save();
+
+		sender.sendMessage("Saved routes.");
+	}
+
 	Material toolMaterial = Material.GOLD_SPADE;
 	@Command
 	public void routes_add(CommandSender sender, String commandName, String label, String[] args) {
