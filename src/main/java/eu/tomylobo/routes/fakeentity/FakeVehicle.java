@@ -50,5 +50,7 @@ public class FakeVehicle extends FakeEntity {
 		p23.i = 0;
 
 		sendPacketToPlayer(player, p23);
+
+		setOrientation(location);
 	}
 }

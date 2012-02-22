@@ -24,6 +24,7 @@ import net.minecraft.server.MathHelper;
 import net.minecraft.server.Packet;
 import net.minecraft.server.Packet28EntityVelocity;
 import net.minecraft.server.Packet29DestroyEntity;
+import net.minecraft.server.Packet32EntityLook;
 import net.minecraft.server.Packet34EntityTeleport;
 import net.minecraft.server.Packet38EntityStatus;
 import net.minecraft.server.Packet39AttachEntity;
@@ -119,9 +120,23 @@ public abstract class FakeEntity implements Entity {
 		sendPacketToRelevantPlayers(new Packet28EntityVelocity(entityId, velocity.getX(), velocity.getY(), velocity.getZ()));
 	}
 
+	public boolean setOrientation(Location location) {
+		this.location.setYaw(location.getYaw());
+		this.location.setPitch(location.getPitch());
+
+		sendPacketToRelevantPlayers(new Packet32EntityLook(
+				entityId,
+				(byte) ((int) ((location.getYaw()+yawOffset) * 256.0F / 360.0F)),
+				(byte) ((int) (location.getPitch() * 256.0F / 360.0F))
+		));
+
+		return true;
+	}
+
 	@Override
 	public boolean teleport(Location location) {
 		this.location = location;
+
 		sendPacketToRelevantPlayers(new Packet34EntityTeleport(
 				entityId,
 				MathHelper.floor(location.getX()*32.0D),
@@ -130,6 +145,7 @@ public abstract class FakeEntity implements Entity {
 				(byte) ((int) ((location.getYaw()+yawOffset) * 256.0F / 360.0F)),
 				(byte) ((int) (location.getPitch() * 256.0F / 360.0F))
 		));
+
 		return true;
 	}
 
@@ -261,20 +277,16 @@ public abstract class FakeEntity implements Entity {
 
 	@Override
 	public UUID getUniqueId() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public int getTicksLived() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public void setTicksLived(int value) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
