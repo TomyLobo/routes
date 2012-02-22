@@ -22,17 +22,23 @@ package eu.tomylobo.routes.commands;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
+import org.bukkit.block.Block;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
-
 import eu.tomylobo.routes.Route;
 import eu.tomylobo.routes.commands.system.Command;
+import eu.tomylobo.routes.commands.system.Context;
 import eu.tomylobo.routes.commands.system.CommandContainer;
 import eu.tomylobo.routes.commands.system.NestedCommand;
+import eu.tomylobo.routes.trace.Shape;
+import eu.tomylobo.routes.trace.SignShape;
+import eu.tomylobo.routes.trace.TraceResult;
+import eu.tomylobo.routes.util.Workarounds;
 
 /**
  * Contains all commands connected to route management.
@@ -46,45 +52,41 @@ public class RoutesCommands extends CommandContainer implements Listener {
 	}
 
 	@NestedCommand
-	public void routes(CommandSender sender, String commandName, String label, String[] args) {
-		if (args.length < 1) {
-			sender.sendMessage("/"+label+" expects a sub-command.");
+	public void routes(Context context) {
+		if (context.length() < 1) {
+			context.sendMessage("/"+context.getLabel()+" expects a sub-command.");
 		}
 		else {
-			sender.sendMessage("Could not find the specified /"+label+" sub-command.");
+			context.sendMessage("Could not find the specified /"+context.getLabel()+" sub-command.");
 		}
 	}
 
 	@Command
-	public void routes_load(CommandSender sender, String commandName, String label, String[] args) {
+	public void routes_load(Context context) {
 		plugin.load();
 
-		sender.sendMessage("Reloaded routes.");
+		context.sendMessage("Reloaded routes.");
 	}
 
 	@Command
-	public void routes_save(CommandSender sender, String commandName, String label, String[] args) {
+	public void routes_save(Context context) {
 		plugin.save();
 
-		sender.sendMessage("Saved routes.");
+		context.sendMessage("Saved routes.");
 	}
 
 	Material toolMaterial = Material.GOLD_SPADE;
 	@Command
-	public void routes_add(CommandSender sender, String commandName, String label, String[] args) {
-		if (!(sender instanceof Player))
-			return;
-
-		final Player player = (Player) sender;
-
-		final String routeName = args[0];
+	public void routes_add(Context context) {
+		final Player player = context.getPlayer();
+		final String routeName = context.getString(0);
 
 		final Route route = new Route();
 		plugin.transportSystem.addRoute(routeName, route);
 
 		editedRoutes.put(player, route);
 
-		sender.sendMessage("Starting a route named '"+routeName+"' here. Right-click with "+toolMaterial+" to add a waypoint.");
+		context.sendMessage("Starting a route named '"+routeName+"' here. Right-click with "+toolMaterial+" to add a waypoint.");
 	}
 
 	Map<Player, Route> editedRoutes = new HashMap<Player, Route>();
@@ -96,17 +98,60 @@ public class RoutesCommands extends CommandContainer implements Listener {
 		case RIGHT_CLICK_BLOCK:
 			final Player player = event.getPlayer();
 
-			if (player.getItemInHand().getType() != toolMaterial)
-				return;
+			final Material materialInHand = player.getItemInHand().getType();
+			if (materialInHand == toolMaterial) {
+				final Route route = editedRoutes.get(player);
+				if (route == null)
+					return;
 
-			final Route route = editedRoutes.get(player);
-			if (route == null)
-				return;
+				route.addNodes(player.getLocation());
+				route.visualize(1.0);
+				break;
+			}
 
-			route.addNodes(player.getLocation());
-			route.visualize(1.0);
+			switch (materialInHand) {
+			case ARROW:
+				final Block block = event.getClickedBlock();
+				if (block == null)
+					return;
+
+				final Sign sign = (Sign) block.getState();
+
+				final Shape shape = new SignShape(sign);
+
+				final Location eyeLocation = Workarounds.getEyeLocation(player);
+
+				final TraceResult trace = shape.trace(eyeLocation);
+				final double signScale = 2.0 / 3.0;
+				final double fontScale = signScale / 60.0;
+				final int index = (int) Math.floor(2.1 - trace.relativePosition.getY() / fontScale / 10.0);
+
+				if (index >= 0 && index < 4) {
+					markSignLine(sign, index);
+				}
+
+				/*FakeVehicle entity = new FakeVehicle(originLocation, VehicleType.ENDER_EYE);
+				entity.send();
+				plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Remover(entity), 40);*/
+
+				break;
+			}
 
 			break;
 		}
+	}
+
+	private static void markSignLine(final Sign sign, final int index) {
+		final String[] lines = sign.getLines();
+		for (int i = 0; i < 4; ++i) {
+			final String cleaned = lines[i].replaceAll("\u00a7.", "");
+			if (i == index) {
+				sign.setLine(i, "\u00a7c"+cleaned);
+			}
+			else {
+				sign.setLine(i, cleaned);
+			}
+		}
+		sign.update();
 	}
 }

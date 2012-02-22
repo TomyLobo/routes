@@ -23,6 +23,8 @@ import org.bukkit.Location;
 import org.bukkit.block.Sign;
 import org.bukkit.util.Vector;
 
+import eu.tomylobo.routes.util.Workarounds;
+
 public class SignShape extends Plane {
 	public SignShape(Sign sign) {
 		this(getOriginLocation(sign));
@@ -34,7 +36,7 @@ public class SignShape extends Plane {
 
 	private static final double signScale = 2.0 / 3.0;
 	private static Location getOriginLocation(Sign sign) {
-		final Location originLocation = sign.getBlock().getLocation().add(0.5, 0.75*signScale, 0.5); // TODO: Remove ".getBlock()" once the patch got pulled.
+		final Location originLocation = Workarounds.getLocation(sign).add(0.5, 0.75*signScale, 0.5);
 
 		double yOffset = 0.5 * signScale;
 		double zOffset = 0.07 * signScale;

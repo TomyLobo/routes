@@ -10,3 +10,5 @@ version: '1.0'
 commands:
   routes:
     aliases: [ro]
+  travel:
+    aliases: [tr]

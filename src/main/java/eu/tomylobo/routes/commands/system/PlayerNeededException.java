@@ -19,23 +19,10 @@
 
 package eu.tomylobo.routes.commands.system;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+public class PlayerNeededException extends CommandException {
+	private static final long serialVersionUID = 1L;
 
-/**
- * Invokes nested commands instead of invoking the instance directly.
- *
- * @author TomyLobo
- *
- */
-public class NestedInvoker extends Invoker {
-	public NestedInvoker(Method method, CommandContainer instance) {
-		super(method, instance);
-	}
-
-	@Override
-	public void invoke(Context context) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-		if (!instance.plugin.commandSystem.dispatch(context.getNested()))
-			super.invoke(context);
+	public PlayerNeededException() {
+		super("This command cannot be invoked from the console.");
 	}
 }

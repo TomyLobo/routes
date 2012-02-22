@@ -20,11 +20,11 @@
 package eu.tomylobo.routes.commands;
 
 import org.bukkit.Location;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import eu.tomylobo.routes.Route;
 import eu.tomylobo.routes.commands.system.Command;
+import eu.tomylobo.routes.commands.system.Context;
 import eu.tomylobo.routes.commands.system.CommandContainer;
 import eu.tomylobo.routes.fakeentity.FakeEntity;
 import eu.tomylobo.routes.fakeentity.FakeMob;
@@ -41,16 +41,16 @@ import eu.tomylobo.routes.util.Remover;
  */
 public class TestCommands extends CommandContainer {
 	@Command
-	public void routes_test(CommandSender sender, String commandName, String label, String[] args) {
-		routes_test1(sender, commandName, label, args);
-		routes_test2(sender, commandName, label, args);
+	public void routes_test3(Context context) {
+		routes_test1(context);
+		routes_test2(context);
 	}
 
 	@Command
-	public void routes_test1(CommandSender sender, String commandName, String label, String[] args) {
+	public void routes_test1(Context context) {
 		Route route = new Route();
 
-		final Player player = (Player) sender;
+		final Player player = context.getPlayer();
 		final Location location = player.getLocation();
 
 		final int routeScale = 32;
@@ -71,11 +71,11 @@ public class TestCommands extends CommandContainer {
 		);
 
 		plugin.transportSystem.addRoute("test", route);
-		sender.sendMessage("Created a test route.");
+		context.sendMessage("Created a test route.");
 	}
 
 	@Command
-	public void routes_test2(CommandSender sender, String commandName, String label, String[] args) {
+	public void routes_test2(Context context) {
 		plugin.transportSystem.load();
 		Route route = plugin.transportSystem.getRoute("test");
 		final Location location = route.getLocation(0);
@@ -87,6 +87,6 @@ public class TestCommands extends CommandContainer {
 		entity.setPassenger(entity2);
 		plugin.travelAgency.addTraveller("test", entity, 5.0, new Remover(entity, entity2));
 		route.visualize(1.0);
-		sender.sendMessage("Testing route.");
+		context.sendMessage("Testing route.");
 	}
 }

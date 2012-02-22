@@ -22,8 +22,6 @@ package eu.tomylobo.routes.commands.system;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.bukkit.command.CommandSender;
-
 /**
  * Wraps a method+instance to be invoked by the command system.
  *
@@ -39,7 +37,7 @@ public class Invoker {
 		this.instance = instance;
 	}
 
-	public void invoke(CommandSender sender, String commandName, String label, String[] args) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-		method.invoke(instance, sender, commandName, label, args);
+	public void invoke(Context context) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+		method.invoke(instance, context);
 	}
 }

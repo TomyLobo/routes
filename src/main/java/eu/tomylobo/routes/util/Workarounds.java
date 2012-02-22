@@ -17,25 +17,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.tomylobo.routes.commands.system;
+package eu.tomylobo.routes.util;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import org.bukkit.Location;
+import org.bukkit.block.BlockState;
+import org.bukkit.entity.Player;
 
-/**
- * Invokes nested commands instead of invoking the instance directly.
- *
- * @author TomyLobo
- *
- */
-public class NestedInvoker extends Invoker {
-	public NestedInvoker(Method method, CommandContainer instance) {
-		super(method, instance);
+public class Workarounds {
+	public static Location getEyeLocation(final Player player) {
+		final Location eyeLocation = player.getLocation();
+		double eyeHeight = player.getEyeHeight(true);
+		if (player.isSneaking()) {
+			eyeHeight -= 0.08;
+		}
+		eyeLocation.add(0, eyeHeight, 0);
+		return eyeLocation;
 	}
 
-	@Override
-	public void invoke(Context context) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-		if (!instance.plugin.commandSystem.dispatch(context.getNested()))
-			super.invoke(context);
+	public static Location getLocation(BlockState state) {
+		return state.getBlock().getLocation();
 	}
 }
