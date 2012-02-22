@@ -21,7 +21,6 @@ package eu.tomylobo.routes.commands;
 
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import eu.tomylobo.routes.Route;
@@ -32,6 +31,7 @@ import eu.tomylobo.routes.fakeentity.FakeMob;
 import eu.tomylobo.routes.fakeentity.FakeVehicle;
 import eu.tomylobo.routes.fakeentity.MobType;
 import eu.tomylobo.routes.fakeentity.VehicleType;
+import eu.tomylobo.routes.util.Remover;
 
 /**
  * Contains all commands that are purely temporary and for testing only.
@@ -88,20 +88,5 @@ public class TestCommands extends CommandContainer {
 		plugin.travelAgency.addTraveller("test", entity, 5.0, new Remover(entity, entity2));
 		route.visualize(1.0);
 		sender.sendMessage("Testing route.");
-	}
-
-	public class Remover implements Runnable {
-		private final Entity[] entities;
-
-		public Remover(Entity... entities) {
-			this.entities = entities;
-		}
-
-		@Override
-		public void run() {
-			for (Entity entity : entities) {
-				entity.remove();
-			}
-		}
 	}
 }
