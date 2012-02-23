@@ -28,6 +28,7 @@ import org.bukkit.command.CommandSender;
 
 import eu.tomylobo.routes.commands.RoutesCommands;
 import eu.tomylobo.routes.commands.TestCommands;
+import eu.tomylobo.routes.commands.TravelCommands;
 
 /**
  * The framework for command invocation.<br />
@@ -43,6 +44,7 @@ public class CommandSystem {
 		@SuppressWarnings("unchecked")
 		Class<? extends CommandContainer>[] classes = (Class<? extends CommandContainer>[]) new Class[] {
 			RoutesCommands.class,
+			TravelCommands.class,
 			TestCommands.class
 		};
 

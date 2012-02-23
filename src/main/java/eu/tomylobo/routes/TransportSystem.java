@@ -44,6 +44,7 @@ public class TransportSystem {
 	}
 
 	public Route getRoute(String routeName) {
+		System.out.println(routes);
 		return routes.get(routeName);
 	}
 

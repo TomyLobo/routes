@@ -45,6 +45,7 @@ public class Routes extends JavaPlugin {
 	public void onEnable() {
 		commandSystem = new CommandSystem();
 		travelAgency = new TravelAgency(this);
+		load();
 	}
 
 	@Override
@@ -63,5 +64,4 @@ public class Routes extends JavaPlugin {
 	public String getConfigFileName(String baseFileName) {
 		return getDataFolder() + "/" + baseFileName;
 	}
-
 }
