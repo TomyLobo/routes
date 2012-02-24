@@ -28,6 +28,7 @@ import net.minecraft.server.Packet32EntityLook;
 import net.minecraft.server.Packet34EntityTeleport;
 import net.minecraft.server.Packet38EntityStatus;
 import net.minecraft.server.Packet39AttachEntity;
+import net.minecraft.server.Packet40EntityMetadata;
 
 import org.bukkit.Bukkit;
 import org.bukkit.EntityEffect;
@@ -41,7 +42,10 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.util.Vector;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 /**
@@ -72,6 +76,7 @@ public abstract class FakeEntity implements Entity {
 	protected final float yawOffset;
 	protected final DataWatcher datawatcher;
 	private Entity passenger;
+	private Map<Entity, Double> fakePassengers = new HashMap<Entity, Double>();
 
 	@Override
 	public void playEffect(EntityEffect effect) {
@@ -118,6 +123,10 @@ public abstract class FakeEntity implements Entity {
 	@Override
 	public void setVelocity(Vector velocity) {
 		sendPacketToRelevantPlayers(new Packet28EntityVelocity(entityId, velocity.getX(), velocity.getY(), velocity.getZ()));
+
+		for (Entry<Entity, Double> entry : fakePassengers.entrySet()) {
+			entry.getKey().setVelocity(velocity);
+		}
 	}
 
 	public boolean setOrientation(Location location) {
@@ -145,6 +154,10 @@ public abstract class FakeEntity implements Entity {
 				(byte) ((int) ((location.getYaw()+yawOffset) * 256.0F / 360.0F)),
 				(byte) ((int) (location.getPitch() * 256.0F / 360.0F))
 		));
+
+		for (Entry<Entity, Double> entry : fakePassengers.entrySet()) {
+			entry.getKey().teleport(location.clone().add(0, entry.getValue(), 0));
+		}
 
 		return true;
 	}
@@ -297,5 +310,61 @@ public abstract class FakeEntity implements Entity {
 	@Override
 	public boolean teleport(Location location, TeleportCause cause) {
 		return teleport(location);
+	}
+
+	public void addFakePassenger(Entity entity, double yOffset) {
+		fakePassengers.put(entity, yOffset);
+	}
+
+	public void removeFakePassenger(Entity entity) {
+		fakePassengers.remove(entity);
+	}
+
+
+	public byte getDataByte(int index) {
+		try {
+			return datawatcher.getByte(index);
+		}
+		catch (NullPointerException e) {
+			return 0;
+		}
+	}
+
+	public int getDataInteger(int index) {
+		try {
+			return datawatcher.getInt(index);
+		}
+		catch (NullPointerException e) {
+			return 0;
+		}
+	}
+
+	public String getDataString(int index) {
+		try {
+			return datawatcher.getString(index);
+		}
+		catch (NullPointerException e) {
+			return null;
+		}
+	}
+
+	public void setData(int index, Object value) {
+		sendPacketToRelevantPlayers(createMetadataPacket(index, value));
+	}
+
+	private Packet40EntityMetadata createMetadataPacket(int index, Object value) {
+		try {
+			// create entry
+			datawatcher.a(index, value.getClass().getConstructor(String.class).newInstance("0"));
+
+			// mark dirty
+			datawatcher.watch(index, value.getClass().getConstructor(String.class).newInstance("1"));
+		}
+		catch (Exception e) { }
+
+		// put the actual data in
+		datawatcher.watch(index, value);
+
+		return new Packet40EntityMetadata(entityId, datawatcher);
 	}
 }
