@@ -21,7 +21,6 @@ package eu.tomylobo.routes.util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 
@@ -75,7 +74,7 @@ public final class Ini {
 			stream.close();
 		}
 		catch (IOException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 			return null;
 		}
 
@@ -169,13 +168,20 @@ public final class Ini {
 		);
 	}
 
-	public static Location loadLocation(Multimap<String, String> section, String format, Server server) {
+	public static Location loadLocation(Multimap<String, String> section, String format, boolean withYawPitch) {
 		try {
-			return loadVector(section, format).toLocation(
-					loadWorld(section, format),
-					getOnlyFloat(section.get(String.format(format, "yaw"))),
-					getOnlyFloat(section.get(String.format(format, "pitch")))
-			);
+			if (withYawPitch) {
+				return loadVector(section, format).toLocation(
+						loadWorld(section, format),
+						getOnlyFloat(section.get(String.format(format, "yaw"))),
+						getOnlyFloat(section.get(String.format(format, "pitch")))
+				);
+			}
+			else {
+				return loadVector(section, format).toLocation(
+						loadWorld(section, format)
+				);
+			}
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -194,10 +200,13 @@ public final class Ini {
 		section.put(String.format(format, "z"), (String.valueOf(vector.getZ())));
 	}
 
-	public static void saveLocation(Multimap<String, String> section, String format, Location location) {
+	public static void saveLocation(Multimap<String, String> section, String format, Location location, boolean withYawPitch) {
 		saveWorld(section, format, location.getWorld());
 		saveVector(section, format, location.toVector());
-		section.put(String.format(format, "yaw"), String.valueOf(location.getYaw()));
-		section.put(String.format(format, "pitch"), String.valueOf(location.getPitch()));
+
+		if (withYawPitch) {
+			section.put(String.format(format, "yaw"), String.valueOf(location.getYaw()));
+			section.put(String.format(format, "pitch"), String.valueOf(location.getPitch()));
+		}
 	}
 }
