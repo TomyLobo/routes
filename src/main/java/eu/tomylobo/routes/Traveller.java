@@ -71,7 +71,9 @@ public class Traveller {
 	}
 
 	public void runFinalizer() {
-		finalizer.run();
+		if (finalizer != null) {
+			finalizer.run();
+		}
 	}
 
 	public Entity getEntity() {

@@ -63,7 +63,11 @@ public class TransportSystem {
 	}
 
 	public void load() {
+		routes.clear();
+
 		final Multimap<String, Multimap<String, String>> sections = Ini.load(plugin.getConfigFileName("routes.txt"));
+		if (sections == null)
+			return;
 
 		for (Entry<String, Multimap<String, String>> entry : sections.entries()) {
 			final String sectionName = entry.getKey();

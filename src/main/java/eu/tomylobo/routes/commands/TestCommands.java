@@ -78,13 +78,30 @@ public class TestCommands extends CommandContainer {
 	public void routes_test2(Context context) {
 		Route route = plugin.transportSystem.getRoute("test");
 		final Location location = route.getLocation(0);
-		//final FakeEntity entity = new FakeMob(location, MobType.SPIDER);
-		final FakeEntity entity = new FakeVehicle(location, VehicleType.MINECART);
-		final FakeEntity entity2 = new FakeMob(location, MobType.SKELETON);
-		entity.send();
-		entity2.send();
-		entity.setPassenger(entity2);
-		plugin.travelAgency.addTraveller("test", entity, 5.0, new Remover(entity, entity2));
+		//final FakeEntity entity = new FakeMob(location, MobType.ENDER_DRAGON);
+		//final FakeEntity entity = new FakeVehicle(location, VehicleType.ENDER_EYE);
+		FakeEntity[] entities = new FakeEntity[17];
+
+		entities[0] = new FakeMob(location, MobType.ENDER_DRAGON);
+		entities[0].send();
+
+		// ent to put the stack onto
+		entities[1] = new FakeVehicle(location, VehicleType.ENDER_EYE);
+		entities[1].send();
+		for (int i = 2; i < entities.length; ++i) {
+			entities[i] = new FakeVehicle(location, VehicleType.ENDER_EYE);
+			entities[i].send();
+			entities[i-1].setPassenger(entities[i]);
+		}
+
+		FakeEntity skeleton = new FakeMob(location, MobType.SKELETON);
+		skeleton.send();
+		entities[entities.length-1].setPassenger(context.getPlayer());
+
+		//entity.addFakePassenger(context.getPlayer(), 2.12);
+		//entity.setPassenger(entity2);
+		plugin.travelAgency.addTraveller("test", entities[0], 8.0, new Remover(entities));
+		plugin.travelAgency.addTraveller("test", entities[1], 8.0, new Remover(skeleton));
 		route.visualize(1.0);
 		context.sendMessage("Testing route.");
 	}

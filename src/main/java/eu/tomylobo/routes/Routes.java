@@ -36,15 +36,15 @@ public class Routes extends JavaPlugin {
 	}
 
 	public CommandSystem commandSystem;
-
 	public TravelAgency travelAgency;
-
 	public final TransportSystem transportSystem = new TransportSystem(this);
+	public SignHandler signHandler;
 
 	@Override
 	public void onEnable() {
 		commandSystem = new CommandSystem();
 		travelAgency = new TravelAgency(this);
+		signHandler = new SignHandler(this);
 		load();
 	}
 
@@ -55,10 +55,12 @@ public class Routes extends JavaPlugin {
 
 	public void save() {
 		transportSystem.save();
+		signHandler.save();
 	}
 
 	public void load() {
 		transportSystem.load();
+		signHandler.load();
 	}
 
 	public String getConfigFileName(String baseFileName) {

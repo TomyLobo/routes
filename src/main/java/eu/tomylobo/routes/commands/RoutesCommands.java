@@ -22,10 +22,7 @@ package eu.tomylobo.routes.commands;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,10 +32,6 @@ import eu.tomylobo.routes.commands.system.Command;
 import eu.tomylobo.routes.commands.system.Context;
 import eu.tomylobo.routes.commands.system.CommandContainer;
 import eu.tomylobo.routes.commands.system.NestedCommand;
-import eu.tomylobo.routes.trace.Shape;
-import eu.tomylobo.routes.trace.SignShape;
-import eu.tomylobo.routes.trace.TraceResult;
-import eu.tomylobo.routes.util.Workarounds;
 
 /**
  * Contains all commands connected to route management.
@@ -109,49 +102,7 @@ public class RoutesCommands extends CommandContainer implements Listener {
 				break;
 			}
 
-			switch (materialInHand) {
-			case ARROW:
-				final Block block = event.getClickedBlock();
-				if (block == null)
-					return;
-
-				final Sign sign = (Sign) block.getState();
-
-				final Shape shape = new SignShape(sign);
-
-				final Location eyeLocation = Workarounds.getEyeLocation(player);
-
-				final TraceResult trace = shape.trace(eyeLocation);
-				final double signScale = 2.0 / 3.0;
-				final double fontScale = signScale / 60.0;
-				final int index = (int) Math.floor(2.1 - trace.relativePosition.getY() / fontScale / 10.0);
-
-				if (index >= 0 && index < 4) {
-					markSignLine(sign, index);
-				}
-
-				/*FakeVehicle entity = new FakeVehicle(originLocation, VehicleType.ENDER_EYE);
-				entity.send();
-				plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Remover(entity), 40);*/
-
-				break;
-			}
-
 			break;
 		}
-	}
-
-	private static void markSignLine(final Sign sign, final int index) {
-		final String[] lines = sign.getLines();
-		for (int i = 0; i < 4; ++i) {
-			final String cleaned = lines[i].replaceAll("\u00a7.", "");
-			if (i == index) {
-				sign.setLine(i, "\u00a7c"+cleaned);
-			}
-			else {
-				sign.setLine(i, cleaned);
-			}
-		}
-		sign.update();
 	}
 }

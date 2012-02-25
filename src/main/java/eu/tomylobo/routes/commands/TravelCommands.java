@@ -19,19 +19,13 @@
 
 package eu.tomylobo.routes.commands;
 
-import org.bukkit.Location;
-
 import eu.tomylobo.routes.Route;
 import eu.tomylobo.routes.commands.system.Command;
 import eu.tomylobo.routes.commands.system.Context;
 import eu.tomylobo.routes.commands.system.CommandContainer;
-import eu.tomylobo.routes.commands.system.CommandException;
 import eu.tomylobo.routes.commands.system.NestedCommand;
-import eu.tomylobo.routes.fakeentity.FakeEntity;
 import eu.tomylobo.routes.fakeentity.FakeMob;
-import eu.tomylobo.routes.fakeentity.FakeVehicle;
 import eu.tomylobo.routes.fakeentity.MobType;
-import eu.tomylobo.routes.fakeentity.VehicleType;
 import eu.tomylobo.routes.util.Remover;
 
 /**
@@ -54,19 +48,13 @@ public class TravelCommands extends CommandContainer {
 	@Command
 	public void travel_test(Context context) {
 		final String routeName = context.getString(0);
+		final Route route = plugin.transportSystem.getRoute(routeName);
 
-		Route route = plugin.transportSystem.getRoute(routeName);
-		if (route == null)
-			throw new CommandException("Route '"+routeName+"' not found.");
+		final FakeMob dragon = new FakeMob(route.getLocation(0), MobType.ENDER_DRAGON);
+		dragon.send();
 
-		final Location location = route.getLocation(0);
-		final FakeEntity entity = new FakeVehicle(location, VehicleType.MINECART);
-		final FakeEntity entity2 = new FakeMob(location, MobType.SKELETON);
-		entity.send();
-		entity2.send();
-		entity.setPassenger(entity2);
-		plugin.travelAgency.addTraveller(routeName, entity, 5.0, new Remover(entity, entity2));
-		route.visualize(1.0);
-		context.sendMessage("Testing route "+routeName+".");
+		plugin.travelAgency.addTraveller(route, dragon, 5.0, new Remover(dragon));
+
+		context.sendMessage("Testing route '"+routeName+"'.");
 	}
 }
