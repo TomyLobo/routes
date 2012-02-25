@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.tomylobo.routes;
+package eu.tomylobo.routes.infrastructure;
 
 import org.bukkit.util.Vector;
 

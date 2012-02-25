@@ -27,11 +27,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
-import eu.tomylobo.routes.Route;
 import eu.tomylobo.routes.commands.system.Command;
 import eu.tomylobo.routes.commands.system.Context;
 import eu.tomylobo.routes.commands.system.CommandContainer;
 import eu.tomylobo.routes.commands.system.NestedCommand;
+import eu.tomylobo.routes.infrastructure.Route;
 
 /**
  * Contains all commands connected to route management.

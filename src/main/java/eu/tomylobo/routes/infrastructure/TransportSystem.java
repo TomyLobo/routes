@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.tomylobo.routes;
+package eu.tomylobo.routes.infrastructure;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +27,7 @@ import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
 
+import eu.tomylobo.routes.Routes;
 import eu.tomylobo.routes.util.Ini;
 
 /**

@@ -23,7 +23,7 @@ import java.util.List;
 
 import org.bukkit.util.Vector;
 
-import eu.tomylobo.routes.Node;
+import eu.tomylobo.routes.infrastructure.Node;
 
 /**
  * Represents an arbitrary function in &#8477; &rarr; &#8477;<sup>3</sup>

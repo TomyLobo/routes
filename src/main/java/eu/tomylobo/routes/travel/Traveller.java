@@ -17,10 +17,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.tomylobo.routes;
+package eu.tomylobo.routes.travel;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+
+import eu.tomylobo.routes.infrastructure.Route;
 
 /**
  * A Traveller is an {@link #entity} travelling along a {@link #route}

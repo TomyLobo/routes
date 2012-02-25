@@ -19,13 +19,13 @@
 
 package eu.tomylobo.routes.commands;
 
-import eu.tomylobo.routes.Route;
 import eu.tomylobo.routes.commands.system.Command;
 import eu.tomylobo.routes.commands.system.Context;
 import eu.tomylobo.routes.commands.system.CommandContainer;
 import eu.tomylobo.routes.commands.system.NestedCommand;
 import eu.tomylobo.routes.fakeentity.FakeMob;
 import eu.tomylobo.routes.fakeentity.MobType;
+import eu.tomylobo.routes.infrastructure.Route;
 import eu.tomylobo.routes.util.Remover;
 
 /**

@@ -24,6 +24,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import eu.tomylobo.routes.commands.system.CommandSystem;
+import eu.tomylobo.routes.infrastructure.TransportSystem;
+import eu.tomylobo.routes.sign.SignHandler;
+import eu.tomylobo.routes.travel.TravelAgency;
 
 public class Routes extends JavaPlugin {
 	private static Routes instance;

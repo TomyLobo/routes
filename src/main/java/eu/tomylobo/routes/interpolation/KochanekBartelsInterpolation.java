@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.bukkit.util.Vector;
 
-import eu.tomylobo.routes.Node;
+import eu.tomylobo.routes.infrastructure.Node;
 
 /**
  * Kochanek-Bartels interpolation.<br />

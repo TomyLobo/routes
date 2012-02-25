@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.tomylobo.routes;
+package eu.tomylobo.routes.sign;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,6 +36,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
+import eu.tomylobo.routes.Routes;
 import eu.tomylobo.routes.fakeentity.FakeEntity;
 import eu.tomylobo.routes.fakeentity.FakeMob;
 import eu.tomylobo.routes.fakeentity.MobType;

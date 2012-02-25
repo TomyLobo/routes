@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.tomylobo.routes;
+package eu.tomylobo.routes.infrastructure;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +31,7 @@ import org.bukkit.util.Vector;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
+import eu.tomylobo.routes.Routes;
 import eu.tomylobo.routes.fakeentity.FakeEntity;
 import eu.tomylobo.routes.fakeentity.FakeVehicle;
 import eu.tomylobo.routes.fakeentity.VehicleType;

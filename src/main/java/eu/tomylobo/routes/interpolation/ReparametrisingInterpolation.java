@@ -25,7 +25,7 @@ import java.util.TreeMap;
 
 import org.bukkit.util.Vector;
 
-import eu.tomylobo.routes.Node;
+import eu.tomylobo.routes.infrastructure.Node;
 
 /**
  * Reparametrises another interpolation function by arc length.<br />

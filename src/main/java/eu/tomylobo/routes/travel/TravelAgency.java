@@ -17,13 +17,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.tomylobo.routes;
+package eu.tomylobo.routes.travel;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import org.bukkit.entity.Entity;
+
+import eu.tomylobo.routes.Routes;
+import eu.tomylobo.routes.infrastructure.Route;
 
 /**
  * The TravelAgency manages all current {@link Traveller}s and will invoke

@@ -23,7 +23,7 @@ import java.util.List;
 
 import org.bukkit.util.Vector;
 
-import eu.tomylobo.routes.Node;
+import eu.tomylobo.routes.infrastructure.Node;
 
 /**
  * Simple linear interpolation. Mainly used for testing.
