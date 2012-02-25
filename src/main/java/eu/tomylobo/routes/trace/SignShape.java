@@ -26,6 +26,9 @@ import org.bukkit.util.Vector;
 import eu.tomylobo.routes.util.Workarounds;
 
 public class SignShape extends Plane {
+	private static final double SIGN_SCALE = 2.0 / 3.0;
+	private static final double FONT_SCALE = SIGN_SCALE / 60.0;
+
 	public SignShape(Sign sign) {
 		this(getOriginLocation(sign));
 	}
@@ -34,12 +37,11 @@ public class SignShape extends Plane {
 		super(originLocation.toVector(), originLocation.getDirection());
 	}
 
-	private static final double signScale = 2.0 / 3.0;
 	private static Location getOriginLocation(Sign sign) {
-		final Location originLocation = Workarounds.getLocation(sign).add(0.5, 0.75*signScale, 0.5);
+		final Location originLocation = Workarounds.getLocation(sign).add(0.5, 0.75*SIGN_SCALE, 0.5);
 
-		double yOffset = 0.5 * signScale;
-		double zOffset = 0.07 * signScale;
+		double yOffset = 0.5 * SIGN_SCALE;
+		double zOffset = 0.07 * SIGN_SCALE;
 
 		switch (sign.getType()) {
 		case SIGN_POST:
@@ -75,5 +77,27 @@ public class SignShape extends Plane {
 		originLocation.add(normal.clone().multiply(zOffset));
 
 		return originLocation;
+	}
+
+
+	@Override
+	public SignTraceResult trace(Location location) {
+		return augument(super.trace(location));
+	}
+
+	@Override
+	public SignTraceResult trace(Vector start, Vector direction) {
+		return augument(super.trace(start, direction));
+	}
+
+	@Override
+	public SignTraceResult traceToPoint(Vector start, Vector end) {
+		return augument(super.traceToPoint(start, end));
+	}
+
+	private SignTraceResult augument(TraceResult trace) {
+		final int index = (int) Math.floor(2.1 - trace.relativePosition.getY() / FONT_SCALE / 10.0);
+
+		return new SignTraceResult(trace, index);
 	}
 }

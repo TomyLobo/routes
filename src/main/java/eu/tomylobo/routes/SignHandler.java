@@ -39,9 +39,8 @@ import com.google.common.collect.Multimap;
 import eu.tomylobo.routes.fakeentity.FakeEntity;
 import eu.tomylobo.routes.fakeentity.FakeMob;
 import eu.tomylobo.routes.fakeentity.MobType;
-import eu.tomylobo.routes.trace.Shape;
 import eu.tomylobo.routes.trace.SignShape;
-import eu.tomylobo.routes.trace.TraceResult;
+import eu.tomylobo.routes.trace.SignTraceResult;
 import eu.tomylobo.routes.util.Ini;
 import eu.tomylobo.routes.util.Remover;
 import eu.tomylobo.routes.util.Workarounds;
@@ -110,15 +109,12 @@ public class SignHandler implements Listener {
 					return;
 
 				final Sign sign = (Sign) block.getState();
-				final Shape shape = new SignShape(sign);
+				final SignShape shape = new SignShape(sign);
 
 				final Location eyeLocation = Workarounds.getEyeLocation(player);
-				final TraceResult trace = shape.trace(eyeLocation);
+				final SignTraceResult trace = shape.trace(eyeLocation);
 
-				final double signScale = 2.0 / 3.0;
-				final double fontScale = signScale / 60.0;
-
-				final int index = (int) Math.floor(2.1 - trace.relativePosition.getY() / fontScale / 10.0);
+				final int index = trace.index;
 
 				if (index < 0 || index >= 4)
 					return;
