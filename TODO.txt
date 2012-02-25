@@ -1,0 +1,5 @@
+- teleport player to the end of the route/inbetween in intervals (or transfer chunks manually)
+- add a way to control the attributes of waypoints
+	- selector tool, flashing waypoints
+- add a way to insert waypoints
+	- selector tool, flashing line
