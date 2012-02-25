@@ -119,8 +119,8 @@ public class SignHandler implements Listener {
 				if (index < 0 || index >= 4)
 					return;
 
-				if (trackedSign.isMarked(index)) {
-					trackedSign.mark(-1);
+				if (trackedSign.isSelected(index)) {
+					trackedSign.select(-1);
 
 					final String routeName = trackedSign.getEntry(index);
 
@@ -132,7 +132,7 @@ public class SignHandler implements Listener {
 					player.sendMessage("Travelling on route '"+routeName+"'.");
 				}
 				else {
-					trackedSign.mark(index);
+					trackedSign.select(index);
 				}
 
 				break;

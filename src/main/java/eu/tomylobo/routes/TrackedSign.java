@@ -30,23 +30,32 @@ import com.google.common.collect.Multimap;
 import eu.tomylobo.routes.util.Ini;
 
 public class TrackedSign {
+	private static final String UNMARKED_COLOR = "\u00a79";
+	private static final String MARKED_COLOR = "\u00a7c";
+
 	private final Block block;
 	private final String[] entries;
 	private int selected = -1;
+	private final int entryCount;
 
 	public TrackedSign(Sign sign) {
 		block = sign.getBlock();
 		String[] lines = sign.getLines();
 		entries = new String[lines.length];
 
+		int entryCount = 0;
 		for (int i = 0; i < lines.length; ++i) {
 			final String line = lines[i];
 
 			if (line.startsWith("@@")) {
 				entries[i] = line.substring(2);
 				setMarked(sign, i, false);
+				++entryCount;
 			}
 		}
+		this.entryCount = entryCount;
+		if (entryCount == 0)
+			throw new IllegalArgumentException("A sign with no entries was passed.");
 
 		sign.update();
 	}
@@ -55,13 +64,18 @@ public class TrackedSign {
 		block = Ini.loadLocation(section, "%s", false).getBlock();
 
 		entries = new String[4];
+		int entryCount = 0;
 		for (int i = 0; i < 4; ++i) {
-			final Collection<String> entries2 = section.get("line"+i);
-			if (entries2.size() != 1)
+			final Collection<String> values = section.get("line"+i);
+			if (values.size() != 1)
 				continue;
 
-			entries[i] = Ini.getOnlyValue(entries2);
+			entries[i] = Ini.getOnlyValue(values);
+			++entryCount;
 		}
+		this.entryCount = entryCount;
+		if (entryCount == 0)
+			throw new IllegalArgumentException("A sign with no entries was parsed.");
 	}
 
 	public Multimap<String, String> save() {
@@ -79,11 +93,22 @@ public class TrackedSign {
 		return section;
 	}
 
+	/**
+	 * Retrieves the block the sign is in.
+	 *
+	 * @return a block
+	 */
 	public Block getBlock() {
 		return block;
 	}
 
-	public boolean hasIndex(int index) {
+	/**
+	 * Determines whether the specified index has an entry.
+	 * 
+	 * @param index The index to look at.
+	 * @return true if there is an entry at the index, false if not.
+	 */
+	public boolean hasEntry(int index) {
 		return entries[index] != null;
 	}
 
@@ -112,9 +137,12 @@ public class TrackedSign {
 		return block.hashCode();
 	}
 
-	private static final String UNMARKED_COLOR = "\u00a79";
-	private static final String MARKED_COLOR = "\u00a7c";
-	public void mark(int index) {
+	/**
+	 * Selects the specified entry and unmarks the previously selected one.
+	 *
+	 * @param index The index of the entry
+	 */
+	public void select(int index) {
 		if (selected == index)
 			return;
 
@@ -140,7 +168,22 @@ public class TrackedSign {
 		sign.setLine(index, (marked ? MARKED_COLOR : UNMARKED_COLOR) + entries[index]);
 	}
 
-	public boolean isMarked(int index) {
+	/**
+	 * Determines whether the specified entry is selected.
+	 *
+	 * @param index The index of the entry
+	 * @return true if the entry is selected, false if not.
+	 */
+	public boolean isSelected(int index) {
 		return selected == index;
+	}
+
+	/**
+	 * Returns the number of valid entries.
+	 *
+	 * @return entry count 1..3
+	 */
+	public int getEntryCount() {
+		return entryCount;
 	}
 }
