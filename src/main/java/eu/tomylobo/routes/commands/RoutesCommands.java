@@ -82,6 +82,18 @@ public class RoutesCommands extends CommandContainer implements Listener {
 		context.sendMessage("Starting a route named '"+routeName+"' here. Right-click with "+toolMaterial+" to add a waypoint.");
 	}
 
+	@Command
+	public void routes_show(Context context) {
+		final String routeName = context.getString(0);
+
+		final Route route = plugin.transportSystem.getRoute(routeName);
+
+		route.visualize(1.0, 600);
+
+		context.sendMessage("Showing the route '"+routeName+"'.");
+	}
+
+
 	Map<Player, Route> editedRoutes = new HashMap<Player, Route>();
 
 	@EventHandler
