@@ -73,6 +73,7 @@ public abstract class FakeEntity implements Entity {
 	public final int entityId;
 	public Location location;
 	private boolean isDead;
+	private float height;
 	protected final float yawOffset;
 	protected final DataWatcher datawatcher;
 	private Entity passenger;
@@ -83,17 +84,14 @@ public abstract class FakeEntity implements Entity {
 		sendPacketToRelevantPlayers(new Packet38EntityStatus(entityId, effect.getData()));
 	}
 
-	public FakeEntity(Location location) {
-		this(location, 0);
-	}
-
-	public FakeEntity(Location location, float yawOffset) {
-		this.yawOffset = yawOffset;
+	public FakeEntity(Location location, EntityType entityType) {
 		if (location == null)
 			throw new IllegalArgumentException("A null Location was passed to the FakeEntity ctor.");
 
 		entityId = ++lastFakeEntityId;
 		this.location = location;
+		this.height = entityType.getHeight();
+		this.yawOffset = entityType.getYawOffset();
 		this.datawatcher = new DataWatcher();
 	}
 
@@ -366,5 +364,9 @@ public abstract class FakeEntity implements Entity {
 		datawatcher.watch(index, value);
 
 		return new Packet40EntityMetadata(entityId, datawatcher);
+	}
+
+	public double getMountedYOffset() {
+		return height * 0.75;
 	}
 }

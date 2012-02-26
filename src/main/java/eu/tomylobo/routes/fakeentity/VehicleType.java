@@ -25,42 +25,54 @@ package eu.tomylobo.routes.fakeentity;
  * @author TomyLobo
  *
  */
-public enum VehicleType {
-	BOAT(1, 270),
-	MINECART(10, 270),
-	MINECART_CHEST(11, 270),
-	MINECART_FURNACE(12, 270),
-	PRIMED_TNT(50),
-	ENDER_CRYSTAL(51),
-	ARROW(60),
-	SNOWBALL(61),
-	EGG(62),
-	FIREBALL(63),
-	SMALL_FIREBALL(64),
-	ENDER_PEARL(65),
-	FALLING_SAND(70),
-	FALLING_GRAVEL(71),
-	ENDER_EYE(72),
-	POTION(73),
-	FALLING_DRAGON_EGG(74),
-	FISHING_HOOK(90);
+public enum VehicleType implements EntityType {
+	BOAT(1, 0.6f, 270),
+	MINECART(10, 0.7f, 270),
+	MINECART_CHEST(11, 0.7f, 270),
+	MINECART_FURNACE(12, 0.7f, 270),
+	PRIMED_TNT(50, 0.98f),
+	ENDER_CRYSTAL(51, 2f),
+	ARROW(60, 0.5f),
+	SNOWBALL(61, 0.25f),
+	EGG(62, 0.25f),
+	FIREBALL(63, 1f),
+	SMALL_FIREBALL(64, 0.3125f),
+	ENDER_PEARL(65, 0.25f),
+	FALLING_SAND(70, 0.98f),
+	FALLING_GRAVEL(71, 0.98f),
+	ENDER_EYE(72, 0.25f),
+	POTION(73, 0.25f),
+	FALLING_DRAGON_EGG(74, 0.98f),
+	FISHING_HOOK(90, 0.25f);
 
 	private final int id;
+	private final float height;
 	private final float yawOffset;
 
-	private VehicleType(int id, float yawOffset) {
-		this.id = id;
-		this.yawOffset = yawOffset;
+	private VehicleType(int id) {
+		this(id, 1.8f);
 	}
 
-	private VehicleType(int id) {
-		this(id, 0);
+	private VehicleType(int id, float height) {
+		this(id, height, 0);
+	}
+
+	private VehicleType(int id, float height, float yawOffset) {
+		this.id = id;
+		this.height = height;
+		this.yawOffset = yawOffset;
 	}
 
 	public int getId() {
 		return id;
 	}
 
+	@Override
+	public float getHeight() {
+		return height;
+	}
+
+	@Override
 	public float getYawOffset() {
 		return yawOffset;
 	}

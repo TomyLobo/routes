@@ -32,9 +32,8 @@ import org.bukkit.entity.Player;
  */
 public class FakeVehicle extends FakeEntity {
 	private final int vehicleTypeId;
-
 	public FakeVehicle(Location location, VehicleType vehicleType) {
-		super(location, vehicleType.getYawOffset());
+		super(location, vehicleType);
 
 		this.vehicleTypeId = vehicleType.getId();
 	}

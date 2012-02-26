@@ -35,9 +35,8 @@ import eu.tomylobo.routes.util.Utils;
  */
 public class FakeMob extends FakeEntity {
 	private final int mobTypeId;
-
 	public FakeMob(Location location, MobType mobType) {
-		super(location, mobType.getYawOffset());
+		super(location, mobType);
 
 		this.mobTypeId = mobType.getId();
 	}
