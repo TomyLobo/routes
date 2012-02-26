@@ -42,6 +42,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.util.Vector;
 
+import eu.tomylobo.routes.util.Workarounds;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -152,6 +154,10 @@ public abstract class FakeEntity implements Entity {
 				(byte) ((int) ((location.getYaw()+yawOffset) * 256.0F / 360.0F)),
 				(byte) ((int) (location.getPitch() * 256.0F / 360.0F))
 		));
+
+		if (passenger != null) {
+			Workarounds.setPosition(passenger, location.toVector().add(new Vector(0, getMountedYOffset(), 0)), false);
+		}
 
 		for (Entry<Entity, Double> entry : fakePassengers.entrySet()) {
 			entry.getKey().teleport(location.clone().add(0, entry.getValue(), 0));
