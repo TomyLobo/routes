@@ -66,4 +66,6 @@ public interface Interpolation {
 	 * @return
 	 */
 	double arcLength(double positionA, double positionB);
+
+	int getSegment(double position);
 }

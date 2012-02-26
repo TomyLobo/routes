@@ -230,4 +230,15 @@ public class KochanekBartelsInterpolation implements Interpolation {
 		accum += a.clone().multiply(remainderRight).add(b).multiply(remainderRight).add(c).length() / 2.0;
 		return accum * (remainderRight - remainderLeft) / nPoints;
 	}
+
+	@Override
+	public int getSegment(double position) {
+		if (position > 1)
+			return Integer.MAX_VALUE;
+
+		position *= scaling;
+
+		final int index = (int) Math.floor(position);
+		return index;
+	}
 }

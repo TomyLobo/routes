@@ -135,4 +135,15 @@ public class LinearInterpolation implements Interpolation {
 
 		return position1.distance(position2) * (remainderB - remainderA);
 	}
+
+	@Override
+	public int getSegment(double position) {
+		if (position > 1)
+			return Integer.MAX_VALUE;
+
+		position *= nodes.size() - 1;
+
+		final int index = (int) Math.floor(position);
+		return index;
+	}
 }

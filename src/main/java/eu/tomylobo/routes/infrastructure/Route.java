@@ -192,4 +192,8 @@ public final class Route {
 	public World getWorld() {
 		return world;
 	}
+
+	public int getSegment(double position) {
+		return interpolation.getSegment(position);
+	}
 }

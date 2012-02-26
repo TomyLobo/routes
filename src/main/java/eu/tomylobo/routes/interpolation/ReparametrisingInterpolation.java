@@ -138,4 +138,12 @@ public class ReparametrisingInterpolation implements Interpolation {
 		}
 		return midParameter;
 	}
+
+	@Override
+	public int getSegment(double position) {
+		if (position > 1)
+			return Integer.MAX_VALUE;
+
+		return baseInterpolation.getSegment(arcToParameter(position));
+	}
 }
