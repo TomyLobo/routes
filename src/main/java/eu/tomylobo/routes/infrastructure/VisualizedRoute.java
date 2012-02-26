@@ -30,15 +30,23 @@ import eu.tomylobo.routes.fakeentity.VehicleType;
 import eu.tomylobo.routes.util.Statistics;
 
 public class VisualizedRoute {
-	private final List<FakeEntity> visualizationEntities;
+	private final List<FakeEntity> waypointMarkers = new ArrayList<FakeEntity>();
+	private final List<List<FakeEntity>> lineMarkers = new ArrayList<List<FakeEntity>>();
 
 	public VisualizedRoute(Route route, double pointsPerMeter) {
-		visualizationEntities = new ArrayList<FakeEntity>();
-
 		int points = (int) Math.ceil(pointsPerMeter * route.length());
 
 		double lastPosition = -1;
 		final Statistics stats = new Statistics();
+
+		for (Node node : route.getNodes()) {
+			final FakeEntity waypointMarker = new FakeVehicle(node.getPosition().toLocation(route.getWorld()), VehicleType.ENDER_CRYSTAL);
+			waypointMarker.send();
+
+			waypointMarkers.add(waypointMarker);
+
+			lineMarkers.add(new ArrayList<FakeEntity>());
+		}
 
 		for (int i = 0; i < points; ++i) {
 			final double position = ((double) i) / points;
@@ -53,25 +61,26 @@ public class VisualizedRoute {
 			lastPosition = position;
 			// end statistics
 
-			final FakeEntity a = new FakeVehicle(location, VehicleType.ENDER_EYE);
-			a.send();
+			final FakeEntity lineMarker = new FakeVehicle(location, VehicleType.ENDER_EYE);
+			lineMarker.send();
 
-			visualizationEntities.add(a);
-		}
+			final int index = route.getSegment(position);
+			// TODO: maybe add a sanity check for the index?
 
-		for (Node node : route.getNodes()) {
-			final FakeEntity a = new FakeVehicle(node.getPosition().toLocation(route.getWorld()), VehicleType.ENDER_CRYSTAL);
-			a.send();
-
-			visualizationEntities.add(a);
+			lineMarkers.get(index).add(lineMarker);
 		}
 
 		System.out.println(stats.format());
 	}
 
 	public void removeEntities() {
-		for (FakeEntity entity : visualizationEntities) {
+		for (FakeEntity entity : waypointMarkers) {
 			entity.remove();
+		}
+		for (List<FakeEntity> list : lineMarkers) {
+			for (FakeEntity entity : list) {
+				entity.remove();
+			}
 		}
 	}
 }
