@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.tomylobo.routes.infrastructure;
+package eu.tomylobo.routes.infrastructure.editor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +27,8 @@ import org.bukkit.Location;
 import eu.tomylobo.routes.fakeentity.FakeEntity;
 import eu.tomylobo.routes.fakeentity.FakeVehicle;
 import eu.tomylobo.routes.fakeentity.VehicleType;
+import eu.tomylobo.routes.infrastructure.Node;
+import eu.tomylobo.routes.infrastructure.Route;
 import eu.tomylobo.routes.util.Statistics;
 
 public class VisualizedRoute {

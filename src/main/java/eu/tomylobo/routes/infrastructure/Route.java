@@ -32,9 +32,10 @@ import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
 import eu.tomylobo.routes.Routes;
-import eu.tomylobo.routes.interpolation.Interpolation;
-import eu.tomylobo.routes.interpolation.KochanekBartelsInterpolation;
-import eu.tomylobo.routes.interpolation.ReparametrisingInterpolation;
+import eu.tomylobo.routes.infrastructure.editor.VisualizedRoute;
+import eu.tomylobo.routes.infrastructure.interpolation.Interpolation;
+import eu.tomylobo.routes.infrastructure.interpolation.KochanekBartelsInterpolation;
+import eu.tomylobo.routes.infrastructure.interpolation.ReparametrisingInterpolation;
 import eu.tomylobo.routes.util.Ini;
 import eu.tomylobo.routes.util.Utils;
 

@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.tomylobo.routes.interpolation;
+package eu.tomylobo.routes.infrastructure.interpolation;
 
 import java.util.Collections;
 import java.util.List;
