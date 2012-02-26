@@ -61,7 +61,7 @@ public abstract class FakeEntity implements Entity {
 	static int lastFakeEntityId = 1000000000;
 
 	public static final void sendPacketToPlayer(final Player ply, final Packet packet) {
-		((CraftPlayer)ply).getHandle().netServerHandler.sendPacket((net.minecraft.server.Packet) packet);
+		((CraftPlayer)ply).getHandle().netServerHandler.sendPacket(packet);
 	}
 
 	public void sendPacketToRelevantPlayers(final Packet packet) {
