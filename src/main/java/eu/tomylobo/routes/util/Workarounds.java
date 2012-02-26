@@ -19,12 +19,15 @@
 
 package eu.tomylobo.routes.util;
 
+import net.minecraft.server.Packet11PlayerPosition;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+
+import eu.tomylobo.routes.fakeentity.FakeEntity;
 
 public class Workarounds {
 	public static Location getEyeLocation(final Player player) {
@@ -41,8 +44,21 @@ public class Workarounds {
 		return state.getBlock().getLocation();
 	}
 
-	public static void setPosition(Entity entity, Vector vector) {
+	public static void setPosition(Entity entity, Vector vector, boolean sendUpdate) {
 		net.minecraft.server.Entity notchEntity = ((CraftEntity) entity).getHandle();
-		notchEntity.setPosition(vector.getX(), vector.getY(), vector.getZ());
+
+		final double x = vector.getX();
+		final double y = vector.getY();
+		final double z = vector.getZ();
+
+		notchEntity.setPosition(x, y, z);
+		if (sendUpdate && entity instanceof Player) {
+			final Packet11PlayerPosition packet = new Packet11PlayerPosition();
+			packet.x = x;
+			packet.y = y + 1.62;
+			packet.stance = y;
+			packet.z = z;
+			FakeEntity.sendPacketToPlayer((Player) entity, packet);
+		}
 	}
 }
