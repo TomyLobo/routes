@@ -98,7 +98,7 @@ public class RoutesCommands extends CommandContainer implements Listener {
 					return;
 
 				route.addNodes(player.getLocation());
-				route.visualize(1.0);
+				route.visualize(1.0, 600);
 				break;
 			}
 

@@ -32,14 +32,10 @@ import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
 import eu.tomylobo.routes.Routes;
-import eu.tomylobo.routes.fakeentity.FakeEntity;
-import eu.tomylobo.routes.fakeentity.FakeVehicle;
-import eu.tomylobo.routes.fakeentity.VehicleType;
 import eu.tomylobo.routes.interpolation.Interpolation;
 import eu.tomylobo.routes.interpolation.KochanekBartelsInterpolation;
 import eu.tomylobo.routes.interpolation.ReparametrisingInterpolation;
 import eu.tomylobo.routes.util.Ini;
-import eu.tomylobo.routes.util.Statistics;
 import eu.tomylobo.routes.util.Utils;
 
 /**
@@ -57,8 +53,9 @@ public final class Route {
 	//private Interpolation interpolation = new LinearInterpolation();
 	private Interpolation interpolation = new ReparametrisingInterpolation(new KochanekBartelsInterpolation());
 
-	private List<FakeEntity> visualizationEntities = new ArrayList<FakeEntity>();
 	private int taskId = -1;
+
+	private VisualizedRoute visualizedRoute;
 
 	public List<Node> getNodes() {
 		return nodes;
@@ -124,45 +121,17 @@ public final class Route {
 		return interpolation.get1stDerivative(position);
 	}
 
-	public void visualize(double pointsPerMeter) {
+	public void visualize(double pointsPerMeter, long ticks) {
 		clearVisualization();
 
-		int points = (int) Math.ceil(pointsPerMeter * length());
-
-		double lastPosition = -1;
-		final Statistics stats = new Statistics();
-
-		for (int i = 0; i < points; ++i) {
-			final double position = ((double) i) / points;
-			final Location location = getLocation(position);
-			if (lastPosition != -1) {
-				final double distance = interpolation.arcLength(lastPosition, position);
-
-				stats.stat(distance);
-			}
-			lastPosition = position;
-
-			final FakeEntity a = new FakeVehicle(location, VehicleType.ENDER_EYE);
-			a.send();
-
-			visualizationEntities.add(a);
-		}
-
-		for (Node node : nodes) {
-			final FakeEntity a = new FakeVehicle(node.getPosition().toLocation(world), VehicleType.ENDER_CRYSTAL);
-			a.send();
-
-			visualizationEntities.add(a);
-		}
-
-		System.out.println(stats.format());
+		visualizedRoute = new VisualizedRoute(this, pointsPerMeter);
 
 		taskId = Bukkit.getScheduler().scheduleSyncDelayedTask(Routes.getInstance(), new Runnable() {
 			@Override
 			public void run() {
 				clearVisualization();
 			}
-		}, 600);
+		}, ticks);
 	}
 
 	public void save(Multimap<String, Multimap<String, String>> sections, String routeName) {
@@ -207,13 +176,20 @@ public final class Route {
 
 	private void clearVisualization() {
 		Bukkit.getScheduler().cancelTask(taskId);
-		for (FakeEntity entity : visualizationEntities) {
-			entity.remove();
+		if (visualizedRoute != null) {
+			visualizedRoute.removeEntities();
 		}
-		visualizationEntities.clear();
 	}
 
 	void setDirty() {
 		nodesDirty = true;
+	}
+
+	public double getArcLength(double positionA, double positionB) {
+		return interpolation.arcLength(positionA, positionB);
+	}
+
+	public World getWorld() {
+		return world;
 	}
 }

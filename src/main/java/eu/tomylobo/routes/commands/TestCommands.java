@@ -102,7 +102,7 @@ public class TestCommands extends CommandContainer {
 		//entity.setPassenger(entity2);
 		plugin.travelAgency.addTraveller("test", entities[0], 8.0, new Remover(entities));
 		plugin.travelAgency.addTraveller("test", entities[1], 8.0, new Remover(skeleton));
-		route.visualize(1.0);
+		route.visualize(1.0, 600);
 		context.sendMessage("Testing route.");
 	}
 }
