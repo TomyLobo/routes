@@ -21,7 +21,10 @@ package eu.tomylobo.routes.util;
 
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
+import org.bukkit.craftbukkit.entity.CraftEntity;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 public class Workarounds {
 	public static Location getEyeLocation(final Player player) {
@@ -36,5 +39,10 @@ public class Workarounds {
 
 	public static Location getLocation(BlockState state) {
 		return state.getBlock().getLocation();
+	}
+
+	public static void setPosition(Entity entity, Vector vector) {
+		net.minecraft.server.Entity notchEntity = ((CraftEntity) entity).getHandle();
+		notchEntity.setPosition(vector.getX(), vector.getY(), vector.getZ());
 	}
 }
