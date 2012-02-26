@@ -59,7 +59,7 @@ public class Traveller {
 	public boolean tick() {
 		position += increment;
 
-		Location location = route.getLocation(position);
+		final Location location = route.getLocation(position);
 		if (location == null) {
 			runFinalizer();
 			return false;

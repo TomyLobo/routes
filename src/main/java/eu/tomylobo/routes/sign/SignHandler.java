@@ -146,7 +146,9 @@ public class SignHandler implements Listener {
 	public void save() {
 		Multimap<String, Multimap<String, String>> sections = LinkedListMultimap.create();
 		for (Entry<Block, TrackedSign> entry : trackedSigns.entrySet()) {
-			sections.put("sign", entry.getValue().save());
+			final TrackedSign trackedSign = entry.getValue();
+
+			sections.put("sign", trackedSign.save());
 		}
 
 		Ini.save(plugin.getConfigFileName("signs.txt"), sections);
