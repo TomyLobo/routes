@@ -84,20 +84,6 @@ public class Context {
 	}
 
 	/**
-	 * Gets the specified argument as a string.
-	 *
-	 * @param index index of the argument
-	 * @return the argument
-	 * @throws NotEnoughArgumentsException if there is no argument in the specified place
-	 */
-	public String getString(int index) throws NotEnoughArgumentsException {
-		if (index >= args.length)
-			throw new NotEnoughArgumentsException();
-
-		return args[index];
-	}
-
-	/**
 	 * Returns the total number of arguments given.
 	 *
 	 * @return the total number of arguments given.
@@ -124,5 +110,222 @@ public class Context {
 	 */
 	public void sendMessage(String message) {
 		sender.sendMessage(message);
+	}
+
+
+	/**
+	 * Gets the specified argument as a string.
+	 *
+	 * @param index index of the argument
+	 * @return the argument
+	 * @throws NotEnoughArgumentsException if there is no argument in the specified place
+	 */
+	public String getString(int index) throws NotEnoughArgumentsException {
+		if (index >= args.length)
+			throw new NotEnoughArgumentsException();
+
+		return args[index];
+	}
+
+	/**
+	 * Gets the specified argument as a string.
+	 *
+	 * @param index index of the argument
+	 * @return the argument or defaultValue if there is no argument in the specified place
+	 */
+	public String getString(int index, String defaultValue) {
+		if (index >= args.length)
+			return defaultValue;
+
+		return args[index];
+	}
+
+	/**
+	 * Gets the specified argument as a byte.
+	 *
+	 * @param index index of the argument
+	 * @return the argument
+	 * @throws NotEnoughArgumentsException if there is no argument in the specified place
+	 */
+	public byte getByte(int index) throws NotEnoughArgumentsException, NumberFormatException {
+		if (index >= args.length)
+			throw new NotEnoughArgumentsException();
+
+		return Byte.parseByte(args[index]);
+	}
+
+	/**
+	 * Gets the specified argument as a byte.
+	 *
+	 * @param index index of the argument
+	 * @return the argument or defaultValue if there is no argument in the specified place
+	 */
+	public byte getByte(int index, byte defaultValue) throws NumberFormatException {
+		if (index >= args.length)
+			return defaultValue;
+
+		return Byte.parseByte(args[index]);
+	}
+
+	/**
+	 * Gets the specified argument as a short.
+	 *
+	 * @param index index of the argument
+	 * @return the argument
+	 * @throws NotEnoughArgumentsException if there is no argument in the specified place
+	 */
+	public short getShort(int index) throws NotEnoughArgumentsException, NumberFormatException {
+		if (index >= args.length)
+			throw new NotEnoughArgumentsException();
+
+		return Short.parseShort(args[index]);
+	}
+
+	/**
+	 * Gets the specified argument as a short.
+	 *
+	 * @param index index of the argument
+	 * @return the argument or defaultValue if there is no argument in the specified place
+	 */
+	public short getShort(int index, short defaultValue) throws NumberFormatException {
+		if (index >= args.length)
+			return defaultValue;
+
+		return Short.parseShort(args[index]);
+	}
+
+	/**
+	 * Gets the specified argument as an int.
+	 *
+	 * @param index index of the argument
+	 * @return the argument
+	 * @throws NotEnoughArgumentsException if there is no argument in the specified place
+	 */
+	public int getInt(int index) throws NotEnoughArgumentsException, NumberFormatException {
+		if (index >= args.length)
+			throw new NotEnoughArgumentsException();
+
+		return Integer.parseInt(args[index]);
+	}
+
+	/**
+	 * Gets the specified argument as an int.
+	 *
+	 * @param index index of the argument
+	 * @return the argument or defaultValue if there is no argument in the specified place
+	 */
+	public int getInt(int index, int defaultValue) throws NumberFormatException {
+		if (index >= args.length)
+			return defaultValue;
+
+		return Integer.parseInt(args[index]);
+	}
+
+	/**
+	 * Gets the specified argument as a long.
+	 *
+	 * @param index index of the argument
+	 * @return the argument
+	 * @throws NotEnoughArgumentsException if there is no argument in the specified place
+	 */
+	public long getLong(int index) throws NotEnoughArgumentsException, NumberFormatException {
+		if (index >= args.length)
+			throw new NotEnoughArgumentsException();
+
+		return Long.parseLong(args[index]);
+	}
+
+	/**
+	 * Gets the specified argument as a long.
+	 *
+	 * @param index index of the argument
+	 * @return the argument or defaultValue if there is no argument in the specified place
+	 */
+	public long getLong(int index, long defaultValue) throws NumberFormatException {
+		if (index >= args.length)
+			return defaultValue;
+
+		return Long.parseLong(args[index]);
+	}
+
+	/**
+	 * Gets the specified argument as a float.
+	 *
+	 * @param index index of the argument
+	 * @return the argument
+	 * @throws NotEnoughArgumentsException if there is no argument in the specified place
+	 */
+	public float getFloat(int index) throws NotEnoughArgumentsException, NumberFormatException {
+		if (index >= args.length)
+			throw new NotEnoughArgumentsException();
+
+		return Float.parseFloat(args[index]);
+	}
+
+	/**
+	 * Gets the specified argument as a float.
+	 *
+	 * @param index index of the argument
+	 * @return the argument or defaultValue if there is no argument in the specified place
+	 */
+	public float getFloat(int index, float defaultValue) throws NumberFormatException {
+		if (index >= args.length)
+			return defaultValue;
+
+		return Float.parseFloat(args[index]);
+	}
+
+	/**
+	 * Gets the specified argument as a double.
+	 *
+	 * @param index index of the argument
+	 * @return the argument
+	 * @throws NotEnoughArgumentsException if there is no argument in the specified place
+	 */
+	public double getDouble(int index) throws NotEnoughArgumentsException, NumberFormatException {
+		if (index >= args.length)
+			throw new NotEnoughArgumentsException();
+
+		return Double.parseDouble(args[index]);
+	}
+
+	/**
+	 * Gets the specified argument as a double.
+	 *
+	 * @param index index of the argument
+	 * @return the argument or defaultValue if there is no argument in the specified place
+	 */
+	public double getDouble(int index, double defaultValue) throws NumberFormatException {
+		if (index >= args.length)
+			return defaultValue;
+
+		return Double.parseDouble(args[index]);
+	}
+
+	/**
+	 * Gets the specified argument as a boolean.
+	 *
+	 * @param index index of the argument
+	 * @return the argument
+	 * @throws NotEnoughArgumentsException if there is no argument in the specified place
+	 */
+	public boolean getBoolean(int index) throws NotEnoughArgumentsException, NumberFormatException {
+		if (index >= args.length)
+			throw new NotEnoughArgumentsException();
+
+		return Boolean.parseBoolean(args[index]);
+	}
+
+	/**
+	 * Gets the specified argument as a boolean.
+	 *
+	 * @param index index of the argument
+	 * @return the argument or defaultValue if there is no argument in the specified place
+	 */
+	public boolean getBoolean(int index, boolean defaultValue) throws NumberFormatException {
+		if (index >= args.length)
+			return defaultValue;
+
+		return Boolean.parseBoolean(args[index]);
 	}
 }
