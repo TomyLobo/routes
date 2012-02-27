@@ -136,6 +136,9 @@ public class KochanekBartelsInterpolation implements Interpolation {
 
 	@Override
 	public Vector getPosition(double position) {
+		if (coeffA == null)
+			throw new IllegalStateException("Must call setNodes first.");
+
 		if (position > 1)
 			return null;
 
@@ -154,6 +157,9 @@ public class KochanekBartelsInterpolation implements Interpolation {
 
 	@Override
 	public Vector get1stDerivative(double position) {
+		if (coeffA == null)
+			throw new IllegalStateException("Must call setNodes first.");
+
 		if (position > 1)
 			return null;
 
@@ -171,6 +177,9 @@ public class KochanekBartelsInterpolation implements Interpolation {
 
 	@Override
 	public double arcLength(double positionA, double positionB) {
+		if (coeffA == null)
+			throw new IllegalStateException("Must call setNodes first.");
+
 		if (positionA > positionB)
 			return arcLength(positionB, positionA);
 
@@ -233,6 +242,9 @@ public class KochanekBartelsInterpolation implements Interpolation {
 
 	@Override
 	public int getSegment(double position) {
+		if (coeffA == null)
+			throw new IllegalStateException("Must call setNodes first.");
+
 		if (position > 1)
 			return Integer.MAX_VALUE;
 

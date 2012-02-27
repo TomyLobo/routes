@@ -78,6 +78,9 @@ public class ReparametrisingInterpolation implements Interpolation {
 	}
 
 	private double arcToParameter(double arc) {
+		if (cache.isEmpty())
+			throw new IllegalStateException("Must call setNodes first.");
+
 		if (arc > 1) arc = 1;
 		arc *= totalArcLength;
 
