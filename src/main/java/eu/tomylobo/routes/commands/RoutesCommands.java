@@ -19,19 +19,17 @@
 
 package eu.tomylobo.routes.commands;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEvent;
 import eu.tomylobo.routes.commands.system.Command;
 import eu.tomylobo.routes.commands.system.Context;
 import eu.tomylobo.routes.commands.system.CommandContainer;
 import eu.tomylobo.routes.commands.system.NestedCommand;
 import eu.tomylobo.routes.infrastructure.Route;
+import eu.tomylobo.routes.infrastructure.editor.RouteEditSession;
+import eu.tomylobo.routes.infrastructure.editor.RouteEditor;
+import eu.tomylobo.routes.infrastructure.editor.VisualizedRoute;
+import eu.tomylobo.routes.util.ScheduledTask;
 
 /**
  * Contains all commands connected to route management.
@@ -68,7 +66,6 @@ public class RoutesCommands extends CommandContainer implements Listener {
 		context.sendMessage("Saved routes.");
 	}
 
-	Material toolMaterial = Material.GOLD_SPADE;
 	@Command
 	public void routes_add(Context context) {
 		final Player player = context.getPlayer();
@@ -77,44 +74,59 @@ public class RoutesCommands extends CommandContainer implements Listener {
 		final Route route = new Route();
 		plugin.transportSystem.addRoute(routeName, route);
 
-		editedRoutes.put(player, route);
+		plugin.routeEditor.edit(player, route);
 
-		context.sendMessage("Starting a route named '"+routeName+"' here. Right-click with "+toolMaterial+" to add a waypoint.");
+		context.sendMessage("Starting a route named '"+routeName+"' here. Right-click with "+RouteEditor.toolMaterial+" to add a waypoint.");
 	}
 
 	@Command
 	public void routes_show(Context context) {
 		final String routeName = context.getString(0);
 
-		final Route route = plugin.transportSystem.getRoute(routeName);
+		final int segmentIndex = context.getInt(1, -1);
 
-		route.visualize(1.0, 600);
+		if (segmentIndex == -1) {
+			final Route route = plugin.transportSystem.getRoute(routeName);
+
+			route.visualize(1.0, 600);
+		}
+		else {
+			final Route route = plugin.transportSystem.getRoute(routeName);
+
+			final VisualizedRoute visualizedRoute = new VisualizedRoute(route, 1.0, context.getPlayer());
+
+			final ScheduledTask task = new ScheduledTask(plugin) {
+				int iteration = 0;
+				@Override
+				public void run() {
+					if (++iteration > 10) {
+						cancel();
+						visualizedRoute.removeEntities();
+						return;
+					}
+
+					visualizedRoute.showSegment(segmentIndex, iteration%2 == 0);
+				}
+			};
+
+			task.scheduleSyncRepeating(0, 10);
+		}
 
 		context.sendMessage("Showing the route '"+routeName+"'.");
 	}
 
+	@Command
+	public void routes_edit(Context context) {
+		final Player player = context.getPlayer();
 
-	Map<Player, Route> editedRoutes = new HashMap<Player, Route>();
+		final String routeName = context.getString(0);
+		final int segmentIndex = context.getInt(1, -1);
 
-	@EventHandler
-	public void onPlayerInteract(PlayerInteractEvent event) {
-		switch (event.getAction()) {
-		case RIGHT_CLICK_AIR:
-		case RIGHT_CLICK_BLOCK:
-			final Player player = event.getPlayer();
+		final Route route = plugin.transportSystem.getRoute(routeName);
 
-			final Material materialInHand = player.getItemInHand().getType();
-			if (materialInHand == toolMaterial) {
-				final Route route = editedRoutes.get(player);
-				if (route == null)
-					return;
+		RouteEditSession routeEditSession = plugin.routeEditor.edit(player, route);
+		routeEditSession.selectSegment(segmentIndex);
 
-				route.addNodes(player.getLocation());
-				route.visualize(1.0, 600);
-				break;
-			}
-
-			break;
-		}
+		context.sendMessage("Editing the route '"+routeName+"'.");
 	}
 }

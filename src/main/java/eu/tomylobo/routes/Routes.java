@@ -25,6 +25,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import eu.tomylobo.routes.commands.system.CommandSystem;
 import eu.tomylobo.routes.infrastructure.TransportSystem;
+import eu.tomylobo.routes.infrastructure.editor.RouteEditor;
 import eu.tomylobo.routes.sign.SignHandler;
 import eu.tomylobo.routes.travel.TravelAgency;
 
@@ -42,12 +43,14 @@ public class Routes extends JavaPlugin {
 	public TravelAgency travelAgency;
 	public final TransportSystem transportSystem = new TransportSystem(this);
 	public SignHandler signHandler;
+	public RouteEditor routeEditor;
 
 	@Override
 	public void onEnable() {
 		commandSystem = new CommandSystem();
 		travelAgency = new TravelAgency(this);
 		signHandler = new SignHandler(this);
+		routeEditor = new RouteEditor(this);
 		load();
 	}
 
