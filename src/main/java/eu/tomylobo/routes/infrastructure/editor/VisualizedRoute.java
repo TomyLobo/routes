@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import eu.tomylobo.routes.fakeentity.FakeEntity;
 import eu.tomylobo.routes.fakeentity.FakeVehicle;
@@ -32,26 +34,66 @@ import eu.tomylobo.routes.infrastructure.Route;
 import eu.tomylobo.routes.util.Statistics;
 
 public class VisualizedRoute {
+	private final Route route;
+	private final double pointsPerMeter;
+
 	private final List<FakeEntity> waypointMarkers = new ArrayList<FakeEntity>();
 	private final List<List<FakeEntity>> lineMarkers = new ArrayList<List<FakeEntity>>();
+	private Player player;
 
+	/**
+	 * Visualizes a route for everyone.
+	 * 
+	 * @param route
+	 * @param pointsPerMeter
+	 */
 	public VisualizedRoute(Route route, double pointsPerMeter) {
+		this(route, pointsPerMeter, null);
+	}
+
+	/**
+	 * Visualizes a route for the specified player.
+	 * 
+	 * @param route The route to visualize
+	 * @param pointsPerMeter How many points to draw each meter
+	 * @param player The player to visualize for
+	 */
+	public VisualizedRoute(Route route, double pointsPerMeter, Player player) {
+		this.route = route;
+		this.pointsPerMeter = pointsPerMeter;
+		this.player = player;
+
+		refresh(0, 0, route.getNodes().size());
+	}
+
+	private void createEntities(int startIndex, int amount) {
+		final World world = route.getWorld();
+		final List<Node> nodes = route.getNodes();
+
+		for (int i = startIndex; i < startIndex + amount; ++i) {
+			Node node = nodes.get(i);
+			final FakeEntity waypointMarker = new FakeVehicle(node.getPosition().toLocation(world), VehicleType.ENDER_CRYSTAL);
+			sendFakeEntity(waypointMarker);
+
+			waypointMarkers.set(i, waypointMarker);
+		}
+
 		int points = (int) Math.ceil(pointsPerMeter * route.length());
 
 		double lastPosition = -1;
 		final Statistics stats = new Statistics();
 
-		for (Node node : route.getNodes()) {
-			final FakeEntity waypointMarker = new FakeVehicle(node.getPosition().toLocation(route.getWorld()), VehicleType.ENDER_CRYSTAL);
-			waypointMarker.send();
-
-			waypointMarkers.add(waypointMarker);
-
-			lineMarkers.add(new ArrayList<FakeEntity>());
-		}
-
 		for (int i = 0; i < points; ++i) {
 			final double position = ((double) i) / points;
+
+			final int index = route.getSegment(position);
+
+			if (index < startIndex)
+				continue;
+
+			if (index >= startIndex + amount)
+				continue;
+
 			final Location location = route.getLocation(position);
 
 			// begin statistics
@@ -64,10 +106,7 @@ public class VisualizedRoute {
 			// end statistics
 
 			final FakeEntity lineMarker = new FakeVehicle(location, VehicleType.ENDER_EYE);
-			lineMarker.send();
-
-			final int index = route.getSegment(position);
-			// TODO: maybe add a sanity check for the index?
+			sendFakeEntity(lineMarker);
 
 			lineMarkers.get(index).add(lineMarker);
 		}
@@ -75,28 +114,83 @@ public class VisualizedRoute {
 		System.out.println(stats.format());
 	}
 
+	/**
+	 * Removes all entities. Should be called when discarding this visualization. 
+	 */
 	public void removeEntities() {
-		for (FakeEntity entity : waypointMarkers) {
-			entity.remove();
-		}
-		for (List<FakeEntity> list : lineMarkers) {
+		removeEntities(0, waypointMarkers.size());
+	}
+
+	private void removeEntities(int startIndex, int amount) {
+		for (int i = startIndex; i < startIndex + amount; ++i) {
+			waypointMarkers.set(i, null).remove();
+
+			List<FakeEntity> list = lineMarkers.get(i);
 			for (FakeEntity entity : list) {
 				entity.remove();
+			}
+			list.clear();
+		}
+	}
+
+	/**
+	 * Shows or hides the specified segment.
+	 *
+	 * @param index segment index
+	 * @param show If true, show the segment, else hide it.
+	 */
+	public void showSegment(int index, boolean show) {
+		if (index < 0)
+			return;
+
+		if (index >= waypointMarkers.size())
+			return;
+
+		if (show) {
+			waypointMarkers.get(index).send();
+			for (FakeEntity lineMarker : lineMarkers.get(index)) {
+				sendFakeEntity(lineMarker);
+			}
+		}
+		else {
+			waypointMarkers.get(index).delete();
+			for (FakeEntity lineMarker : lineMarkers.get(index)) {
+				lineMarker.delete();
 			}
 		}
 	}
 
-	public void showSegment(int index, boolean show) {
-		if (show) {
-			waypointMarkers.get(index).send();
-			for (FakeEntity lineMarker : lineMarkers.get(index)) {
-				lineMarker.send();
-			}
+	/**
+	 * Refreshes the specified segment range
+	 *
+	 * @param startIndex The index at which to start refreshing
+	 * @param oldAmount The amount of segments to remove
+	 * @param newAmount The amount of segments to insert
+	 */
+	public void refresh(int startIndex, int oldAmount, int newAmount) {
+		removeEntities(startIndex, oldAmount);
+
+		while (oldAmount < newAmount) {
+			++oldAmount;
+			waypointMarkers.add(startIndex, null);
+			lineMarkers.add(startIndex, new ArrayList<FakeEntity>());
+		}
+
+		while (oldAmount > newAmount) {
+			--oldAmount;
+			waypointMarkers.remove(startIndex);
+			lineMarkers.remove(startIndex);
+		}
+
+		createEntities(startIndex, newAmount);
+	}
+
+	private void sendFakeEntity(final FakeEntity fakeEntity) {
+		if (player == null) {
+			fakeEntity.send();
 		}
 		else {
-			for (FakeEntity lineMarker : lineMarkers.get(index)) {
-				lineMarker.delete();
-			}
+			fakeEntity.send(player);
 		}
 	}
 }
