@@ -45,9 +45,11 @@ import org.bukkit.util.Vector;
 import eu.tomylobo.routes.util.Workarounds;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -67,7 +69,7 @@ public abstract class FakeEntity implements Entity {
 	}
 
 	public void sendPacketToRelevantPlayers(final Packet packet) {
-		for (Player player : location.getWorld().getPlayers()) {
+		for (Player player : relevantPlayers) {
 			sendPacketToPlayer(player, packet);
 		}
 	}
@@ -80,6 +82,7 @@ public abstract class FakeEntity implements Entity {
 	protected final DataWatcher datawatcher;
 	private Entity passenger;
 	private Map<Entity, Double> fakePassengers = new HashMap<Entity, Double>();
+	private Set<Player> relevantPlayers = new HashSet<Player>();
 
 	@Override
 	public void playEffect(EntityEffect effect) {
@@ -103,21 +106,23 @@ public abstract class FakeEntity implements Entity {
 		}
 	}
 
-	private void send(Player player) {
+	public void send(Player player) {
 		sendImplementation(player);
 		setPassenger(passenger);
+		relevantPlayers.add(player);
 	}
 
 	abstract public void sendImplementation(Player player);
 
 	public void delete() {
-		for (Player player : location.getWorld().getPlayers()) {
+		for (Player player : relevantPlayers) {
 			delete(player);
 		}
 	}
 
-	private void delete(Player player) {
+	public void delete(Player player) {
 		sendPacketToPlayer(player, new Packet29DestroyEntity(entityId));
+		relevantPlayers.remove(player);
 	}
 
 	@Override
