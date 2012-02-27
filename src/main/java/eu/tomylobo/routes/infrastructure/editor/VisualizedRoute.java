@@ -85,4 +85,18 @@ public class VisualizedRoute {
 			}
 		}
 	}
+
+	public void showSegment(int index, boolean show) {
+		if (show) {
+			waypointMarkers.get(index).send();
+			for (FakeEntity lineMarker : lineMarkers.get(index)) {
+				lineMarker.send();
+			}
+		}
+		else {
+			for (FakeEntity lineMarker : lineMarkers.get(index)) {
+				lineMarker.delete();
+			}
+		}
+	}
 }
