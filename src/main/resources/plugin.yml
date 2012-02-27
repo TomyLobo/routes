@@ -5,7 +5,7 @@ main: eu.tomylobo.routes.Routes
 name: routes
 startup: postworld
 url: https://github.com/TomyLobo/routes
-version: 'preview-2'
+version: 'preview-3-SNAPSHOT'
 
 commands:
   routes:
