@@ -67,10 +67,14 @@ public class VisualizedRoute {
 	}
 
 	private void createEntities(int startIndex, int amount) {
+		if (amount == 0)
+			return;
+
 		final World world = route.getWorld();
 		final List<Node> nodes = route.getNodes();
 
-		for (int i = startIndex; i < startIndex + amount; ++i) {
+		final int endIndex = Math.min(waypointMarkers.size(), startIndex + amount);
+		for (int i = startIndex; i < endIndex; ++i) {
 			Node node = nodes.get(i);
 			final FakeEntity waypointMarker = new FakeVehicle(node.getPosition().toLocation(world), VehicleType.ENDER_CRYSTAL);
 			sendFakeEntity(waypointMarker);
@@ -91,7 +95,7 @@ public class VisualizedRoute {
 			if (index < startIndex)
 				continue;
 
-			if (index >= startIndex + amount)
+			if (index >= endIndex)
 				continue;
 
 			final Location location = route.getLocation(position);
@@ -122,7 +126,8 @@ public class VisualizedRoute {
 	}
 
 	private void removeEntities(int startIndex, int amount) {
-		for (int i = startIndex; i < startIndex + amount; ++i) {
+		final int endIndex = Math.min(waypointMarkers.size(), startIndex + amount);
+		for (int i = startIndex; i < endIndex; ++i) {
 			waypointMarkers.set(i, null).remove();
 
 			List<FakeEntity> list = lineMarkers.get(i);
@@ -168,6 +173,12 @@ public class VisualizedRoute {
 	 * @param newAmount The amount of segments to insert
 	 */
 	public void refresh(int startIndex, int oldAmount, int newAmount) {
+		while (startIndex < 0) {
+			++startIndex;
+			--oldAmount;
+			--newAmount;
+		}
+
 		removeEntities(startIndex, oldAmount);
 
 		while (oldAmount < newAmount) {
