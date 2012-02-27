@@ -36,7 +36,7 @@ public class RouteEditSession {
 	public RouteEditSession(Player player, Route route) {
 		this.player = player;
 		this.route = route;
-		this.segmentIndex = route.getNodes().size();
+		this.segmentIndex = route.getNodes().size()-1;
 		this.visualizedRoute = new VisualizedRoute(route, 1.0, player);
 
 		flashTask = new ScheduledTask(Routes.getInstance()) {

@@ -120,9 +120,9 @@ public class RoutesCommands extends CommandContainer implements Listener {
 		final Player player = context.getPlayer();
 
 		final String routeName = context.getString(0);
-		final int segmentIndex = context.getInt(1, -1);
-
 		final Route route = plugin.transportSystem.getRoute(routeName);
+
+		final int segmentIndex = context.getInt(1, route.getNodes().size()-1);
 
 		RouteEditSession routeEditSession = plugin.routeEditor.edit(player, route);
 		routeEditSession.selectSegment(segmentIndex);
