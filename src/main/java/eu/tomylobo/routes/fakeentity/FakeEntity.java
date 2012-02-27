@@ -110,7 +110,7 @@ public abstract class FakeEntity implements Entity {
 
 	abstract public void sendImplementation(Player player);
 
-	private void delete() {
+	public void delete() {
 		for (Player player : location.getWorld().getPlayers()) {
 			delete(player);
 		}
