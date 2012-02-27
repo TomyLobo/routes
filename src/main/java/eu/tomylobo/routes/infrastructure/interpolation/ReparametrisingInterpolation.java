@@ -50,7 +50,6 @@ public class ReparametrisingInterpolation implements Interpolation {
 		cache.clear();
 		cache.put(0.0, 0.0);
 		cache.put(totalArcLength = baseInterpolation.arcLength(0.0, 1.0), 1.0);
-		System.out.println(cache);
 	}
 
 	public Interpolation getBaseInterpolation() {

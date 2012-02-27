@@ -115,7 +115,7 @@ public class KochanekBartelsInterpolation implements Interpolation {
 	}
 
 	/**
-	 * Retrieves a node. Indexes are clamped to the valid range. 
+	 * Retrieves a node. Indexes are clamped to the valid range.
 	 * 
 	 * @param index node index to retrieve
 	 * @return nodes[clamp(0, nodes.length-1)]
@@ -130,7 +130,7 @@ public class KochanekBartelsInterpolation implements Interpolation {
 		return fastRetrieve(index);
 	}
 
-	public Vector fastRetrieve(int index) {
+	private Vector fastRetrieve(int index) {
 		return nodes.get(index).getPosition();
 	}
 
