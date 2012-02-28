@@ -1,4 +1,9 @@
 - add a way to control the attributes of waypoints
 	- selector tool, flashing waypoints
-- add a way to insert waypoints
-	- selector tool, flashing line
+- remove the need for the arrow item
+- make the gold spade configurable
+- permissions
+	- blocked by we/cb/routes compatibility layer decision process
+- make /travel travel on a route
+	- restrict distance to the start of the route
+		- make sure signs are not affected
