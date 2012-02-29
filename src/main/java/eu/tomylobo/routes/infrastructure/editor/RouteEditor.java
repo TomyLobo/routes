@@ -63,8 +63,9 @@ public class RouteEditor implements Listener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		final RouteEditSession routeEditSession = editedRoutes.remove(event.getPlayer());
-
-		routeEditSession.close();
+		if (routeEditSession != null) {
+			routeEditSession.close();
+		}
 	}
 
 	/**
