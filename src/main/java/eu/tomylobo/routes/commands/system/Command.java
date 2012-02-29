@@ -35,4 +35,11 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Command {
+	public static final String DISABLED = "\u1f4a9";
+
+	/**
+	 * One of these permissions has to be given for the command to work.<br />
+	 * Passing {@link #DISABLED} or omitting this field means that no permission check is done.
+	 */
+	String[] permissions() default DISABLED;
 }

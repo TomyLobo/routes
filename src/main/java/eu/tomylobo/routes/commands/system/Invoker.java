@@ -22,6 +22,8 @@ package eu.tomylobo.routes.commands.system;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.bukkit.command.CommandSender;
+
 /**
  * Wraps a method+instance to be invoked by the command system.
  *
@@ -31,13 +33,34 @@ import java.lang.reflect.Method;
 public class Invoker {
 	protected Method method;
 	protected CommandContainer instance;
+	protected String[] permissions;
 
-	public Invoker(Method method, CommandContainer instance) {
+	public Invoker(Method method, CommandContainer instance, String[] permissions) {
 		this.method = method;
 		this.instance = instance;
+		this.permissions = permissions;
 	}
 
-	public void invoke(Context context) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-		method.invoke(instance, context);
+	public void invoke(Context context) throws CommandException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+		if (hasPermission(context.getSender()))
+			throw new PermissionDeniedException();
+		try {
+			method.invoke(instance, context);
+		}
+		catch (InvocationTargetException e) {
+			if (!(e.getCause() instanceof CommandException))
+				throw e;
+			
+			throw (CommandException) e.getCause();
+		}
+	}
+
+	protected boolean hasPermission(CommandSender sender) {
+		for (String permission : permissions) {
+			if (sender.hasPermission(permission))
+				return true;
+		}
+
+		return false;
 	}
 }

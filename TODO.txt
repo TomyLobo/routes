@@ -3,7 +3,8 @@
 - remove the need for the arrow item
 - make the gold spade configurable
 - permissions
-	- blocked by we/cb/routes compatibility layer decision process
+	- signs
+	- per-route travel permissions
 - make /travel travel on a route
 	- restrict distance to the start of the route
 		- make sure signs are not affected

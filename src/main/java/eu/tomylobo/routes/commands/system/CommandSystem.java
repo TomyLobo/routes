@@ -53,7 +53,10 @@ public class CommandSystem {
 				CommandContainer instance = clazz.newInstance();
 				for (Method method : clazz.getMethods()) {
 					if (method.isAnnotationPresent(Command.class)) {
-						commands.put(method.getName(), new Invoker(method, instance));
+						final Command commandAnnotation = method.getAnnotation(Command.class);
+						final String[] permissions = commandAnnotation.permissions();
+
+						commands.put(method.getName(), new Invoker(method, instance, permissions));
 					}
 					else if (method.isAnnotationPresent(NestedCommand.class)) {
 						commands.put(method.getName(), new NestedInvoker(method, instance));
@@ -81,10 +84,10 @@ public class CommandSystem {
 	}
 
 	/**
-	 * Dispatches the given context
+	 * Dispatches the given context.
 	 *
-	 * @param context
-	 * @return true on success or expected errors. false if args is null or no closure was found or it could not be accessed.
+	 * @param context The context to dispatch
+	 * @return false if context is null or no closure was found. true otherwise.
 	 */
 	public boolean dispatch(Context context) {
 		if (context == null)
@@ -97,18 +100,17 @@ public class CommandSystem {
 		try {
 			closure.invoke(context);
 		}
+		catch (CommandException e) {
+			context.sendMessage("\u00a7c"+e.getMessage());
+		}
 		catch (IllegalAccessException e) {
-			return false;
+			context.sendMessage("\u00a7cInternal error while executing command.");
+			e.printStackTrace();
 		}
 		catch (InvocationTargetException e) {
 			final Throwable cause = e.getCause();
-			if (cause instanceof CommandException) {
-				context.sendMessage("\u00a7c"+cause.getMessage());
-			}
-			else {
-				context.sendMessage("\u00a7cException caught while executing command.");
-				cause.printStackTrace();
-			}
+			context.sendMessage("\u00a7cException caught while executing command.");
+			cause.printStackTrace();
 		}
 		return true;
 	}

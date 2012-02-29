@@ -19,30 +19,10 @@
 
 package eu.tomylobo.routes.commands.system;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+public class PermissionDeniedException extends CommandException {
+	private static final long serialVersionUID = 1L;
 
-import org.bukkit.command.CommandSender;
-
-/**
- * Invokes nested commands instead of invoking the instance directly.
- *
- * @author TomyLobo
- *
- */
-public class NestedInvoker extends Invoker {
-	public NestedInvoker(Method method, CommandContainer instance) {
-		super(method, instance, null);
-	}
-
-	@Override
-	public void invoke(Context context) throws CommandException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-		if (!instance.plugin.commandSystem.dispatch(context.getNested()))
-			super.invoke(context);
-	}
-
-	@Override
-	protected boolean hasPermission(CommandSender sender) {
-		return true;
+	public PermissionDeniedException() {
+		super("Permission denied.");
 	}
 }
