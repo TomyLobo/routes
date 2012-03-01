@@ -19,13 +19,12 @@
 
 package eu.tomylobo.routes.fakeentity;
 
-import net.minecraft.server.MathHelper;
 import net.minecraft.server.Packet24MobSpawn;
 
 import org.bukkit.Location;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-
-import eu.tomylobo.routes.util.Utils;
+import eu.tomylobo.routes.util.Workarounds;
 
 /**
  * A client-side-only entity spawned through {@link Packet24MobSpawn}.
@@ -43,16 +42,16 @@ public class FakeMob extends FakeEntity {
 
 	@Override
 	public void sendImplementation(Player player) {
-		final Packet24MobSpawn p24 = new Packet24MobSpawn();
-		p24.a = entityId;
-		p24.b = mobTypeId;
-		p24.c = MathHelper.floor(location.getX() * 32.0D);
-		p24.d = MathHelper.floor(location.getY() * 32.0D);
-		p24.e = MathHelper.floor(location.getZ() * 32.0D);
-		p24.f = (byte) ((int) ((location.getYaw() + yawOffset) * 256.0F / 360.0F));
-		p24.g = (byte) ((int) (location.getPitch() * 256.0F / 360.0F));
-		Utils.setPrivateValue(Packet24MobSpawn.class, p24, "h", datawatcher);
+		Workarounds.getNetwork().sendSpawnMob(
+				player, entityId,
+				location.getX(), location.getY(), location.getZ(),
+				location.getYaw() + yawOffset, location.getPitch(),
+				mobTypeId
+		);
+	}
 
-		sendPacketToPlayer(player, p24);
+	@Override
+	public EntityType getType() {
+		return org.bukkit.entity.EntityType.fromId(mobTypeId);
 	}
 }

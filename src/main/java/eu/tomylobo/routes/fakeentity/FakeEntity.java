@@ -20,16 +20,7 @@
 package eu.tomylobo.routes.fakeentity;
 
 import net.minecraft.server.DataWatcher;
-import net.minecraft.server.MathHelper;
 import net.minecraft.server.Packet;
-import net.minecraft.server.Packet28EntityVelocity;
-import net.minecraft.server.Packet29DestroyEntity;
-import net.minecraft.server.Packet32EntityLook;
-import net.minecraft.server.Packet34EntityTeleport;
-import net.minecraft.server.Packet38EntityStatus;
-import net.minecraft.server.Packet39AttachEntity;
-import net.minecraft.server.Packet40EntityMetadata;
-
 import org.bukkit.Bukkit;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
@@ -40,6 +31,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.metadata.MetadataValue;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.util.Vector;
 
 import eu.tomylobo.routes.util.Workarounds;
@@ -86,7 +79,7 @@ public abstract class FakeEntity implements Entity {
 
 	@Override
 	public void playEffect(EntityEffect effect) {
-		sendPacketToRelevantPlayers(new Packet38EntityStatus(entityId, effect.getData()));
+		Workarounds.getNetwork().sendEffect(relevantPlayers, entityId, effect.getData());
 	}
 
 	public FakeEntity(Location location, EntityType entityType) {
@@ -114,20 +107,19 @@ public abstract class FakeEntity implements Entity {
 
 	abstract public void sendImplementation(Player player);
 
-	public void delete() {
-		for (Player player : relevantPlayers) {
-			delete(player);
-		}
+	public final void delete() {
+		Workarounds.getNetwork().sendDestroyEntity(relevantPlayers, entityId);
+		relevantPlayers.clear();
 	}
 
-	public void delete(Player player) {
-		sendPacketToPlayer(player, new Packet29DestroyEntity(entityId));
+	public final void delete(Player player) {
+		Workarounds.getNetwork().sendDestroyEntity(player, entityId);
 		relevantPlayers.remove(player);
 	}
 
 	@Override
 	public void setVelocity(Vector velocity) {
-		sendPacketToRelevantPlayers(new Packet28EntityVelocity(entityId, velocity.getX(), velocity.getY(), velocity.getZ()));
+		Workarounds.getNetwork().sendVelocity(relevantPlayers, this, velocity);
 
 		for (Entry<Entity, Double> entry : fakePassengers.entrySet()) {
 			entry.getKey().setVelocity(velocity);
@@ -138,11 +130,10 @@ public abstract class FakeEntity implements Entity {
 		this.location.setYaw(location.getYaw());
 		this.location.setPitch(location.getPitch());
 
-		sendPacketToRelevantPlayers(new Packet32EntityLook(
-				entityId,
-				(byte) ((int) ((location.getYaw()+yawOffset) * 256.0F / 360.0F)),
-				(byte) ((int) (location.getPitch() * 256.0F / 360.0F))
-		));
+		Workarounds.getNetwork().sendOrientation(
+				relevantPlayers, entityId,
+				location.getYaw()+yawOffset, location.getPitch()
+		);
 
 		return true;
 	}
@@ -151,14 +142,11 @@ public abstract class FakeEntity implements Entity {
 	public boolean teleport(Location location) {
 		this.location = location;
 
-		sendPacketToRelevantPlayers(new Packet34EntityTeleport(
-				entityId,
-				MathHelper.floor(location.getX()*32.0D),
-				MathHelper.floor(location.getY()*32.0D),
-				MathHelper.floor(location.getZ()*32.0D),
-				(byte) ((int) ((location.getYaw()+yawOffset) * 256.0F / 360.0F)),
-				(byte) ((int) (location.getPitch() * 256.0F / 360.0F))
-		));
+		Workarounds.getNetwork().sendTeleport(
+				relevantPlayers, entityId,
+				location.getX(), location.getY(), location.getZ(),
+				location.getYaw()+yawOffset, location.getPitch()
+		);
 
 		if (passenger != null) {
 			Workarounds.setPosition(passenger, location.toVector().add(new Vector(0, getMountedYOffset(), 0)), false);
@@ -249,21 +237,16 @@ public abstract class FakeEntity implements Entity {
 
 	@Override
 	public boolean setPassenger(Entity passenger) {
-		Packet39AttachEntity p39 = new Packet39AttachEntity();
-
 		if (passenger == null)  {
 			if (this.passenger == null)
 				return true;
 
-			p39.a = this.passenger.getEntityId();
-			p39.b = -1;
+			Workarounds.getNetwork().sendAttachToVehicle(relevantPlayers, this.passenger, null);
 		}
 		else {
-			p39.a = passenger.getEntityId();
-			p39.b = entityId;
+			Workarounds.getNetwork().sendAttachToVehicle(relevantPlayers, passenger, this);
 		}
 
-		sendPacketToRelevantPlayers(p39);
 		this.passenger = passenger;
 
 		return true;
@@ -321,6 +304,40 @@ public abstract class FakeEntity implements Entity {
 		return teleport(location);
 	}
 
+	@Override
+	public boolean isInsideVehicle() {
+		return false;
+	}
+
+	@Override
+	public boolean leaveVehicle() {
+		return false;
+	}
+
+	@Override
+	public Entity getVehicle() {
+		return null;
+	}
+
+	@Override
+	public void setMetadata(String metadataKey, MetadataValue newMetadataValue) {
+		
+	}
+
+	@Override
+	public List<MetadataValue> getMetadata(String metadataKey) {
+		return null;
+	}
+
+	@Override
+	public boolean hasMetadata(String metadataKey) {
+		return false;
+	}
+
+	@Override
+	public void removeMetadata(String metadataKey, Plugin owningPlugin) {
+	}
+
 	public void addFakePassenger(Entity entity, double yOffset) {
 		fakePassengers.put(entity, yOffset);
 	}
@@ -358,23 +375,7 @@ public abstract class FakeEntity implements Entity {
 	}
 
 	public void setData(int index, Object value) {
-		sendPacketToRelevantPlayers(createMetadataPacket(index, value));
-	}
-
-	private Packet40EntityMetadata createMetadataPacket(int index, Object value) {
-		try {
-			// create entry
-			datawatcher.a(index, value.getClass().getConstructor(String.class).newInstance("0"));
-
-			// mark dirty
-			datawatcher.watch(index, value.getClass().getConstructor(String.class).newInstance("1"));
-		}
-		catch (Exception e) { }
-
-		// put the actual data in
-		datawatcher.watch(index, value);
-
-		return new Packet40EntityMetadata(entityId, datawatcher);
+		Workarounds.getNetwork().sendSetData(relevantPlayers, entityId, index, value);
 	}
 
 	public double getMountedYOffset() {

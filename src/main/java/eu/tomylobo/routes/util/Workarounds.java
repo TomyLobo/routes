@@ -28,6 +28,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import eu.tomylobo.routes.fakeentity.FakeEntity;
+import eu.tomylobo.routes.util.network.CraftNetwork;
+import eu.tomylobo.routes.util.network.Network;
 
 public class Workarounds {
 	public static Location getEyeLocation(final Player player) {
@@ -60,5 +62,10 @@ public class Workarounds {
 			packet.z = z;
 			FakeEntity.sendPacketToPlayer((Player) entity, packet);
 		}
+	}
+
+	private static final CraftNetwork networkInstance = new CraftNetwork();
+	public static Network getNetwork() {
+		return networkInstance;
 	}
 }
