@@ -45,7 +45,7 @@ public class TravelCommands extends CommandContainer {
 		}
 	}
 
-	@Command
+	@Command(permissions = "routes.travel")
 	public void travel_test(Context context) {
 		final String routeName = context.getString(0);
 		final Route route = plugin.transportSystem.getRoute(routeName);

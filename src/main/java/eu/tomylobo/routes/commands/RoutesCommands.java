@@ -52,21 +52,21 @@ public class RoutesCommands extends CommandContainer implements Listener {
 		}
 	}
 
-	@Command
+	@Command(permissions = "routes.load")
 	public void routes_load(Context context) {
 		plugin.load();
 
 		context.sendMessage("Reloaded routes.");
 	}
 
-	@Command
+	@Command(permissions = "routes.save")
 	public void routes_save(Context context) {
 		plugin.save();
 
 		context.sendMessage("Saved routes.");
 	}
 
-	@Command
+	@Command(permissions = "routes.add")
 	public void routes_add(Context context) {
 		final Player player = context.getPlayer();
 		final String routeName = context.getString(0);
@@ -79,7 +79,7 @@ public class RoutesCommands extends CommandContainer implements Listener {
 		context.sendMessage("Starting a route named '"+routeName+"' here. Right-click with "+RouteEditor.toolMaterial+" to add a waypoint.");
 	}
 
-	@Command
+	@Command(permissions = "routes.show")
 	public void routes_show(Context context) {
 		final String routeName = context.getString(0);
 
@@ -115,7 +115,7 @@ public class RoutesCommands extends CommandContainer implements Listener {
 		context.sendMessage("Showing the route '"+routeName+"'.");
 	}
 
-	@Command
+	@Command(permissions = "routes.edit")
 	public void routes_edit(Context context) {
 		final Player player = context.getPlayer();
 

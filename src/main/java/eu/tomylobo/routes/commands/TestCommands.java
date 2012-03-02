@@ -40,13 +40,13 @@ import eu.tomylobo.routes.util.Remover;
  *
  */
 public class TestCommands extends CommandContainer {
-	@Command
+	@Command(permissions = "routes.test")
 	public void routes_test3(Context context) {
 		routes_test1(context);
 		routes_test2(context);
 	}
 
-	@Command
+	@Command(permissions = "routes.test")
 	public void routes_test1(Context context) {
 		Route route = new Route();
 
@@ -74,7 +74,7 @@ public class TestCommands extends CommandContainer {
 		context.sendMessage("Created a test route.");
 	}
 
-	@Command
+	@Command(permissions = "routes.test")
 	public void routes_test2(Context context) {
 		Route route = plugin.transportSystem.getRoute("test");
 		final Location location = route.getLocation(0);
