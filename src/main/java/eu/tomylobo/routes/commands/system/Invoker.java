@@ -42,7 +42,7 @@ public class Invoker {
 	}
 
 	public void invoke(Context context) throws CommandException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-		if (hasPermission(context.getSender()))
+		if (!hasPermission(context.getSender()))
 			throw new PermissionDeniedException();
 		try {
 			method.invoke(instance, context);
