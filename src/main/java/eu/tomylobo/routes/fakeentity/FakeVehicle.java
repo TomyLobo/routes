@@ -25,6 +25,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
 import eu.tomylobo.routes.util.Workarounds;
+import eu.tomylobo.routes.util.network.OtherType;
 
 /**
  * A client-side-only entity spawned through {@link Packet23VehicleSpawn}.
@@ -53,6 +54,6 @@ public class FakeVehicle extends FakeEntity {
 
 	@Override
 	public EntityType getType() {
-		return null;
+		return OtherType.fromId(vehicleTypeId).toEntityType();
 	}
 }
