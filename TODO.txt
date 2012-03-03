@@ -1,6 +1,5 @@
 - add a way to control the attributes of waypoints
 	- selector tool, flashing waypoints
-- remove the need for the arrow item
 - make the gold spade configurable
 - permissions
 	- signs

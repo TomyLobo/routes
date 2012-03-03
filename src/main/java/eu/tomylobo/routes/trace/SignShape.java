@@ -23,8 +23,6 @@ import org.bukkit.Location;
 import org.bukkit.block.Sign;
 import org.bukkit.util.Vector;
 
-import eu.tomylobo.routes.util.Workarounds;
-
 public class SignShape extends Plane {
 	private static final double SIGN_SCALE = 2.0 / 3.0;
 	private static final double FONT_SCALE = SIGN_SCALE / 60.0;
@@ -38,7 +36,7 @@ public class SignShape extends Plane {
 	}
 
 	private static Location getOriginLocation(Sign sign) {
-		final Location originLocation = Workarounds.getLocation(sign).add(0.5, 0.75*SIGN_SCALE, 0.5);
+		final Location originLocation = sign.getLocation().add(0.5, 0.75*SIGN_SCALE, 0.5);
 
 		double yOffset = 0.5 * SIGN_SCALE;
 		double zOffset = 0.07 * SIGN_SCALE;

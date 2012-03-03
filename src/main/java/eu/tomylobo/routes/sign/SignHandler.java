@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandException;
@@ -31,6 +32,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -43,7 +45,6 @@ import eu.tomylobo.routes.fakeentity.MobType;
 import eu.tomylobo.routes.trace.SignShape;
 import eu.tomylobo.routes.trace.SignTraceResult;
 import eu.tomylobo.routes.util.Ini;
-import eu.tomylobo.routes.util.Workarounds;
 
 public class SignHandler implements Listener {
 	private final Routes plugin;
@@ -55,7 +56,7 @@ public class SignHandler implements Listener {
 
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
-	
+
 	private SignSession getOrCreateSession(Player player) {
 		SignSession session = sessions.get(player);
 		if (session == null) {
@@ -102,57 +103,51 @@ public class SignHandler implements Listener {
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onPlayerInteract(PlayerInteractEvent event) {
-		switch (event.getAction()) {
-		case RIGHT_CLICK_AIR:
-		case RIGHT_CLICK_BLOCK:
-			final Player player = event.getPlayer();
+		if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
+			return; // We only want RIGHT_CLICK_BLOCK
 
-			switch (player.getItemInHand().getType()) {
-			case ARROW:
-				final Block block = event.getClickedBlock();
-				if (block == null)
-					return;
+		final Block block = event.getClickedBlock();
+		if (block == null)
+			return; // This can't really happen, but check for it anyway, just in case someone dispatches a broken event...
 
-				TrackedSign trackedSign = trackedSigns.get(block);
-				if (trackedSign == null)
-					return;
+		final Material type = block.getType();
+		if (type != Material.WALL_SIGN && type != Material.SIGN_POST)
+			return; // We only want signs
 
-				final Sign sign = (Sign) block.getState();
-				final SignShape shape = new SignShape(sign);
+		TrackedSign trackedSign = trackedSigns.get(block);
+		if (trackedSign == null)
+			return; // We only want tracked signs
 
-				final Location eyeLocation = Workarounds.getEyeLocation(player);
-				final SignTraceResult trace = shape.trace(eyeLocation);
+		final Player player = event.getPlayer();
+		final Location eyeLocation = player.getEyeLocation();
 
-				final int index = trace.index;
+		final SignShape shape = new SignShape((Sign) block.getState());
+		final SignTraceResult trace = shape.trace(eyeLocation);
 
-				if (index < 0 || index >= 4)
-					return;
+		final int index = trace.index;
 
-				if (!trackedSign.hasEntry(index))
-					return;
+		if (index < 0 || index >= 4)
+			return; // We only want valid indexes
 
-				final SignSession session = getOrCreateSession(player);
-				if (session.isSelected(trackedSign, index)) {
-					session.close();
+		if (!trackedSign.hasEntry(index))
+			return; // We only want indexes for which the sign has a tracked entry
 
-					final String routeName = trackedSign.getEntry(index);
+		final SignSession session = getOrCreateSession(player);
+		if (session.isSelected(trackedSign, index)) {
+			session.close();
 
-					try {
-						plugin.travelAgency.addTravellerWithMount(routeName, player, MobType.ENDER_DRAGON);
-						player.sendMessage("Travelling on route '"+routeName+"'.");
-					}
-					catch (CommandException e) {
-						player.sendMessage(e.getMessage());
-					}
-				}
-				else {
-					session.select(trackedSign, index);
-				}
+			final String routeName = trackedSign.getEntry(index);
 
-				break;
+			try {
+				plugin.travelAgency.addTravellerWithMount(routeName, player, MobType.ENDER_DRAGON);
+				player.sendMessage("Travelling on route '"+routeName+"'.");
 			}
-
-			break;
+			catch (CommandException e) {
+				player.sendMessage(e.getMessage());
+			}
+		}
+		else {
+			session.select(trackedSign, index);
 		}
 	}
 

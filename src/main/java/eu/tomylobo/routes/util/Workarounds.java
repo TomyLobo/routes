@@ -20,8 +20,6 @@
 package eu.tomylobo.routes.util;
 
 import net.minecraft.server.Packet11PlayerPosition;
-import org.bukkit.Location;
-import org.bukkit.block.BlockState;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -32,20 +30,6 @@ import eu.tomylobo.routes.util.network.CraftNetwork;
 import eu.tomylobo.routes.util.network.Network;
 
 public class Workarounds {
-	public static Location getEyeLocation(final Player player) {
-		final Location eyeLocation = player.getLocation();
-		double eyeHeight = player.getEyeHeight(true);
-		if (player.isSneaking()) {
-			eyeHeight -= 0.08;
-		}
-		eyeLocation.add(0, eyeHeight, 0);
-		return eyeLocation;
-	}
-
-	public static Location getLocation(BlockState state) {
-		return state.getBlock().getLocation();
-	}
-
 	public static void setPosition(Entity entity, Vector vector, boolean sendUpdate) {
 		net.minecraft.server.Entity notchEntity = ((CraftEntity) entity).getHandle();
 
