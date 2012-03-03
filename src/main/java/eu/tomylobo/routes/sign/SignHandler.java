@@ -44,16 +44,30 @@ import eu.tomylobo.routes.trace.SignShape;
 import eu.tomylobo.routes.trace.SignTraceResult;
 import eu.tomylobo.routes.util.Ini;
 import eu.tomylobo.routes.util.Remover;
+import eu.tomylobo.routes.util.ScheduledTask;
 import eu.tomylobo.routes.util.Workarounds;
 
 public class SignHandler implements Listener {
 	private final Routes plugin;
 	private Map<Block, TrackedSign> trackedSigns = new HashMap<Block, TrackedSign>();
+	private TrackedSign currentTrackedSign;
+	private ScheduledTask signResetTask;
 
 	public SignHandler(Routes plugin) {
 		this.plugin = plugin;
 
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+
+		signResetTask = new ScheduledTask(plugin) {
+			@Override
+			public void run() {
+				if (currentTrackedSign == null)
+					return;
+
+				currentTrackedSign.select(-1);
+				currentTrackedSign = null;
+			}
+		};
 	}
 
 	@EventHandler
@@ -120,7 +134,17 @@ public class SignHandler implements Listener {
 				if (index < 0 || index >= 4)
 					return;
 
+				if (!trackedSign.hasEntry(index))
+					return;
+
+				if (trackedSign != currentTrackedSign && currentTrackedSign != null) {
+					currentTrackedSign.select(-1);
+				}
+
+				signResetTask.cancel();
+
 				if (trackedSign.isSelected(index)) {
+					currentTrackedSign = null;
 					trackedSign.select(-1);
 
 					final String routeName = trackedSign.getEntry(index);
@@ -133,7 +157,10 @@ public class SignHandler implements Listener {
 					player.sendMessage("Travelling on route '"+routeName+"'.");
 				}
 				else {
+					currentTrackedSign = trackedSign;
 					trackedSign.select(index);
+
+					signResetTask.scheduleSyncDelayed(2 * 20);
 				}
 
 				break;
