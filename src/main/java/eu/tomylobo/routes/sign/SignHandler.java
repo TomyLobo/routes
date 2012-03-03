@@ -43,7 +43,6 @@ import eu.tomylobo.routes.fakeentity.MobType;
 import eu.tomylobo.routes.trace.SignShape;
 import eu.tomylobo.routes.trace.SignTraceResult;
 import eu.tomylobo.routes.util.Ini;
-import eu.tomylobo.routes.util.Remover;
 import eu.tomylobo.routes.util.Workarounds;
 
 public class SignHandler implements Listener {
@@ -138,11 +137,19 @@ public class SignHandler implements Listener {
 
 					final String routeName = trackedSign.getEntry(index);
 
-					FakeEntity dragon = new FakeMob(eyeLocation, MobType.ENDER_DRAGON);
+					final FakeEntity dragon = new FakeMob(eyeLocation, MobType.ENDER_DRAGON);
 					dragon.send();
+					final boolean oldAllowFlight = player.getAllowFlight();
+					player.setAllowFlight(true);
 					dragon.setPassenger(player);
 
-					plugin.travelAgency.addTraveller(routeName, dragon, 5.0, new Remover(dragon));
+					plugin.travelAgency.addTraveller(routeName, dragon, 5.0, new Runnable() {
+						@Override
+						public void run() {
+							dragon.remove();
+							player.setAllowFlight(oldAllowFlight);
+						}
+					});
 					player.sendMessage("Travelling on route '"+routeName+"'.");
 				}
 				else {
