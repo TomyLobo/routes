@@ -29,6 +29,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.command.CommandException;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
@@ -63,7 +64,7 @@ public class SignHandler implements Listener {
 		return session;
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onSignChange(SignChangeEvent event) {
 		final Block block = event.getBlock();
 		final Sign sign = (Sign) block.getState();
@@ -86,7 +87,7 @@ public class SignHandler implements Listener {
 		}
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onBlockBreak(BlockBreakEvent event) {
 		final Block block = event.getBlock();
 
@@ -99,7 +100,7 @@ public class SignHandler implements Listener {
 		event.getPlayer().sendMessage("Broke tracked sign");
 	}
 
-	@EventHandler
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		switch (event.getAction()) {
 		case RIGHT_CLICK_AIR:
