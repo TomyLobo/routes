@@ -44,30 +44,25 @@ import eu.tomylobo.routes.trace.SignShape;
 import eu.tomylobo.routes.trace.SignTraceResult;
 import eu.tomylobo.routes.util.Ini;
 import eu.tomylobo.routes.util.Remover;
-import eu.tomylobo.routes.util.ScheduledTask;
 import eu.tomylobo.routes.util.Workarounds;
 
 public class SignHandler implements Listener {
 	private final Routes plugin;
 	private Map<Block, TrackedSign> trackedSigns = new HashMap<Block, TrackedSign>();
-	private TrackedSign currentTrackedSign;
-	private ScheduledTask signResetTask;
+	public Map<Player, SignSession> sessions = new HashMap<Player, SignSession>();
 
 	public SignHandler(Routes plugin) {
 		this.plugin = plugin;
 
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
-
-		signResetTask = new ScheduledTask(plugin) {
-			@Override
-			public void run() {
-				if (currentTrackedSign == null)
-					return;
-
-				currentTrackedSign.select(-1);
-				currentTrackedSign = null;
-			}
-		};
+	}
+	
+	private SignSession getOrCreateSession(Player player) {
+		SignSession session = sessions.get(player);
+		if (session == null) {
+			sessions.put(player, session = new SignSession(this, player));
+		}
+		return session;
 	}
 
 	@EventHandler
@@ -137,15 +132,9 @@ public class SignHandler implements Listener {
 				if (!trackedSign.hasEntry(index))
 					return;
 
-				if (trackedSign != currentTrackedSign && currentTrackedSign != null) {
-					currentTrackedSign.select(-1);
-				}
-
-				signResetTask.cancel();
-
-				if (trackedSign.isSelected(index)) {
-					currentTrackedSign = null;
-					trackedSign.select(-1);
+				final SignSession session = getOrCreateSession(player);
+				if (session.isSelected(trackedSign, index)) {
+					session.close();
 
 					final String routeName = trackedSign.getEntry(index);
 
@@ -157,10 +146,7 @@ public class SignHandler implements Listener {
 					player.sendMessage("Travelling on route '"+routeName+"'.");
 				}
 				else {
-					currentTrackedSign = trackedSign;
-					trackedSign.select(index);
-
-					signResetTask.scheduleSyncDelayed(2 * 20);
+					session.select(trackedSign, index);
 				}
 
 				break;

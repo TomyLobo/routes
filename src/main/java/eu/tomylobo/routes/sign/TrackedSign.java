@@ -23,11 +23,13 @@ import java.util.Collection;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
 
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
 import eu.tomylobo.routes.util.Ini;
+import eu.tomylobo.routes.util.Workarounds;
 
 public class TrackedSign {
 	private static final String UNMARKED_COLOR = "\u00a79";
@@ -162,6 +164,23 @@ public class TrackedSign {
 		}
 
 		sign.update();
+	}
+
+	/**
+	 * Selects the specified entry for the given player and unmarks the
+	 * previously selected one.<br />
+	 * Does not alter this object's state.
+	 *
+	 * @param index The index of the entry
+	 */
+	public void select(Player player, int index) {
+		final Sign sign = (Sign) block.getState();
+
+		if (index != -1 && entries[index] != null) {
+			setMarked(sign, index, true);
+		}
+
+		Workarounds.getNetwork().sendSignUpdate(player, sign);
 	}
 
 	private void setMarked(final Sign sign, int index, boolean marked) {
