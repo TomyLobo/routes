@@ -5,6 +5,5 @@
 - permissions
 	- signs
 	- per-route travel permissions
-- make /travel travel on a route
-	- restrict distance to the start of the route
-		- make sure signs are not affected
+- restrict distance to the start of the route for /travel
+	- make sure signs are not affected
