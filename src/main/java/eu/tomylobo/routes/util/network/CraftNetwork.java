@@ -23,6 +23,7 @@ import java.util.Collection;
 
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
+import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -34,6 +35,7 @@ import eu.tomylobo.routes.util.Utils;
 import net.minecraft.server.DataWatcher;
 import net.minecraft.server.MathHelper;
 import net.minecraft.server.Packet;
+import net.minecraft.server.Packet130UpdateSign;
 import net.minecraft.server.Packet23VehicleSpawn;
 import net.minecraft.server.Packet24MobSpawn;
 import net.minecraft.server.Packet28EntityVelocity;
@@ -323,6 +325,41 @@ public class CraftNetwork implements Network {
 	}
 
 
+	private Packet130UpdateSign createSignUpdatePacket(int x, int y, int z, String[] lines) {
+		return new Packet130UpdateSign(x, y, z, lines);
+	}
+
+	@Override
+	public void sendSignUpdate(Player player, Sign signState) {
+		sendSignUpdate(player, signState.getLocation(), signState.getLines());
+	}
+
+	@Override
+	public void sendSignUpdate(Player player, Location location, String[] lines) {
+		sendSignUpdate(player, location.getBlockX(), location.getBlockY(), location.getBlockZ(), lines);
+	}
+
+	@Override
+	public void sendSignUpdate(Player player, int x, int y, int z, String[] lines) {
+		sendPacket(player, createSignUpdatePacket(x, y, z, lines));
+	}
+
+	@Override
+	public void sendSignUpdate(Collection<Player> players, Sign signState) {
+		sendSignUpdate(players, signState.getLocation(), signState.getLines());
+	}
+
+	@Override
+	public void sendSignUpdate(Collection<Player> players, Location location, String[] lines) {
+		sendSignUpdate(players, location.getBlockX(), location.getBlockY(), location.getBlockZ(), lines);
+	}
+
+	@Override
+	public void sendSignUpdate(Collection<Player> players, int x, int y, int z, String[] lines) {
+		sendPacket(players, createSignUpdatePacket(x, y, z, lines));
+	}
+
+
 
 	private static void sendPacket(Collection<Player> players, Packet packet) {
 		for (Player player : players) {
@@ -330,7 +367,7 @@ public class CraftNetwork implements Network {
 		}
 	}
 
-	private static void sendPacket(final Player ply, final Packet packet) {
-		((CraftPlayer) ply).getHandle().netServerHandler.sendPacket(packet);
+	private static void sendPacket(final Player player, final Packet packet) {
+		((CraftPlayer) player).getHandle().netServerHandler.sendPacket(packet);
 	}
 }

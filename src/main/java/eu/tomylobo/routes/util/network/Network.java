@@ -23,6 +23,7 @@ import java.util.Collection;
 
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -72,4 +73,11 @@ public interface Network {
 	void sendSpawnMob(Collection<Player> players, int entityId, double x, double y, double z, float yaw, float pitch, int creatureTypeId);
 	void sendSpawnOther(Collection<Player> players, Entity entity, Location location, OtherType otherType, int dataValue);
 	void sendSpawnOther(Collection<Player> players, int entityId, double x, double y, double z, int typeId, int dataValue);
+
+	void sendSignUpdate(Player player, Sign signState);
+	void sendSignUpdate(Player player, Location location, String[] lines);
+	void sendSignUpdate(Player player, int x, int y, int z, String[] lines);
+	void sendSignUpdate(Collection<Player> players, Sign signState);
+	void sendSignUpdate(Collection<Player> players, Location location, String[] lines);
+	void sendSignUpdate(Collection<Player> players, int x, int y, int z, String[] lines);
 }
