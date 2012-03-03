@@ -25,10 +25,13 @@ import eu.tomylobo.routes.commands.system.Command;
 import eu.tomylobo.routes.commands.system.Context;
 import eu.tomylobo.routes.commands.system.CommandContainer;
 import eu.tomylobo.routes.commands.system.NestedCommand;
+import eu.tomylobo.routes.fakeentity.FakeMob;
+import eu.tomylobo.routes.fakeentity.MobType;
 import eu.tomylobo.routes.infrastructure.Route;
 import eu.tomylobo.routes.infrastructure.editor.RouteEditSession;
 import eu.tomylobo.routes.infrastructure.editor.RouteEditor;
 import eu.tomylobo.routes.infrastructure.editor.VisualizedRoute;
+import eu.tomylobo.routes.util.Remover;
 import eu.tomylobo.routes.util.ScheduledTask;
 
 /**
@@ -128,5 +131,18 @@ public class RoutesCommands extends CommandContainer implements Listener {
 		routeEditSession.selectSegment(segmentIndex);
 
 		context.sendMessage("Editing the route '"+routeName+"'.");
+	}
+
+	@Command(permissions = "routes.test")
+	public void routes_test(Context context) {
+		final String routeName = context.getString(0);
+		final Route route = plugin.transportSystem.getRoute(routeName);
+
+		final FakeMob dragon = new FakeMob(route.getLocation(0), MobType.ENDER_DRAGON);
+		dragon.send();
+
+		plugin.travelAgency.addTraveller(route, dragon, 5.0, new Remover(dragon));
+
+		context.sendMessage("Testing route '"+routeName+"'.");
 	}
 }

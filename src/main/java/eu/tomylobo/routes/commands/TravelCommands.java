@@ -22,7 +22,7 @@ package eu.tomylobo.routes.commands;
 import eu.tomylobo.routes.commands.system.Command;
 import eu.tomylobo.routes.commands.system.Context;
 import eu.tomylobo.routes.commands.system.CommandContainer;
-import eu.tomylobo.routes.commands.system.NestedCommand;
+import eu.tomylobo.routes.fakeentity.FakeEntity;
 import eu.tomylobo.routes.fakeentity.FakeMob;
 import eu.tomylobo.routes.fakeentity.MobType;
 import eu.tomylobo.routes.infrastructure.Route;
@@ -35,26 +35,16 @@ import eu.tomylobo.routes.util.Remover;
  *
  */
 public class TravelCommands extends CommandContainer {
-	@NestedCommand
-	public void travel(Context context) {
-		if (context.length() < 1) {
-			context.sendMessage("/"+context.getLabel()+" expects a sub-command.");
-		}
-		else {
-			context.sendMessage("Could not find the specified /"+context.getLabel()+" sub-command.");
-		}
-	}
-
 	@Command(permissions = "routes.travel")
-	public void travel_test(Context context) {
+	public void travel(Context context) {
 		final String routeName = context.getString(0);
 		final Route route = plugin.transportSystem.getRoute(routeName);
 
-		final FakeMob dragon = new FakeMob(route.getLocation(0), MobType.ENDER_DRAGON);
+		FakeEntity dragon = new FakeMob(route.getLocation(0), MobType.ENDER_DRAGON);
 		dragon.send();
+		dragon.setPassenger(context.getPlayer());
 
-		plugin.travelAgency.addTraveller(route, dragon, 5.0, new Remover(dragon));
-
-		context.sendMessage("Testing route '"+routeName+"'.");
+		plugin.travelAgency.addTraveller(routeName, dragon, 5.0, new Remover(dragon));
+		context.sendMessage("Travelling on route '"+routeName+"'.");
 	}
 }
