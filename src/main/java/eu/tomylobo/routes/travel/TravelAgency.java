@@ -26,6 +26,7 @@ import java.util.Map;
 import org.bukkit.entity.Entity;
 
 import eu.tomylobo.routes.Routes;
+import eu.tomylobo.routes.commands.system.CommandException;
 import eu.tomylobo.routes.infrastructure.Route;
 
 /**
@@ -52,9 +53,14 @@ public class TravelAgency implements Runnable {
 	 * @param entity An entity to move along the route
 	 * @param speed Speed in m/s
 	 * @param finalizer A Runnable to invoke after the route was finished
+	 * @throws CommandException Thrown if no route can be found.
 	 */
-	public void addTraveller(String routeName, Entity entity, double speed, Runnable finalizer) {
-		addTraveller(plugin.transportSystem.getRoute(routeName), entity, speed, finalizer);
+	public void addTraveller(String routeName, Entity entity, double speed, Runnable finalizer) throws CommandException {
+		final Route route = plugin.transportSystem.getRoute(routeName);
+		if (route == null)
+			throw new CommandException("Route '"+routeName+"' not found.");
+
+		addTraveller(route, entity, speed, finalizer);
 	}
 
 	/**
