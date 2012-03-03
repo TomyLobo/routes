@@ -26,6 +26,7 @@ import java.util.Map.Entry;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.command.CommandException;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -37,8 +38,6 @@ import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
 import eu.tomylobo.routes.Routes;
-import eu.tomylobo.routes.fakeentity.FakeEntity;
-import eu.tomylobo.routes.fakeentity.FakeMob;
 import eu.tomylobo.routes.fakeentity.MobType;
 import eu.tomylobo.routes.trace.SignShape;
 import eu.tomylobo.routes.trace.SignTraceResult;
@@ -137,20 +136,13 @@ public class SignHandler implements Listener {
 
 					final String routeName = trackedSign.getEntry(index);
 
-					final FakeEntity dragon = new FakeMob(eyeLocation, MobType.ENDER_DRAGON);
-					dragon.send();
-					final boolean oldAllowFlight = player.getAllowFlight();
-					player.setAllowFlight(true);
-					dragon.setPassenger(player);
-
-					plugin.travelAgency.addTraveller(routeName, dragon, 5.0, new Runnable() {
-						@Override
-						public void run() {
-							dragon.remove();
-							player.setAllowFlight(oldAllowFlight);
-						}
-					});
-					player.sendMessage("Travelling on route '"+routeName+"'.");
+					try {
+						plugin.travelAgency.addTravellerWithMount(routeName, player, MobType.ENDER_DRAGON);
+						player.sendMessage("Travelling on route '"+routeName+"'.");
+					}
+					catch (CommandException e) {
+						player.sendMessage(e.getMessage());
+					}
 				}
 				else {
 					session.select(trackedSign, index);

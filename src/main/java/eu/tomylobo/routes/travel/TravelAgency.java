@@ -23,10 +23,18 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
 import eu.tomylobo.routes.Routes;
 import eu.tomylobo.routes.commands.system.CommandException;
+import eu.tomylobo.routes.fakeentity.EntityType;
+import eu.tomylobo.routes.fakeentity.FakeEntity;
+import eu.tomylobo.routes.fakeentity.FakeMob;
+import eu.tomylobo.routes.fakeentity.FakeVehicle;
+import eu.tomylobo.routes.fakeentity.MobType;
+import eu.tomylobo.routes.fakeentity.VehicleType;
 import eu.tomylobo.routes.infrastructure.Route;
 
 /**
@@ -45,6 +53,36 @@ public class TravelAgency implements Runnable {
 		this.plugin = plugin;
 
 		plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, this, 0, 1);
+	}
+
+	public void addTravellerWithMount(String routeName, final Player player, EntityType entityType) throws CommandException {
+		final Route route = plugin.transportSystem.getRoute(routeName);
+		if (route == null)
+			throw new CommandException("Route '"+routeName+"' not found.");
+
+		final boolean oldAllowFlight = player.getAllowFlight();
+		player.setAllowFlight(true);
+
+		Location location = route.getLocation(0);
+
+		final FakeEntity mount;
+		if (entityType instanceof MobType) {
+			mount = new FakeMob(location, (MobType) entityType);
+		}
+		else {
+			mount = new FakeVehicle(location, (VehicleType) entityType);
+		}
+
+		mount.send();
+		mount.setPassenger(player);
+
+		addTraveller(route, mount, 5.0, new Runnable() {
+			@Override
+			public void run() {
+				mount.remove();
+				player.setAllowFlight(oldAllowFlight);
+			}
+		});
 	}
 
 	/**

@@ -22,11 +22,7 @@ package eu.tomylobo.routes.commands;
 import eu.tomylobo.routes.commands.system.Command;
 import eu.tomylobo.routes.commands.system.Context;
 import eu.tomylobo.routes.commands.system.CommandContainer;
-import eu.tomylobo.routes.fakeentity.FakeEntity;
-import eu.tomylobo.routes.fakeentity.FakeMob;
 import eu.tomylobo.routes.fakeentity.MobType;
-import eu.tomylobo.routes.infrastructure.Route;
-import eu.tomylobo.routes.util.Remover;
 
 /**
  * Contains all commands connected to travelling management.
@@ -38,13 +34,8 @@ public class TravelCommands extends CommandContainer {
 	@Command(permissions = "routes.travel")
 	public void travel(Context context) {
 		final String routeName = context.getString(0);
-		final Route route = plugin.transportSystem.getRoute(routeName);
 
-		FakeEntity dragon = new FakeMob(route.getLocation(0), MobType.ENDER_DRAGON);
-		dragon.send();
-		dragon.setPassenger(context.getPlayer());
-
-		plugin.travelAgency.addTraveller(routeName, dragon, 5.0, new Remover(dragon));
+		plugin.travelAgency.addTravellerWithMount(routeName, context.getPlayer(), MobType.ENDER_DRAGON);
 		context.sendMessage("Travelling on route '"+routeName+"'.");
 	}
 }
