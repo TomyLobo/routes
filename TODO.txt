@@ -6,3 +6,8 @@
 	- per-route travel permissions
 - restrict distance to the start of the route for /travel
 	- make sure signs are not affected
+- add ways to post-process routes for certain entity types
+	- boats: drop to water height
+	- land creatures: drop to ground, add jumps
+	- dragons: add corkscrew climbs?
+	- spiders: climb?
