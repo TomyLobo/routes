@@ -23,6 +23,8 @@ import org.bukkit.Material;
 
 @ConfigFile("config.txt")
 public class RoutesConfig extends Config {
+	// [editor]
+
 	@ConfigItem("editor.tool")
 	public Material editorTool = Material.GOLD_SPADE;
 
@@ -31,4 +33,9 @@ public class RoutesConfig extends Config {
 
 	@ConfigItem("editor.flashTicks")
 	public long editorFlashTicks = 5;
+
+	// [signs]
+
+	@ConfigItem("signs.routePrefix")
+	public String signsRoutePrefix = "@@";
 }

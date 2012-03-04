@@ -74,7 +74,7 @@ public class SignHandler implements Listener {
 		for (int i = 0; i < 4; ++i) {
 			final String line = event.getLine(i);
 			sign.setLine(i, line);
-			if (line.startsWith("@@")) {
+			if (line.startsWith(plugin.config.signsRoutePrefix)) {
 				hasDestinations = true;
 			}
 		}
