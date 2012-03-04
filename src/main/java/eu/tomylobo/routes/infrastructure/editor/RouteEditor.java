@@ -34,11 +34,8 @@ import eu.tomylobo.routes.Routes;
 import eu.tomylobo.routes.infrastructure.Route;
 
 public class RouteEditor implements Listener {
-	public static final Material toolMaterial = Material.GOLD_SPADE;
-
 	private final Map<Player, RouteEditSession> editedRoutes = new HashMap<Player, RouteEditSession>();
 
-	@SuppressWarnings("unused")
 	private final Routes plugin;
 
 	public RouteEditor(Routes plugin) {
@@ -52,7 +49,7 @@ public class RouteEditor implements Listener {
 		final Player player = event.getPlayer();
 
 		final Material materialInHand = player.getItemInHand().getType();
-		if (materialInHand == toolMaterial) {
+		if (materialInHand == plugin.config.editorTool) {
 			final RouteEditSession routeEditSession = editedRoutes.get(player);
 			if (routeEditSession == null)
 				return;

@@ -29,7 +29,6 @@ import eu.tomylobo.routes.fakeentity.FakeMob;
 import eu.tomylobo.routes.fakeentity.MobType;
 import eu.tomylobo.routes.infrastructure.Route;
 import eu.tomylobo.routes.infrastructure.editor.RouteEditSession;
-import eu.tomylobo.routes.infrastructure.editor.RouteEditor;
 import eu.tomylobo.routes.infrastructure.editor.VisualizedRoute;
 import eu.tomylobo.routes.util.Remover;
 import eu.tomylobo.routes.util.ScheduledTask;
@@ -79,7 +78,7 @@ public class RoutesCommands extends CommandContainer implements Listener {
 
 		plugin.routeEditor.edit(player, route);
 
-		context.sendMessage("Starting a route named '"+routeName+"' here. Right-click with "+RouteEditor.toolMaterial+" to add a waypoint.");
+		context.sendMessage("Starting a route named '"+routeName+"' here. Right-click with "+plugin.config.editorTool+" to add a waypoint.");
 	}
 
 	@Command(permissions = "routes.show")

@@ -111,8 +111,11 @@ public class Config {
 
 	public void load() throws CommandException {
 		final Multimap<String, Multimap<String, String>> sections = Ini.load(Routes.getInstance().getConfigFileName(configFileName));
-		if (sections == null)
+		if (sections == null) {
+			System.out.println("Config file missing, creating default.");
+			save();
 			return;
+		}
 
 		for (Entry entry : entries) {
 			final String sectionName = entry.sectionName;

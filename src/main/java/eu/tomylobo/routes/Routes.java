@@ -23,7 +23,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import eu.tomylobo.routes.commands.system.CommandException;
 import eu.tomylobo.routes.commands.system.CommandSystem;
+import eu.tomylobo.routes.config.RoutesConfig;
 import eu.tomylobo.routes.infrastructure.TransportSystem;
 import eu.tomylobo.routes.infrastructure.editor.RouteEditor;
 import eu.tomylobo.routes.sign.SignHandler;
@@ -38,6 +40,8 @@ public class Routes extends JavaPlugin {
 	public static Routes getInstance() {
 		return instance;
 	}
+
+	public RoutesConfig config = new RoutesConfig();
 
 	public CommandSystem commandSystem;
 	public TravelAgency travelAgency;
@@ -59,12 +63,14 @@ public class Routes extends JavaPlugin {
 		return commandSystem.dispatch(sender, command, label, args);
 	}
 
-	public void save() {
+	public void save() throws CommandException {
+		config.save();
 		transportSystem.save();
 		signHandler.save();
 	}
 
-	public void load() {
+	public void load() throws CommandException {
+		config.load();
 		transportSystem.load();
 		signHandler.load();
 	}
