@@ -109,7 +109,7 @@ public final class Ini {
 	public static void save(String fileName, Multimap<String, Multimap<String, String>> sections) {
 		try {
 			final File file = new File(fileName);
-			file.getParentFile().mkdirs();
+			file.getAbsoluteFile().getParentFile().mkdirs();
 			BufferedWriter stream = new BufferedWriter(new FileWriter(file));
 			for (Entry<String, Multimap<String, String>> entry : sections.entries()) {
 				stream.write("["+entry.getKey()+"]");
