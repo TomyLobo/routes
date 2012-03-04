@@ -23,6 +23,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import eu.tomylobo.routes.Routes;
+import eu.tomylobo.routes.config.RoutesConfig;
 import eu.tomylobo.routes.infrastructure.Route;
 import eu.tomylobo.routes.util.ScheduledTask;
 
@@ -36,8 +37,9 @@ public class RouteEditSession {
 	public RouteEditSession(Player player, Route route) {
 		this.player = player;
 		this.route = route;
-		this.segmentIndex = route.getNodes().size()-1;
-		this.visualizedRoute = new VisualizedRoute(route, 1.0, player);
+		this.segmentIndex = route.getNodes().size() - 1;
+		final RoutesConfig config = Routes.getInstance().config;
+		this.visualizedRoute = new VisualizedRoute(route, config.editorDotsPerMeter, player);
 
 		flashTask = new ScheduledTask(Routes.getInstance()) {
 			boolean on = true;
@@ -56,7 +58,7 @@ public class RouteEditSession {
 			}
 		};
 
-		flashTask.scheduleSyncRepeating(0, 5);
+		flashTask.scheduleSyncRepeating(0, config.editorFlashTicks);
 	}
 
 	public void interact(PlayerInteractEvent event) {

@@ -25,4 +25,10 @@ import org.bukkit.Material;
 public class RoutesConfig extends Config {
 	@ConfigItem("editor.tool")
 	public Material editorTool = Material.GOLD_SPADE;
+
+	@ConfigItem("editor.dotsPerMeter")
+	public double editorDotsPerMeter = 1.0;
+
+	@ConfigItem("editor.flashTicks")
+	public long editorFlashTicks = 5;
 }
