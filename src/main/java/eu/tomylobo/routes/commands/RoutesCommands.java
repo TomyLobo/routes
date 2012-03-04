@@ -90,18 +90,22 @@ public class RoutesCommands extends CommandContainer implements Listener {
 		if (segmentIndex == -1) {
 			final Route route = plugin.transportSystem.getRoute(routeName);
 
-			route.visualize(1.0, 600);
+			route.visualize(plugin.config.showDotsPerMeter, plugin.config.showTicks);
 		}
 		else {
 			final Route route = plugin.transportSystem.getRoute(routeName);
 
-			final VisualizedRoute visualizedRoute = new VisualizedRoute(route, 1.0, context.getPlayer());
+			final VisualizedRoute visualizedRoute = new VisualizedRoute(route, plugin.config.showDotsPerMeter, context.getPlayer());
 
 			final ScheduledTask task = new ScheduledTask(plugin) {
-				int iteration = 0;
+				private int iteration = 0;
+				private int ticks = 0;
+
 				@Override
 				public void run() {
-					if (++iteration > 10) {
+					++iteration;
+					ticks += plugin.config.showFlashTicks;
+					if (ticks > plugin.config.showTicks) {
 						cancel();
 						visualizedRoute.removeEntities();
 						return;
@@ -111,7 +115,7 @@ public class RoutesCommands extends CommandContainer implements Listener {
 				}
 			};
 
-			task.scheduleSyncRepeating(0, 10);
+			task.scheduleSyncRepeating(0, plugin.config.showFlashTicks);
 		}
 
 		context.sendMessage("Showing the route '"+routeName+"'.");

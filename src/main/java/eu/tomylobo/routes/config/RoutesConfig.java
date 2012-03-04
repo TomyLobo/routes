@@ -38,4 +38,15 @@ public class RoutesConfig extends Config {
 
 	@ConfigItem("signs.routePrefix")
 	public String signsRoutePrefix = "@@";
+
+	// [show]
+
+	@ConfigItem("show.dotsPerMeter")
+	public double showDotsPerMeter = 1.0;
+
+	@ConfigItem("show.flashTicks")
+	public long showFlashTicks = 10;
+
+	@ConfigItem("show.ticks")
+	public long showTicks = 600;
 }
