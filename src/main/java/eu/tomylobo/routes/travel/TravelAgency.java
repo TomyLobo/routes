@@ -36,6 +36,7 @@ import eu.tomylobo.routes.fakeentity.FakeVehicle;
 import eu.tomylobo.routes.fakeentity.MobType;
 import eu.tomylobo.routes.fakeentity.VehicleType;
 import eu.tomylobo.routes.infrastructure.Route;
+import eu.tomylobo.routes.util.ScheduledTask;
 
 /**
  * The TravelAgency manages all current {@link Traveller}s and will invoke
@@ -44,15 +45,16 @@ import eu.tomylobo.routes.infrastructure.Route;
  * @author TomyLobo
  *
  */
-public class TravelAgency implements Runnable {
+public class TravelAgency extends ScheduledTask {
 	private final Routes plugin;
 
 	private final Map<Entity, Traveller> travellers = new HashMap<Entity, Traveller>();
 
 	public TravelAgency(Routes plugin) {
+		super(plugin);
 		this.plugin = plugin;
 
-		plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, this, 0, 1);
+		scheduleSyncRepeating(0, 1);
 	}
 
 	public void addTravellerWithMount(String routeName, final Player player, EntityType entityType) throws CommandException {

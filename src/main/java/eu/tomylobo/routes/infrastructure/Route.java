@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
@@ -37,6 +36,7 @@ import eu.tomylobo.routes.infrastructure.interpolation.Interpolation;
 import eu.tomylobo.routes.infrastructure.interpolation.KochanekBartelsInterpolation;
 import eu.tomylobo.routes.infrastructure.interpolation.ReparametrisingInterpolation;
 import eu.tomylobo.routes.util.Ini;
+import eu.tomylobo.routes.util.ScheduledTask;
 import eu.tomylobo.routes.util.Utils;
 
 /**
@@ -54,7 +54,12 @@ public final class Route {
 	//private Interpolation interpolation = new LinearInterpolation();
 	private Interpolation interpolation = new ReparametrisingInterpolation(new KochanekBartelsInterpolation());
 
-	private int taskId = -1;
+	private ScheduledTask task = new ScheduledTask(Routes.getInstance()) {
+		@Override
+		public void run() {
+			clearVisualization();
+		}
+	};
 
 	private VisualizedRoute visualizedRoute;
 
@@ -127,12 +132,7 @@ public final class Route {
 
 		visualizedRoute = new VisualizedRoute(this, pointsPerMeter);
 
-		taskId = Bukkit.getScheduler().scheduleSyncDelayedTask(Routes.getInstance(), new Runnable() {
-			@Override
-			public void run() {
-				clearVisualization();
-			}
-		}, ticks);
+		task.scheduleSyncDelayed(ticks);
 	}
 
 	public void save(Multimap<String, Multimap<String, String>> sections, String routeName) {
@@ -176,7 +176,7 @@ public final class Route {
 	}
 
 	private void clearVisualization() {
-		Bukkit.getScheduler().cancelTask(taskId);
+		task.cancel();
 		if (visualizedRoute != null) {
 			visualizedRoute.removeEntities();
 		}
