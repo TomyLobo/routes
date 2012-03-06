@@ -21,14 +21,12 @@ package eu.tomylobo.routes.sign;
 
 import java.util.Collection;
 
-import org.bukkit.block.Sign;
-
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
 import eu.tomylobo.abstraction.Factory;
 import eu.tomylobo.abstraction.Player;
-import eu.tomylobo.abstraction.bukkit.BukkitUtils;
+import eu.tomylobo.abstraction.block.Sign;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.routes.util.Ini;
 
@@ -36,13 +34,14 @@ public class TrackedSign {
 	private static final String UNMARKED_COLOR = "\u00a79";
 	private static final String MARKED_COLOR = "\u00a7c";
 
-	private final Location block;
+	private final Location location;
 	private final String[] entries;
 	private int selected = -1;
 	private final int entryCount;
 
-	public TrackedSign(Sign sign) {
-		block = BukkitUtils.wrap(sign.getLocation()); // TODO: port to abstraction layer
+	public TrackedSign(Location location) {
+		this.location = location;
+		Sign sign = (Sign) location.getBlockState();
 		String[] lines = sign.getLines();
 		entries = new String[lines.length];
 
@@ -60,11 +59,11 @@ public class TrackedSign {
 		if (entryCount == 0)
 			throw new IllegalArgumentException("A sign with no entries was passed.");
 
-		sign.update();
+		location.getWorld().setBlockState(location.getPosition(), sign);
 	}
 
 	public TrackedSign(Multimap<String, String> section) {
-		block = Ini.loadLocation(section, "%s", false);
+		location = Ini.loadLocation(section, "%s", false);
 
 		entries = new String[4];
 		int entryCount = 0;
@@ -84,7 +83,7 @@ public class TrackedSign {
 	public Multimap<String, String> save() {
 		Multimap<String, String> section = LinkedListMultimap.create();
 
-		Ini.saveLocation(section, "%s", block, false);
+		Ini.saveLocation(section, "%s", location, false);
 
 		for (int i = 0; i < entries.length; ++i) {
 			if (entries[i] == null)
@@ -101,8 +100,8 @@ public class TrackedSign {
 	 *
 	 * @return a block
 	 */
-	public Location getBlock() {
-		return block;
+	public Location getLocation() {
+		return location;
 	}
 
 	/**
@@ -132,12 +131,12 @@ public class TrackedSign {
 
 		TrackedSign trackedSign = (TrackedSign) obj;
 
-		return block.equals(trackedSign.block);
+		return location.equals(trackedSign.location);
 	}
 
 	@Override
 	public int hashCode() {
-		return block.hashCode();
+		return location.hashCode();
 	}
 
 	/**
@@ -149,7 +148,7 @@ public class TrackedSign {
 		if (selected == index)
 			return;
 
-		final Sign sign = (Sign) block.getBlockState();
+		final Sign sign = (Sign) location.getBlockState();
 
 		if (selected != -1) {
 			setMarked(sign, selected, false);
@@ -164,7 +163,7 @@ public class TrackedSign {
 			}
 		}
 
-		sign.update();
+		location.getWorld().setBlockState(location.getPosition(), sign);
 	}
 
 	/**
@@ -175,13 +174,13 @@ public class TrackedSign {
 	 * @param index The index of the entry
 	 */
 	public void select(Player player, int index) {
-		final Sign sign = (Sign) block.getBlockState();
+		final Sign sign = (Sign) location.getBlockState();
 
 		if (index != -1 && entries[index] != null) {
 			setMarked(sign, index, true);
 		}
 
-		Factory.network().sendSignUpdate(player, sign);
+		Factory.network().sendSignUpdate(player, location.getPosition(), sign);
 	}
 
 	private void setMarked(final Sign sign, int index, boolean marked) {

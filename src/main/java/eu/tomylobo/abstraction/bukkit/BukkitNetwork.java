@@ -21,12 +21,11 @@ package eu.tomylobo.abstraction.bukkit;
 
 import java.util.Collection;
 
-import org.bukkit.block.Sign;
-
 import eu.tomylobo.abstraction.Entity;
 import eu.tomylobo.abstraction.Network;
 import eu.tomylobo.abstraction.OtherType;
 import eu.tomylobo.abstraction.Player;
+import eu.tomylobo.abstraction.block.Sign;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.math.Vector;
 import eu.tomylobo.routes.util.Utils;
@@ -335,13 +334,12 @@ public class BukkitNetwork implements Network {
 	}
 
 	@Override
-	public void sendSignUpdate(Player player, Sign signState) {
-		sendSignUpdate(player, BukkitUtils.wrap(signState.getLocation()), signState.getLines());
+	public void sendSignUpdate(Player player, Vector position, Sign signState) {
+		sendSignUpdate(player, position, signState.getLines());
 	}
 
 	@Override
-	public void sendSignUpdate(Player player, Location location, String[] lines) {
-		final Vector position = location.getPosition();
+	public void sendSignUpdate(Player player, Vector position, String[] lines) {
 		sendSignUpdate(player, (int) position.getX(), (int) position.getY(), (int) position.getZ(), lines);
 	}
 
@@ -351,13 +349,12 @@ public class BukkitNetwork implements Network {
 	}
 
 	@Override
-	public void sendSignUpdate(Collection<Player> players, Sign signState) {
-		sendSignUpdate(players, BukkitUtils.wrap(signState.getLocation()), signState.getLines());
+	public void sendSignUpdate(Collection<Player> players, Vector position, Sign signState) {
+		sendSignUpdate(players, position, signState.getLines());
 	}
 
 	@Override
-	public void sendSignUpdate(Collection<Player> players, Location location, String[] lines) {
-		final Vector position = location.getPosition();
+	public void sendSignUpdate(Collection<Player> players, Vector position, String[] lines) {
 		sendSignUpdate(players, (int) position.getX(), (int) position.getY(), (int) position.getZ(), lines);
 	}
 

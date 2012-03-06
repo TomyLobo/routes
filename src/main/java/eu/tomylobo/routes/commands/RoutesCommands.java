@@ -92,7 +92,7 @@ public class RoutesCommands extends CommandContainer {
 
 			final VisualizedRoute visualizedRoute = new VisualizedRoute(route, plugin.config.showDotsPerMeter, context.getPlayer());
 
-			final ScheduledTask task = new ScheduledTask(plugin) {
+			final ScheduledTask task = new ScheduledTask() {
 				private int iteration = 0;
 				private int ticks = 0;
 

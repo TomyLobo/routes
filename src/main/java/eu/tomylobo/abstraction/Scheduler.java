@@ -19,18 +19,12 @@
 
 package eu.tomylobo.abstraction;
 
-import java.util.List;
-
-import eu.tomylobo.abstraction.block.BlockState;
-import eu.tomylobo.math.Vector;
-
-public interface World {
-	String getName();
-	List<Player> getPlayers();
-	BlockState getBlockState(Vector position);
-
-	int getBlockType(Vector position);
-	int getBlockData(Vector position);
-
-	void setBlockState(Vector position, BlockState blockState);
+public interface Scheduler {
+	Object scheduleSyncDelayedTask(Runnable task, long delay);
+	Object scheduleSyncDelayedTask(Runnable task);
+	Object scheduleSyncRepeatingTask(Runnable task, long delay, long period);
+	Object scheduleAsyncDelayedTask(Runnable task, long delay);
+	Object scheduleAsyncDelayedTask(Runnable task);
+	Object scheduleAsyncRepeatingTask(Runnable task, long delay, long period);
+	void cancelTask(Object taskId);
 }

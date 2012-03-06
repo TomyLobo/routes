@@ -19,9 +19,7 @@
 
 package eu.tomylobo.routes.trace;
 
-import org.bukkit.block.Sign;
-
-import eu.tomylobo.abstraction.bukkit.BukkitUtils;
+import eu.tomylobo.abstraction.block.Sign;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.math.Vector;
 import eu.tomylobo.routes.fakeentity.FakeVehicle;
@@ -31,28 +29,24 @@ public class SignShape extends Plane {
 	private static final double SIGN_SCALE = 2.0 / 3.0;
 	private static final double FONT_SCALE = SIGN_SCALE / 60.0;
 
-	public SignShape(Sign sign) {
-		this(getOriginLocation(sign));
+	public SignShape(Location location) {
+		this(getOriginLocation(location), true);
 	}
 
-	private SignShape(Location originLocation) {
+	private SignShape(Location originLocation, boolean dummy) {
 		super(originLocation.getPosition(), originLocation.getDirection());
 	}
 
-	private static Location getOriginLocation(Sign sign) {
-		Location originLocation = BukkitUtils.wrap(sign.getLocation()).add(0.5, 0.75*SIGN_SCALE, 0.5);
+	private static Location getOriginLocation(Location location) {
+		Sign sign = (Sign) location.getBlockState();
+		Location originLocation = location.add(0.5, 0.75*SIGN_SCALE, 0.5);
 
 		double yOffset = 0.5 * SIGN_SCALE;
 		double zOffset = 0.07 * SIGN_SCALE;
 
 		float yaw = 0;
-		switch (sign.getType()) {
-		case SIGN_POST:
-			yaw = (sign.getRawData() * 360) / 16f;
-			break;
-
-		case WALL_SIGN:
-			switch (sign.getRawData()) {
+		if (sign.isWallSign()) {
+			switch (sign.getData()) {
 			case 2:
 				yaw = 180;
 				break;
@@ -69,10 +63,9 @@ public class SignShape extends Plane {
 
 			yOffset -= 0.3125;
 			zOffset -= 0.4375;
-			break;
-
-		default:
-			throw new IllegalArgumentException("Expected a sign, got something else.");
+		}
+		else {
+			yaw = (sign.getData() * 360) / 16f;
 		}
 
 		originLocation = originLocation.setAngles(yaw, 0);

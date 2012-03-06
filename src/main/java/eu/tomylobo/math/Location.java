@@ -20,7 +20,7 @@
 package eu.tomylobo.math;
 
 import eu.tomylobo.abstraction.World;
-import eu.tomylobo.abstraction.bukkit.BukkitUtils;
+import eu.tomylobo.abstraction.block.BlockState;
 
 public class Location {
 	private final World world;
@@ -71,8 +71,8 @@ public class Location {
 		return setPosition(position.add(x, y, z));
 	}
 
-	public org.bukkit.block.BlockState getBlockState() { // TODO: abstract from bukkit
-		return BukkitUtils.unwrap(this).getBlock().getState();
+	public BlockState getBlockState() {
+		return world.getBlockState(position);
 	}
 
 	public Vector getDirection() {

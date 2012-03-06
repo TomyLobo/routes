@@ -17,20 +17,25 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.tomylobo.abstraction;
+package eu.tomylobo.abstraction.block;
 
-import java.util.List;
+public class Sign extends BlockState {
+	private final String[] lines;
 
-import eu.tomylobo.abstraction.block.BlockState;
-import eu.tomylobo.math.Vector;
+	public Sign(int type, int data, String[] lines) {
+		super(type, data);
+		this.lines = lines;
+	}
 
-public interface World {
-	String getName();
-	List<Player> getPlayers();
-	BlockState getBlockState(Vector position);
+	public boolean isWallSign() {
+		return getType() == 68;
+	}
 
-	int getBlockType(Vector position);
-	int getBlockData(Vector position);
+	public void setLine(int i, String line) {
+		lines[i] = line;
+	}
 
-	void setBlockState(Vector position, BlockState blockState);
+	public String[] getLines() {
+		return lines;
+	}
 }

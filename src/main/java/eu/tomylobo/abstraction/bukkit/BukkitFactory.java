@@ -30,9 +30,14 @@ public class BukkitFactory extends Factory {
 	}
 
 	private final BukkitNetwork networkInstance = new BukkitNetwork();
-
 	@Override
 	protected BukkitNetwork networkImpl() {
 		return networkInstance;
+	}
+
+	private final BukkitScheduler schedulerInstance = new BukkitScheduler();
+	@Override
+	protected BukkitScheduler schedulerImpl() {
+		return schedulerInstance;
 	}
 }

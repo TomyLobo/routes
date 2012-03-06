@@ -33,4 +33,9 @@ public abstract class Factory {
 	public static Network network() {
 		return instance.networkImpl();
 	}
+
+	protected abstract Scheduler schedulerImpl();
+	public static Scheduler scheduler() {
+		return instance.schedulerImpl();
+	}
 }

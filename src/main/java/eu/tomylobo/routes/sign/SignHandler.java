@@ -23,8 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign; // TODO: make own Sign
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -37,6 +35,8 @@ import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
 import eu.tomylobo.abstraction.Player;
+import eu.tomylobo.abstraction.block.BlockState;
+import eu.tomylobo.abstraction.block.Sign;
 import eu.tomylobo.abstraction.bukkit.BukkitUtils;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.routes.Routes;
@@ -80,7 +80,7 @@ public class SignHandler implements Listener {
 		}
 
 		if (hasDestinations) {
-			trackedSigns.put(block, new TrackedSign(sign));
+			trackedSigns.put(block, new TrackedSign(block));
 			save();
 
 			event.getPlayer().sendMessage("Added tracked sign.");
@@ -119,7 +119,7 @@ public class SignHandler implements Listener {
 		final Player player = BukkitUtils.wrap(event.getPlayer());
 		final Location eyeLocation = player.getEyeLocation();
 
-		final SignShape shape = new SignShape((Sign) blockState);
+		final SignShape shape = new SignShape(block);
 		final SignTraceResult trace = shape.trace(eyeLocation);
 
 		final int index = trace.index;
@@ -170,7 +170,7 @@ public class SignHandler implements Listener {
 		for (Multimap<String, String> section : sections.get("sign")) {
 			final TrackedSign trackedSign = new TrackedSign(section);
 
-			trackedSigns.put(trackedSign.getBlock(), trackedSign);
+			trackedSigns.put(trackedSign.getLocation(), trackedSign);
 		}
 	}
 }

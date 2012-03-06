@@ -24,6 +24,9 @@ import java.util.List;
 
 import eu.tomylobo.abstraction.Player;
 import eu.tomylobo.abstraction.World;
+import eu.tomylobo.abstraction.block.BlockState;
+import eu.tomylobo.abstraction.block.Sign;
+import eu.tomylobo.math.Vector;
 
 public class BukkitWorld implements World {
 	final org.bukkit.World backend;
@@ -58,5 +61,40 @@ public class BukkitWorld implements World {
 	@Override
 	public int hashCode() {
 		return backend.hashCode();
+	}
+
+	@Override
+	public BlockState getBlockState(Vector position) {
+		final org.bukkit.block.Block block = backend.getBlockAt((int) position.getX(), (int) position.getY(), (int) position.getZ());
+
+		final int type = block.getTypeId();
+		final int data = block.getData();
+
+		switch (type) {
+		case 63: // SIGN_POST
+		case 68: // WALL_SIGN
+			final String[] lines = ((Sign) block.getState()).getLines();
+			return new Sign(type, data, lines);
+
+		default:
+			return new BlockState(type, data);
+		}
+	}
+
+	@Override
+	public void setBlockState(Vector position, BlockState blockState) {
+		final org.bukkit.block.Block block = backend.getBlockAt((int) position.getX(), (int) position.getY(), (int) position.getZ());
+
+		block.setTypeIdAndData(blockState.getType(), (byte) blockState.getData(), true);
+	}
+
+	@Override
+	public int getBlockType(Vector position) {
+		return backend.getBlockTypeIdAt((int) position.getX(), (int) position.getY(), (int) position.getZ());
+	}
+
+	@Override
+	public int getBlockData(Vector position) {
+		return backend.getBlockAt((int) position.getX(), (int) position.getY(), (int) position.getZ()).getData();
 	}
 }

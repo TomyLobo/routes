@@ -50,7 +50,6 @@ public class TravelAgency extends ScheduledTask {
 	private final Map<Entity, Traveller> travellers = new HashMap<Entity, Traveller>();
 
 	public TravelAgency(Routes plugin) {
-		super(plugin);
 		this.plugin = plugin;
 
 		scheduleSyncRepeating(0, 1);
