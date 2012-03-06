@@ -19,8 +19,6 @@
 
 package eu.tomylobo.routes.commands;
 
-import org.bukkit.event.Listener;
-
 import eu.tomylobo.abstraction.Player;
 import eu.tomylobo.routes.commands.system.Command;
 import eu.tomylobo.routes.commands.system.Context;
@@ -40,11 +38,7 @@ import eu.tomylobo.routes.util.ScheduledTask;
  * @author TomyLobo
  *
  */
-public class RoutesCommands extends CommandContainer implements Listener {
-	public RoutesCommands() {
-		plugin.getServer().getPluginManager().registerEvents(this, plugin);
-	}
-
+public class RoutesCommands extends CommandContainer {
 	@NestedCommand
 	public void routes(Context context) {
 		if (context.length() < 1) {
