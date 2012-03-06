@@ -27,6 +27,9 @@ import eu.tomylobo.abstraction.Player;
 import eu.tomylobo.abstraction.block.Sign;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.math.Vector;
+import eu.tomylobo.routes.fakeentity.EntityType;
+import eu.tomylobo.routes.fakeentity.MobType;
+import eu.tomylobo.routes.fakeentity.VehicleType;
 import eu.tomylobo.routes.util.Utils;
 
 import net.minecraft.server.DataWatcher;
@@ -273,54 +276,66 @@ public class BukkitNetwork implements Network {
 		return p23;
 	}
 
-/*
+
 	@Override
 	public void sendSpawn(Player player, Entity entity, Location location, EntityType entityType) {
-		if (entityType.isAlive()) {
-			sendSpawnMob(player, entity.getEntityId(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch(), entityType.getTypeId());
+		if (entityType instanceof MobType) {
+			sendSpawnMob(player, entity, location, (MobType) entityType);
 		}
 		else {
-			sendSpawnOther(player, entity, location, OtherType.fromEntityType(entityType), 0);
+			sendSpawnOther(player, entity, location, (VehicleType) entityType);
 		}
 	}
-*/
+
+	@Override
+	public void sendSpawnMob(Player player, Entity entity, Location location, MobType mobType) {
+		Vector position = location.getPosition();
+		sendSpawnMob(player, entity.getEntityId(), position.getX(), position.getY(), position.getZ(), location.getYaw(), location.getPitch(), mobType.getId());
+	}
+
 	@Override
 	public void sendSpawnMob(Player player, int entityId, double x, double y, double z, float yaw, float pitch, int creatureTypeId) {
 		sendPacket(player, createSpawnMobPacket(entityId, x, y, z, yaw, pitch, creatureTypeId));
 	}
-/*
+
 	@Override
-	public void sendSpawnOther(Player player, Entity entity, Location location, OtherType otherType, int dataValue) {
+	public void sendSpawnOther(Player player, Entity entity, Location location, VehicleType otherType) {
 		final Vector position = location.getPosition();
-		sendSpawnOther(player, entity.getEntityId(), position.getX(), position.getY(), position.getZ(), otherType.getId(), dataValue);
+		sendSpawnOther(player, entity.getEntityId(), position.getX(), position.getY(), position.getZ(), otherType.getId(), 0);
 	}
-*/
+
 	@Override
 	public void sendSpawnOther(Player player, int entityId, double x, double y, double z, int typeId, int dataValue) {
 		sendPacket(player, createSpawnOtherPacket(entityId, x, y, z, typeId, dataValue));
 	}
-/*
+
 	@Override
 	public void sendSpawn(Collection<Player> players, Entity entity, Location location, EntityType entityType) {
-		if (entityType.isAlive()) {
-			sendSpawnMob(players, entity.getEntityId(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch(), entityType.getTypeId());
+		if (entityType instanceof MobType) {
+			sendSpawnMob(players, entity, location, (MobType) entityType);
 		}
 		else {
-			sendSpawnOther(players, entity, location, OtherType.fromEntityType(entityType), 0);
+			sendSpawnOther(players, entity, location, (VehicleType) entityType);
 		}
 	}
-*/
+
+	@Override
+	public void sendSpawnMob(Collection<Player> players, Entity entity, Location location, MobType mobType) {
+		Vector position = location.getPosition();
+		sendSpawnMob(players, entity.getEntityId(), position.getX(), position.getY(), position.getZ(), location.getYaw(), location.getPitch(), mobType.getId());
+	}
+
 	@Override
 	public void sendSpawnMob(Collection<Player> players, int entityId, double x, double y, double z, float yaw, float pitch, int creatureTypeId) {
 		sendPacket(players, createSpawnMobPacket(entityId, x, y, z, yaw, pitch, creatureTypeId));
 	}
-/*
+
 	@Override
-	public void sendSpawnOther(Collection<Player> players, Entity entity, Location location, OtherType otherType, int dataValue) {
+	public void sendSpawnOther(Collection<Player> players, Entity entity, Location location, VehicleType otherType) {
 		final Vector position = location.getPosition();
-		sendSpawnOther(players, entity.getEntityId(), position.getX(), position.getY(), position.getZ(), otherType.getId(), dataValue);
+		sendSpawnOther(players, entity.getEntityId(), position.getX(), position.getY(), position.getZ(), otherType.getId(), 0);
 	}
-*/
+
 	@Override
 	public void sendSpawnOther(Collection<Player> players, int entityId, double x, double y, double z, int typeId, int dataValue) {
 		sendPacket(players, createSpawnOtherPacket(entityId, x, y, z, typeId, dataValue));

@@ -24,6 +24,9 @@ import java.util.Collection;
 import eu.tomylobo.abstraction.block.Sign;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.math.Vector;
+import eu.tomylobo.routes.fakeentity.EntityType;
+import eu.tomylobo.routes.fakeentity.MobType;
+import eu.tomylobo.routes.fakeentity.VehicleType;
 
 public interface Network {
 	//void sendEffect(Player player, Entity entity, EntityEffect effect);
@@ -61,13 +64,15 @@ public interface Network {
 	void sendDestroyEntity(Collection<Player> players, Entity entity);
 	void sendDestroyEntity(Collection<Player> players, int entityId);
 
-	//void sendSpawn(Player player, Entity entity, Location location, EntityType entityType);
+	void sendSpawn(Player player, Entity entity, Location location, EntityType entityType);
+	void sendSpawnMob(Player player, Entity entity, Location location, MobType otherType);
 	void sendSpawnMob(Player player, int entityId, double x, double y, double z, float yaw, float pitch, int creatureTypeId);
-	//void sendSpawnOther(Player player, Entity entity, Location location, OtherType otherType, int dataValue);
+	void sendSpawnOther(Player player, Entity entity, Location location, VehicleType otherType);
 	void sendSpawnOther(Player player, int entityId, double x, double y, double z, int typeId, int dataValue);
-	//void sendSpawn(Collection<Player> players, Entity entity, Location location, EntityType entityType);
+	void sendSpawn(Collection<Player> players, Entity entity, Location location, EntityType entityType);
+	void sendSpawnMob(Collection<Player> players, Entity entity, Location location, MobType otherType);
 	void sendSpawnMob(Collection<Player> players, int entityId, double x, double y, double z, float yaw, float pitch, int creatureTypeId);
-	//void sendSpawnOther(Collection<Player> players, Entity entity, Location location, OtherType otherType, int dataValue);
+	void sendSpawnOther(Collection<Player> players, Entity entity, Location location, VehicleType otherType);
 	void sendSpawnOther(Collection<Player> players, int entityId, double x, double y, double z, int typeId, int dataValue);
 
 	void sendSignUpdate(Player player, Vector position, Sign signState);
