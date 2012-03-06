@@ -21,7 +21,7 @@ package eu.tomylobo.routes.config;
 
 import org.junit.*;
 
-import eu.tomylobo.routes.Routes;
+import eu.tomylobo.routes.BukkitRoutes;
 import eu.tomylobo.routes.fakeentity.MobType;
 import eu.tomylobo.routes.fakeentity.VehicleType;
 import eu.tomylobo.routes.util.Utils;
@@ -31,7 +31,7 @@ import static org.junit.Assert.*;
 public class ConfigTest {
 	@Test
 	public void configTest() {
-		Utils.setPrivateValue(Routes.class, null, "instance", new Routes() {
+		Utils.setPrivateValue(BukkitRoutes.class, null, "instance", new BukkitRoutes() {
 			@Override
 			public String getConfigFileName(String baseFileName) {
 				return baseFileName;

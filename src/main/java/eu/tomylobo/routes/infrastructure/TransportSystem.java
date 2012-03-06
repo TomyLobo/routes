@@ -26,7 +26,7 @@ import java.util.Map.Entry;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
-import eu.tomylobo.routes.Routes;
+import eu.tomylobo.routes.BukkitRoutes;
 import eu.tomylobo.routes.util.Ini;
 
 /**
@@ -36,10 +36,10 @@ import eu.tomylobo.routes.util.Ini;
  *
  */
 public class TransportSystem {
-	private final Routes plugin;
+	private final BukkitRoutes plugin;
 	private final Map<String, Route> routes = new HashMap<String, Route>();
 
-	public TransportSystem(Routes plugin) {
+	public TransportSystem(BukkitRoutes plugin) {
 		this.plugin = plugin;
 	}
 

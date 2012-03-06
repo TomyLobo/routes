@@ -39,7 +39,7 @@ import eu.tomylobo.abstraction.block.BlockState;
 import eu.tomylobo.abstraction.block.Sign;
 import eu.tomylobo.abstraction.bukkit.BukkitUtils;
 import eu.tomylobo.math.Location;
-import eu.tomylobo.routes.Routes;
+import eu.tomylobo.routes.BukkitRoutes;
 import eu.tomylobo.routes.commands.system.CommandException;
 import eu.tomylobo.routes.fakeentity.MobType;
 import eu.tomylobo.routes.trace.SignShape;
@@ -47,11 +47,11 @@ import eu.tomylobo.routes.trace.SignTraceResult;
 import eu.tomylobo.routes.util.Ini;
 
 public class SignHandler implements Listener {
-	private final Routes plugin;
+	private final BukkitRoutes plugin;
 	private Map<Location, TrackedSign> trackedSigns = new HashMap<Location, TrackedSign>();
 	public Map<Player, SignSession> sessions = new HashMap<Player, SignSession>();
 
-	public SignHandler(Routes plugin) {
+	public SignHandler(BukkitRoutes plugin) {
 		this.plugin = plugin;
 
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);

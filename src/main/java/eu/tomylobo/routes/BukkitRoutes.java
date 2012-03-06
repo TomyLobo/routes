@@ -24,7 +24,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import eu.tomylobo.abstraction.bukkit.BukkitUtils;
-import eu.tomylobo.routes.commands.system.CommandException;
 import eu.tomylobo.routes.commands.system.CommandSystem;
 import eu.tomylobo.routes.config.RoutesConfig;
 import eu.tomylobo.routes.infrastructure.TransportSystem;
@@ -32,13 +31,13 @@ import eu.tomylobo.routes.infrastructure.editor.RouteEditor;
 import eu.tomylobo.routes.sign.SignHandler;
 import eu.tomylobo.routes.travel.TravelAgency;
 
-public class Routes extends JavaPlugin {
-	private static Routes instance;
+public class BukkitRoutes extends JavaPlugin {
+	private static BukkitRoutes instance;
 	{
 		instance = this;
 	}
 
-	public static Routes getInstance() {
+	public static BukkitRoutes getInstance() {
 		return instance;
 	}
 
@@ -65,23 +64,13 @@ public class Routes extends JavaPlugin {
 	}
 
 	public void save() {
-		try {
-			config.save();
-		}
-		catch (CommandException e) {
-			System.out.println(e);
-		} 
+		config.save();
 		transportSystem.save();
 		signHandler.save();
 	}
 
 	public void load() {
-		try {
-			config.load();
-		}
-		catch (CommandException e) {
-			System.out.println(e);
-		} 
+		config.load();
 		transportSystem.load();
 		signHandler.load();
 	}

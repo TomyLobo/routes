@@ -31,15 +31,15 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import eu.tomylobo.abstraction.Player;
 import eu.tomylobo.abstraction.bukkit.BukkitUtils;
-import eu.tomylobo.routes.Routes;
+import eu.tomylobo.routes.BukkitRoutes;
 import eu.tomylobo.routes.infrastructure.Route;
 
 public class RouteEditor implements Listener {
 	private final Map<Player, RouteEditSession> editedRoutes = new HashMap<Player, RouteEditSession>();
 
-	private final Routes plugin;
+	private final BukkitRoutes plugin;
 
-	public RouteEditor(Routes plugin) {
+	public RouteEditor(BukkitRoutes plugin) {
 		this.plugin = plugin;
 
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
