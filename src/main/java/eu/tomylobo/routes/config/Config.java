@@ -192,7 +192,7 @@ public class Config {
 				return Enum.valueOf((Class<Enum>) type, value);
 		}
 		catch (Exception e) {
-			throw new CommandException("Exception encountered while parsing '"+value+"' as a '"+type.getSimpleName()+"'.");
+			throw new CommandException("Exception encountered while parsing '"+value+"' as a '"+type.getSimpleName()+"'.", e);
 		}
 
 		throw new CommandException("No converter found for class '"+type+"'.");
