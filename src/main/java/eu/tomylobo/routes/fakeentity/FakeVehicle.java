@@ -20,12 +20,11 @@
 package eu.tomylobo.routes.fakeentity;
 
 import net.minecraft.server.Packet23VehicleSpawn;
-import org.bukkit.Location;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 
-import eu.tomylobo.routes.util.Workarounds;
-import eu.tomylobo.routes.util.network.OtherType;
+import eu.tomylobo.abstraction.Factory;
+import eu.tomylobo.abstraction.Player;
+import eu.tomylobo.math.Location;
+import eu.tomylobo.math.Vector;
 
 /**
  * A client-side-only entity spawned through {@link Packet23VehicleSpawn}.
@@ -43,17 +42,19 @@ public class FakeVehicle extends FakeEntity {
 
 	@Override
 	public void sendImplementation(Player player) {
-		Workarounds.getNetwork().sendSpawnOther(
+		Vector position = location.getPosition();
+		Factory.network().sendSpawnOther(
 				player, entityId,
-				location.getX(), location.getY(), location.getZ(),
+				position.getX(), position.getY(), position.getZ(),
 				vehicleTypeId, 0
 		);
 
 		setOrientation(location);
 	}
-
+/*
 	@Override
 	public EntityType getType() {
 		return OtherType.fromId(vehicleTypeId).toEntityType();
 	}
+*/
 }

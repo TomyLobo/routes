@@ -19,7 +19,7 @@
 
 package eu.tomylobo.routes.trace;
 
-import org.bukkit.util.Vector;
+import eu.tomylobo.math.Vector;
 
 /**
  * Contains the result of a trace.

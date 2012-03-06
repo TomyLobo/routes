@@ -19,14 +19,12 @@
 
 package eu.tomylobo.routes.config;
 
-import org.bukkit.Material;
-
 @ConfigFile("config.txt")
 public class RoutesConfig extends Config {
 	// [editor]
 
 	@ConfigItem("editor.tool")
-	public Material editorTool = Material.GOLD_SPADE;
+	public int editorTool = 284; // GOLD_SPADE;
 
 	@ConfigItem("editor.dotsPerMeter")
 	public double editorDotsPerMeter = 1.0;

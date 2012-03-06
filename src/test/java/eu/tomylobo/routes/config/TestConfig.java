@@ -19,7 +19,7 @@
 
 package eu.tomylobo.routes.config;
 
-import org.bukkit.entity.EntityType;
+import eu.tomylobo.routes.fakeentity.MobType;
 
 @ConfigFile("testconfig.txt")
 public class TestConfig extends Config {
@@ -33,7 +33,7 @@ public class TestConfig extends Config {
 	public int test3 = 1234;
 
 	@ConfigItem("testsection.testentitytype")
-	public EntityType test4 = EntityType.ENDER_DRAGON;
+	public MobType test4 = MobType.ENDER_DRAGON;
 
 	@ConfigItem("testsection.testboolean")
 	public boolean test5 = true;

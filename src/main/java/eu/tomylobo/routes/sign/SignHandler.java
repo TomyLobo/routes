@@ -23,12 +23,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
-import org.bukkit.command.CommandException;
-import org.bukkit.entity.Player;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Sign; // TODO: make own Sign
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -40,7 +36,11 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
+import eu.tomylobo.abstraction.Player;
+import eu.tomylobo.abstraction.bukkit.BukkitUtils;
+import eu.tomylobo.math.Location;
 import eu.tomylobo.routes.Routes;
+import eu.tomylobo.routes.commands.system.CommandException;
 import eu.tomylobo.routes.fakeentity.MobType;
 import eu.tomylobo.routes.trace.SignShape;
 import eu.tomylobo.routes.trace.SignTraceResult;
@@ -48,7 +48,7 @@ import eu.tomylobo.routes.util.Ini;
 
 public class SignHandler implements Listener {
 	private final Routes plugin;
-	private Map<Block, TrackedSign> trackedSigns = new HashMap<Block, TrackedSign>();
+	private Map<Location, TrackedSign> trackedSigns = new HashMap<Location, TrackedSign>();
 	public Map<Player, SignSession> sessions = new HashMap<Player, SignSession>();
 
 	public SignHandler(Routes plugin) {
@@ -67,8 +67,8 @@ public class SignHandler implements Listener {
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onSignChange(SignChangeEvent event) {
-		final Block block = event.getBlock();
-		final Sign sign = (Sign) block.getState();
+		final Location block = BukkitUtils.wrap(event.getBlock().getLocation());
+		final Sign sign = (Sign) block.getBlockState();
 
 		boolean hasDestinations = false;
 		for (int i = 0; i < 4; ++i) {
@@ -80,7 +80,7 @@ public class SignHandler implements Listener {
 		}
 
 		if (hasDestinations) {
-			trackedSigns.put(sign.getBlock(), new TrackedSign(sign));
+			trackedSigns.put(block, new TrackedSign(sign));
 			save();
 
 			event.getPlayer().sendMessage("Added tracked sign.");
@@ -90,7 +90,7 @@ public class SignHandler implements Listener {
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onBlockBreak(BlockBreakEvent event) {
-		final Block block = event.getBlock();
+		final Location block = BukkitUtils.wrap(event.getBlock().getLocation());
 
 		final TrackedSign trackedSign = trackedSigns.remove(block);
 		if (trackedSign == null)
@@ -106,22 +106,20 @@ public class SignHandler implements Listener {
 		if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
 			return; // We only want RIGHT_CLICK_BLOCK
 
-		final Block block = event.getClickedBlock();
-		if (block == null)
-			return; // This can't really happen, but check for it anyway, just in case someone dispatches a broken event...
+		final Location block = BukkitUtils.wrap(event.getClickedBlock().getLocation());
+		final BlockState blockState = block.getBlockState();
 
-		final Material type = block.getType();
-		if (type != Material.WALL_SIGN && type != Material.SIGN_POST)
+		if (!(blockState instanceof Sign))
 			return; // We only want signs
 
 		TrackedSign trackedSign = trackedSigns.get(block);
 		if (trackedSign == null)
 			return; // We only want tracked signs
 
-		final Player player = event.getPlayer();
+		final Player player = BukkitUtils.wrap(event.getPlayer());
 		final Location eyeLocation = player.getEyeLocation();
 
-		final SignShape shape = new SignShape((Sign) block.getState());
+		final SignShape shape = new SignShape((Sign) blockState);
 		final SignTraceResult trace = shape.trace(eyeLocation);
 
 		final int index = trace.index;
@@ -153,7 +151,7 @@ public class SignHandler implements Listener {
 
 	public void save() {
 		Multimap<String, Multimap<String, String>> sections = LinkedListMultimap.create();
-		for (Entry<Block, TrackedSign> entry : trackedSigns.entrySet()) {
+		for (Entry<Location, TrackedSign> entry : trackedSigns.entrySet()) {
 			final TrackedSign trackedSign = entry.getValue();
 
 			sections.put("sign", trackedSign.save());

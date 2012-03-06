@@ -21,8 +21,8 @@ package eu.tomylobo.routes.commands.system;
 
 import java.util.Arrays;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import eu.tomylobo.abstraction.CommandSender;
+import eu.tomylobo.abstraction.Player;
 
 /**
  * Holds all information about a command invocation.

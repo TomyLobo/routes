@@ -23,10 +23,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-
+import eu.tomylobo.abstraction.Entity;
+import eu.tomylobo.abstraction.Player;
+import eu.tomylobo.math.Location;
 import eu.tomylobo.routes.Routes;
 import eu.tomylobo.routes.commands.system.CommandException;
 import eu.tomylobo.routes.fakeentity.EntityType;

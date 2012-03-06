@@ -22,14 +22,15 @@ package eu.tomylobo.routes.infrastructure.editor;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.Material;
-import org.bukkit.entity.Player;
+import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import eu.tomylobo.abstraction.Player;
+import eu.tomylobo.abstraction.bukkit.BukkitUtils;
 import eu.tomylobo.routes.Routes;
 import eu.tomylobo.routes.infrastructure.Route;
 
@@ -44,12 +45,16 @@ public class RouteEditor implements Listener {
 		plugin.getServer().getPluginManager().registerEvents(this, plugin);
 	}
 
-	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	// TODO: convert event handler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerInteract(PlayerInteractEvent event) {
-		final Player player = event.getPlayer();
+		if (event.useItemInHand() == Result.DENY)
+			return;
 
-		final Material materialInHand = player.getItemInHand().getType();
-		if (materialInHand == plugin.config.editorTool) {
+		final Player player = BukkitUtils.wrap(event.getPlayer());
+
+		final int inHand = player.getItemTypeInHand();
+		if (inHand == plugin.config.editorTool) {
 			final RouteEditSession routeEditSession = editedRoutes.get(player);
 			if (routeEditSession == null)
 				return;
@@ -58,6 +63,7 @@ public class RouteEditor implements Listener {
 		}
 	}
 
+	// TODO: convert event handler
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		final RouteEditSession routeEditSession = editedRoutes.remove(event.getPlayer());

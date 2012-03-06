@@ -19,8 +19,8 @@
 
 package eu.tomylobo.routes.trace;
 
-import org.bukkit.Location;
-import org.bukkit.util.Vector;
+import eu.tomylobo.math.Location;
+import eu.tomylobo.math.Vector;
 
 public abstract class AbstractShape implements Shape {
 
@@ -30,12 +30,12 @@ public abstract class AbstractShape implements Shape {
 
 	@Override
 	public TraceResult trace(Location location) {
-		return trace(location.toVector(), location.getDirection());
+		return trace(location.getPosition(), location.getDirection());
 	}
 
 	@Override
 	public TraceResult traceToPoint(Vector start, Vector end) {
-		return trace(start, end.clone().subtract(start));
+		return trace(start, end.subtract(start));
 	}
 
 }

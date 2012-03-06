@@ -19,13 +19,13 @@
 
 package eu.tomylobo.routes.util;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.util.Vector;
-
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
+
+import eu.tomylobo.abstraction.Factory;
+import eu.tomylobo.abstraction.World;
+import eu.tomylobo.math.Location;
+import eu.tomylobo.math.Vector;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -156,7 +156,7 @@ public final class Ini {
 
 	public static World loadWorld(Multimap<String, String> section, String format) {
 		final String worldName = getOnlyValue(section.get(String.format(format, "world")));
-		return worldName.equals("null") ? null : Bukkit.getServer().getWorld(worldName);
+		return worldName.equals("null") ? null : Factory.world(worldName);
 	}
 
 
@@ -171,15 +171,18 @@ public final class Ini {
 	public static Location loadLocation(Multimap<String, String> section, String format, boolean withYawPitch) {
 		try {
 			if (withYawPitch) {
-				return loadVector(section, format).toLocation(
+				return new Location(
 						loadWorld(section, format),
+						loadVector(section, format),
 						getOnlyFloat(section.get(String.format(format, "yaw"))),
 						getOnlyFloat(section.get(String.format(format, "pitch")))
 				);
 			}
 			else {
-				return loadVector(section, format).toLocation(
-						loadWorld(section, format)
+				return new Location(
+						loadWorld(section, format),
+						loadVector(section, format),
+						0, 0
 				);
 			}
 		}
@@ -202,7 +205,7 @@ public final class Ini {
 
 	public static void saveLocation(Multimap<String, String> section, String format, Location location, boolean withYawPitch) {
 		saveWorld(section, format, location.getWorld());
-		saveVector(section, format, location.toVector());
+		saveVector(section, format, location.getPosition());
 
 		if (withYawPitch) {
 			section.put(String.format(format, "yaw"), String.valueOf(location.getYaw()));

@@ -19,9 +19,8 @@
 
 package eu.tomylobo.routes.travel;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Entity;
-
+import eu.tomylobo.abstraction.Entity;
+import eu.tomylobo.math.Location;
 import eu.tomylobo.routes.infrastructure.Route;
 
 /**

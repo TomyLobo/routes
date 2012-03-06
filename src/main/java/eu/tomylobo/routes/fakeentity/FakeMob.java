@@ -19,12 +19,10 @@
 
 package eu.tomylobo.routes.fakeentity;
 
-import net.minecraft.server.Packet24MobSpawn;
-
-import org.bukkit.Location;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import eu.tomylobo.routes.util.Workarounds;
+import eu.tomylobo.abstraction.Factory;
+import eu.tomylobo.abstraction.Player;
+import eu.tomylobo.math.Location;
+import eu.tomylobo.math.Vector;
 
 /**
  * A client-side-only entity spawned through {@link Packet24MobSpawn}.
@@ -42,16 +40,18 @@ public class FakeMob extends FakeEntity {
 
 	@Override
 	public void sendImplementation(Player player) {
-		Workarounds.getNetwork().sendSpawnMob(
+		Vector position = location.getPosition();
+		Factory.network().sendSpawnMob(
 				player, entityId,
-				location.getX(), location.getY(), location.getZ(),
+				position.getX(), position.getY(), position.getZ(),
 				location.getYaw() + yawOffset, location.getPitch(),
 				mobTypeId
 		);
 	}
-
+/*
 	@Override
 	public EntityType getType() {
-		return org.bukkit.entity.EntityType.fromId(mobTypeId);
+		return EntityType.fromId(mobTypeId);
 	}
+*/
 }

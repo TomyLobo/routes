@@ -19,8 +19,7 @@
 
 package eu.tomylobo.routes.sign;
 
-import org.bukkit.entity.Player;
-
+import eu.tomylobo.abstraction.Player;
 import eu.tomylobo.routes.Routes;
 import eu.tomylobo.routes.util.ScheduledTask;
 

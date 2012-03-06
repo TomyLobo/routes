@@ -17,22 +17,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.tomylobo.routes.util.network;
+package eu.tomylobo.abstraction;
 
 import java.util.Collection;
 
-import org.bukkit.EntityEffect;
-import org.bukkit.Location;
-import org.bukkit.block.Sign;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
+import org.bukkit.block.Sign; // TODO: make own Sign type
+
+import eu.tomylobo.math.Location;
+import eu.tomylobo.math.Vector;
 
 public interface Network {
-	void sendEffect(Player player, Entity entity, EntityEffect effect);
+	//void sendEffect(Player player, Entity entity, EntityEffect effect);
 	void sendEffect(Player player, int entityId, byte effectData);
-	void sendEffect(Collection<Player> players, Entity entity, EntityEffect effect);
+	//void sendEffect(Collection<Player> players, Entity entity, EntityEffect effect);
 	void sendEffect(Collection<Player> players, int entityId, byte effectData);
 
 	void sendSetData(Player player, Entity entity, int index, Object value);
@@ -65,11 +62,11 @@ public interface Network {
 	void sendDestroyEntity(Collection<Player> players, Entity entity);
 	void sendDestroyEntity(Collection<Player> players, int entityId);
 
-	void sendSpawn(Player player, Entity entity, Location location, EntityType entityType);
+	//void sendSpawn(Player player, Entity entity, Location location, EntityType entityType);
 	void sendSpawnMob(Player player, int entityId, double x, double y, double z, float yaw, float pitch, int creatureTypeId);
 	void sendSpawnOther(Player player, Entity entity, Location location, OtherType otherType, int dataValue);
 	void sendSpawnOther(Player player, int entityId, double x, double y, double z, int typeId, int dataValue);
-	void sendSpawn(Collection<Player> players, Entity entity, Location location, EntityType entityType);
+	//void sendSpawn(Collection<Player> players, Entity entity, Location location, EntityType entityType);
 	void sendSpawnMob(Collection<Player> players, int entityId, double x, double y, double z, float yaw, float pitch, int creatureTypeId);
 	void sendSpawnOther(Collection<Player> players, Entity entity, Location location, OtherType otherType, int dataValue);
 	void sendSpawnOther(Collection<Player> players, int entityId, double x, double y, double z, int typeId, int dataValue);
@@ -80,4 +77,7 @@ public interface Network {
 	void sendSignUpdate(Collection<Player> players, Sign signState);
 	void sendSignUpdate(Collection<Player> players, Location location, String[] lines);
 	void sendSignUpdate(Collection<Player> players, int x, int y, int z, String[] lines);
+
+	void sendPlayerPosition(Player player, Vector position);
+	void sendPlayerPosition(Player player, double x, double y, double z);
 }

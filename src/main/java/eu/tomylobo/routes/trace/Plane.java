@@ -19,7 +19,7 @@
 
 package eu.tomylobo.routes.trace;
 
-import org.bukkit.util.Vector;
+import eu.tomylobo.math.Vector;
 
 public class Plane extends AbstractShape {
 	private final Vector origin;
@@ -32,16 +32,16 @@ public class Plane extends AbstractShape {
 
 	@Override
 	public TraceResult trace(Vector start, Vector direction) {
-		final double numerator = origin.clone().subtract(start).dot(normal);
+		final double numerator = origin.subtract(start).dot(normal);
 		final double denominator = direction.dot(normal);
 
 		if (denominator == 0)
 			return null;
 
 		final double t = numerator / denominator;
-		final Vector position = direction.clone().multiply(t).add(start);
+		final Vector position = direction.multiply(t).add(start);
 
-		Vector localPosition = position.clone().subtract(origin);
+		Vector localPosition = position.subtract(origin);
 		return new TraceResult(t, position, localPosition);
 	}
 

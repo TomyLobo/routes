@@ -19,7 +19,7 @@
 
 package eu.tomylobo.routes.util;
 
-import org.bukkit.entity.Entity;
+import eu.tomylobo.abstraction.Entity;
 
 public class Remover implements Runnable {
 	private final Entity[] entities;

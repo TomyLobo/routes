@@ -19,10 +19,10 @@
 
 package eu.tomylobo.routes.config;
 
-import org.bukkit.entity.EntityType;
 import org.junit.*;
 
 import eu.tomylobo.routes.Routes;
+import eu.tomylobo.routes.fakeentity.MobType;
 import eu.tomylobo.routes.util.Utils;
 
 import static org.junit.Assert.*;
@@ -42,14 +42,14 @@ public class ConfigTest {
 		config.test = "falsch";
 		config.test2 = -1;
 		config.test3 = -1;
-		config.test4 = EntityType.BOAT;
+		config.test4 = MobType.CHICKEN;
 		config.test5 = false;
 		config.load();
 
 		assertEquals("testvalue", config.test);
 		assertEquals(1.234f, config.test2, 0);
 		assertEquals(1234, config.test3);
-		assertEquals(EntityType.ENDER_DRAGON, config.test4);
+		assertEquals(MobType.ENDER_DRAGON, config.test4);
 		assertTrue(config.test5);
 	}
 }

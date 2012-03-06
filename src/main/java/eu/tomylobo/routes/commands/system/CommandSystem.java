@@ -24,8 +24,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.command.CommandSender;
-
+import eu.tomylobo.abstraction.CommandSender;
 import eu.tomylobo.routes.commands.RoutesCommands;
 import eu.tomylobo.routes.commands.TestCommands;
 import eu.tomylobo.routes.commands.TravelCommands;
@@ -79,8 +78,8 @@ public class CommandSystem {
 	 * @param args
 	 * @return
 	 */
-	public boolean dispatch(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
-		return dispatch(new Context(sender, command.getName(), label, args));
+	public boolean dispatch(CommandSender sender, String commandName, String label, String[] args) {
+		return dispatch(new Context(sender, commandName, label, args));
 	}
 
 	/**

@@ -23,6 +23,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import eu.tomylobo.abstraction.bukkit.BukkitUtils;
 import eu.tomylobo.routes.commands.system.CommandException;
 import eu.tomylobo.routes.commands.system.CommandSystem;
 import eu.tomylobo.routes.config.RoutesConfig;
@@ -60,17 +61,27 @@ public class Routes extends JavaPlugin {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		return commandSystem.dispatch(sender, command, label, args);
+		return commandSystem.dispatch(BukkitUtils.wrap(sender), command.getName(), label, args);
 	}
 
-	public void save() throws CommandException {
-		config.save();
+	public void save() {
+		try {
+			config.save();
+		}
+		catch (CommandException e) {
+			System.out.println(e);
+		} 
 		transportSystem.save();
 		signHandler.save();
 	}
 
-	public void load() throws CommandException {
-		config.load();
+	public void load() {
+		try {
+			config.load();
+		}
+		catch (CommandException e) {
+			System.out.println(e);
+		} 
 		transportSystem.load();
 		signHandler.load();
 	}

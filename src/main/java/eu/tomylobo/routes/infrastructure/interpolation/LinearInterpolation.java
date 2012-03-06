@@ -21,8 +21,7 @@ package eu.tomylobo.routes.infrastructure.interpolation;
 
 import java.util.List;
 
-import org.bukkit.util.Vector;
-
+import eu.tomylobo.math.Vector;
 import eu.tomylobo.routes.infrastructure.Node;
 
 /**
@@ -52,8 +51,8 @@ public class LinearInterpolation implements Interpolation {
 		final int index1 = (int) Math.floor(position);
 		final double remainder = position - index1;
 
-		final Vector position1 = nodes.get(index1).getPosition().clone();
-		final Vector position2 = nodes.get(index1 + 1).getPosition().clone();
+		final Vector position1 = nodes.get(index1).getPosition();
+		final Vector position2 = nodes.get(index1 + 1).getPosition();
 
 		return position1.multiply(1.0 - remainder).add(position2.multiply(remainder));
 	}
@@ -88,7 +87,7 @@ public class LinearInterpolation implements Interpolation {
 		final Vector position1 = nodes.get(index1).getPosition();
 		final Vector position2 = nodes.get(index1 + 1).getPosition();
 
-		return position2.clone().subtract(position1);
+		return position2.subtract(position1);
 	}
 
 	@Override

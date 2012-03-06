@@ -19,9 +19,8 @@
 
 package eu.tomylobo.routes.commands;
 
-import org.bukkit.Location;
-import org.bukkit.entity.Player;
-
+import eu.tomylobo.abstraction.Player;
+import eu.tomylobo.math.Location;
 import eu.tomylobo.routes.commands.system.Command;
 import eu.tomylobo.routes.commands.system.Context;
 import eu.tomylobo.routes.commands.system.CommandContainer;
@@ -56,17 +55,17 @@ public class TestCommands extends CommandContainer {
 		final int routeScale = 32;
 		route.addNodes(
 				location,
-				location.clone().add(routeScale,0,0),
-				location.clone().add(routeScale,0,routeScale),
+				location.add(routeScale,0,0),
+				location.add(routeScale,0,routeScale),
 
-				location.clone().add(routeScale,routeScale,routeScale),
-				location.clone().add(routeScale,routeScale,0),
-				location.clone().add(0,routeScale,0),
-				location.clone().add(0,routeScale,routeScale),
-				location.clone().add(routeScale,routeScale,routeScale),
+				location.add(routeScale,routeScale,routeScale),
+				location.add(routeScale,routeScale,0),
+				location.add(0,routeScale,0),
+				location.add(0,routeScale,routeScale),
+				location.add(routeScale,routeScale,routeScale),
 
-				location.clone().add(routeScale,0,routeScale),
-				location.clone().add(0,0,routeScale),
+				location.add(routeScale,0,routeScale),
+				location.add(0,0,routeScale),
 				location
 		);
 

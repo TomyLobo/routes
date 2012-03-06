@@ -21,8 +21,7 @@ package eu.tomylobo.routes.infrastructure.interpolation;
 
 import java.util.List;
 
-import org.bukkit.util.Vector;
-
+import eu.tomylobo.math.Vector;
 import eu.tomylobo.routes.infrastructure.Node;
 
 /**

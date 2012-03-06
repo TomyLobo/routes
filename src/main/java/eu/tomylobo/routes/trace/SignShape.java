@@ -19,9 +19,13 @@
 
 package eu.tomylobo.routes.trace;
 
-import org.bukkit.Location;
 import org.bukkit.block.Sign;
-import org.bukkit.util.Vector;
+
+import eu.tomylobo.abstraction.bukkit.BukkitUtils;
+import eu.tomylobo.math.Location;
+import eu.tomylobo.math.Vector;
+import eu.tomylobo.routes.fakeentity.FakeVehicle;
+import eu.tomylobo.routes.fakeentity.VehicleType;
 
 public class SignShape extends Plane {
 	private static final double SIGN_SCALE = 2.0 / 3.0;
@@ -32,32 +36,33 @@ public class SignShape extends Plane {
 	}
 
 	private SignShape(Location originLocation) {
-		super(originLocation.toVector(), originLocation.getDirection());
+		super(originLocation.getPosition(), originLocation.getDirection());
 	}
 
 	private static Location getOriginLocation(Sign sign) {
-		final Location originLocation = sign.getLocation().add(0.5, 0.75*SIGN_SCALE, 0.5);
+		Location originLocation = BukkitUtils.wrap(sign.getLocation()).add(0.5, 0.75*SIGN_SCALE, 0.5);
 
 		double yOffset = 0.5 * SIGN_SCALE;
 		double zOffset = 0.07 * SIGN_SCALE;
 
+		float yaw = 0;
 		switch (sign.getType()) {
 		case SIGN_POST:
-			originLocation.setYaw((sign.getRawData() * 360) / 16f);
+			yaw = (sign.getRawData() * 360) / 16f;
 			break;
 
 		case WALL_SIGN:
 			switch (sign.getRawData()) {
 			case 2:
-				originLocation.setYaw(180);
+				yaw = 180;
 				break;
 
 			case 4:
-				originLocation.setYaw(90);
+				yaw = 90;
 				break;
 
 			case 5:
-				originLocation.setYaw(-90);
+				yaw = -90;
 				break;
 
 			}
@@ -70,9 +75,12 @@ public class SignShape extends Plane {
 			throw new IllegalArgumentException("Expected a sign, got something else.");
 		}
 
+		originLocation = originLocation.setAngles(yaw, 0);
+
 		final Vector normal = originLocation.getDirection();
-		originLocation.add(0, yOffset, 0);
-		originLocation.add(normal.clone().multiply(zOffset));
+		originLocation = originLocation.add(0, yOffset, 0).add(normal.multiply(zOffset));
+
+		new FakeVehicle(originLocation, VehicleType.ENDER_EYE).send();
 
 		return originLocation;
 	}

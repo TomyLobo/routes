@@ -21,27 +21,28 @@ package eu.tomylobo.routes.sign;
 
 import java.util.Collection;
 
-import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.Player;
 
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
+import eu.tomylobo.abstraction.Factory;
+import eu.tomylobo.abstraction.Player;
+import eu.tomylobo.abstraction.bukkit.BukkitUtils;
+import eu.tomylobo.math.Location;
 import eu.tomylobo.routes.util.Ini;
-import eu.tomylobo.routes.util.Workarounds;
 
 public class TrackedSign {
 	private static final String UNMARKED_COLOR = "\u00a79";
 	private static final String MARKED_COLOR = "\u00a7c";
 
-	private final Block block;
+	private final Location block;
 	private final String[] entries;
 	private int selected = -1;
 	private final int entryCount;
 
 	public TrackedSign(Sign sign) {
-		block = sign.getBlock();
+		block = BukkitUtils.wrap(sign.getLocation()); // TODO: port to abstraction layer
 		String[] lines = sign.getLines();
 		entries = new String[lines.length];
 
@@ -63,7 +64,7 @@ public class TrackedSign {
 	}
 
 	public TrackedSign(Multimap<String, String> section) {
-		block = Ini.loadLocation(section, "%s", false).getBlock();
+		block = Ini.loadLocation(section, "%s", false);
 
 		entries = new String[4];
 		int entryCount = 0;
@@ -83,7 +84,7 @@ public class TrackedSign {
 	public Multimap<String, String> save() {
 		Multimap<String, String> section = LinkedListMultimap.create();
 
-		Ini.saveLocation(section, "%s", block.getLocation(), false);
+		Ini.saveLocation(section, "%s", block, false);
 
 		for (int i = 0; i < entries.length; ++i) {
 			if (entries[i] == null)
@@ -100,7 +101,7 @@ public class TrackedSign {
 	 *
 	 * @return a block
 	 */
-	public Block getBlock() {
+	public Location getBlock() {
 		return block;
 	}
 
@@ -148,7 +149,7 @@ public class TrackedSign {
 		if (selected == index)
 			return;
 
-		final Sign sign = (Sign) block.getState();
+		final Sign sign = (Sign) block.getBlockState();
 
 		if (selected != -1) {
 			setMarked(sign, selected, false);
@@ -174,13 +175,13 @@ public class TrackedSign {
 	 * @param index The index of the entry
 	 */
 	public void select(Player player, int index) {
-		final Sign sign = (Sign) block.getState();
+		final Sign sign = (Sign) block.getBlockState();
 
 		if (index != -1 && entries[index] != null) {
 			setMarked(sign, index, true);
 		}
 
-		Workarounds.getNetwork().sendSignUpdate(player, sign);
+		Factory.network().sendSignUpdate(player, sign);
 	}
 
 	private void setMarked(final Sign sign, int index, boolean marked) {

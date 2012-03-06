@@ -19,11 +19,11 @@
 
 package eu.tomylobo.routes.infrastructure;
 
-import org.bukkit.util.Vector;
 
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
+import eu.tomylobo.math.Vector;
 import eu.tomylobo.routes.util.Ini;
 
 /**
@@ -44,7 +44,7 @@ public class Node {
 	private double continuity;
 
 	public Node() {
-		this(new Vector());
+		this(new Vector(0, 0, 0));
 	}
 
 	public Node(Vector position) {

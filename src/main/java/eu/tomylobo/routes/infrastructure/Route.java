@@ -23,13 +23,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.util.Vector;
-
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
+import eu.tomylobo.abstraction.World;
+import eu.tomylobo.math.Location;
+import eu.tomylobo.math.Vector;
 import eu.tomylobo.routes.Routes;
 import eu.tomylobo.routes.infrastructure.editor.VisualizedRoute;
 import eu.tomylobo.routes.infrastructure.interpolation.Interpolation;
@@ -37,7 +36,6 @@ import eu.tomylobo.routes.infrastructure.interpolation.KochanekBartelsInterpolat
 import eu.tomylobo.routes.infrastructure.interpolation.ReparametrisingInterpolation;
 import eu.tomylobo.routes.util.Ini;
 import eu.tomylobo.routes.util.ScheduledTask;
-import eu.tomylobo.routes.util.Utils;
 
 /**
  * Represents a route from one point to another, consisting of multiple nodes.
@@ -79,11 +77,11 @@ public final class Route {
 			if (this.world == null) {
 				this.world = world;
 			}
-			else if (this.world != world) {
+			else if (!this.world.equals(world)) {
 				throw new IllegalArgumentException("New node must be in the same world.");
 			}
 
-			nodes[i] = new Node(location.toVector());
+			nodes[i] = new Node(location.getPosition());
 		}
 		addNodes(index, nodes);
 	}
@@ -110,7 +108,7 @@ public final class Route {
 		if (vec == null)
 			return null;
 
-		return Utils.locationFromEye(world, vec, interpolation.get1stDerivative(position));
+		return Location.fromEye(world, vec, interpolation.get1stDerivative(position));
 	}
 
 	private void ensureClean() {

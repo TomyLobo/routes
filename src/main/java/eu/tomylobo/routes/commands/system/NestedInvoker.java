@@ -22,7 +22,7 @@ package eu.tomylobo.routes.commands.system;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.bukkit.command.CommandSender;
+import eu.tomylobo.abstraction.CommandSender;
 
 /**
  * Invokes nested commands instead of invoking the instance directly.

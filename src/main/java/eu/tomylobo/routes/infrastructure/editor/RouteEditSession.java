@@ -19,9 +19,9 @@
 
 package eu.tomylobo.routes.infrastructure.editor;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import eu.tomylobo.abstraction.Player;
 import eu.tomylobo.routes.Routes;
 import eu.tomylobo.routes.config.RoutesConfig;
 import eu.tomylobo.routes.infrastructure.Route;
@@ -64,6 +64,7 @@ public class RouteEditSession {
 	public void interact(PlayerInteractEvent event) {
 		switch (event.getAction()) {
 		case RIGHT_CLICK_AIR:
+			System.out.println("air");
 		case RIGHT_CLICK_BLOCK:
 			route.addNodes(++segmentIndex, player.getLocation());
 			visualizedRoute.refresh(segmentIndex - 2, 3, 4);

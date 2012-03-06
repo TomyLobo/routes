@@ -19,8 +19,8 @@
 
 package eu.tomylobo.routes.trace;
 
-import org.bukkit.Location;
-import org.bukkit.util.Vector;
+import eu.tomylobo.math.Location;
+import eu.tomylobo.math.Vector;
 
 public interface Shape {
 	/**

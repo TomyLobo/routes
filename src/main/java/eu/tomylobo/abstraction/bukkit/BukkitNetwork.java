@@ -17,24 +17,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.tomylobo.routes.util.network;
+package eu.tomylobo.abstraction.bukkit;
 
 import java.util.Collection;
 
-import org.bukkit.EntityEffect;
-import org.bukkit.Location;
 import org.bukkit.block.Sign;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
 
+import eu.tomylobo.abstraction.Entity;
+import eu.tomylobo.abstraction.Network;
+import eu.tomylobo.abstraction.OtherType;
+import eu.tomylobo.abstraction.Player;
+import eu.tomylobo.math.Location;
+import eu.tomylobo.math.Vector;
 import eu.tomylobo.routes.util.Utils;
 
 import net.minecraft.server.DataWatcher;
 import net.minecraft.server.MathHelper;
 import net.minecraft.server.Packet;
+import net.minecraft.server.Packet11PlayerPosition;
 import net.minecraft.server.Packet130UpdateSign;
 import net.minecraft.server.Packet23VehicleSpawn;
 import net.minecraft.server.Packet24MobSpawn;
@@ -46,26 +46,27 @@ import net.minecraft.server.Packet38EntityStatus;
 import net.minecraft.server.Packet39AttachEntity;
 import net.minecraft.server.Packet40EntityMetadata;
 
-public class CraftNetwork implements Network {
+public class BukkitNetwork implements Network {
+	
 	private Packet38EntityStatus createEffectPacket(int entityId, byte effectData) {
 		return new Packet38EntityStatus(entityId, effectData);
 	}
-
+/*
 	@Override
 	public void sendEffect(Player player, Entity entity, EntityEffect effect) {
 		sendEffect(player, entity.getEntityId(), effect.getData());
 	}
-
+*/
 	@Override
 	public void sendEffect(Player player, int entityId, byte effectData) {
 		sendPacket(player, createEffectPacket(entityId, effectData));
 	}
-
+/*
 	@Override
 	public void sendEffect(Collection<Player> players, Entity entity, EntityEffect effect) {
 		sendEffect(players, entity.getEntityId(), effect.getData());
 	}
-
+*/
 	@Override
 	public void sendEffect(Collection<Player> players, int entityId, byte effectData) {
 		sendPacket(players, createEffectPacket(entityId, effectData));
@@ -123,7 +124,8 @@ public class CraftNetwork implements Network {
 
 	@Override
 	public void sendTeleport(Player player, Entity entity, Location location) {
-		sendTeleport(player, entity.getEntityId(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+		final Vector position = location.getPosition();
+		sendTeleport(player, entity.getEntityId(), position.getX(), position.getY(), position.getZ(), location.getYaw(), location.getPitch());
 	}
 
 	@Override
@@ -133,7 +135,8 @@ public class CraftNetwork implements Network {
 
 	@Override
 	public void sendTeleport(Collection<Player> players, Entity entity, Location location) {
-		sendTeleport(players, entity.getEntityId(), location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
+		final Vector position = location.getPosition();
+		sendTeleport(players, entity.getEntityId(), position.getX(), position.getY(), position.getZ(), location.getYaw(), location.getPitch());
 	}
 
 	@Override
@@ -273,7 +276,7 @@ public class CraftNetwork implements Network {
 		return p23;
 	}
 
-
+/*
 	@Override
 	public void sendSpawn(Player player, Entity entity, Location location, EntityType entityType) {
 		if (entityType.isAlive()) {
@@ -283,7 +286,7 @@ public class CraftNetwork implements Network {
 			sendSpawnOther(player, entity, location, OtherType.fromEntityType(entityType), 0);
 		}
 	}
-
+*/
 	@Override
 	public void sendSpawnMob(Player player, int entityId, double x, double y, double z, float yaw, float pitch, int creatureTypeId) {
 		sendPacket(player, createSpawnMobPacket(entityId, x, y, z, yaw, pitch, creatureTypeId));
@@ -291,14 +294,15 @@ public class CraftNetwork implements Network {
 
 	@Override
 	public void sendSpawnOther(Player player, Entity entity, Location location, OtherType otherType, int dataValue) {
-		sendSpawnOther(player, entity.getEntityId(), location.getX(), location.getY(), location.getZ(), otherType.getId(), dataValue);
+		final Vector position = location.getPosition();
+		sendSpawnOther(player, entity.getEntityId(), position.getX(), position.getY(), position.getZ(), otherType.getId(), dataValue);
 	}
 
 	@Override
 	public void sendSpawnOther(Player player, int entityId, double x, double y, double z, int typeId, int dataValue) {
 		sendPacket(player, createSpawnOtherPacket(entityId, x, y, z, typeId, dataValue));
 	}
-
+/*
 	@Override
 	public void sendSpawn(Collection<Player> players, Entity entity, Location location, EntityType entityType) {
 		if (entityType.isAlive()) {
@@ -308,7 +312,7 @@ public class CraftNetwork implements Network {
 			sendSpawnOther(players, entity, location, OtherType.fromEntityType(entityType), 0);
 		}
 	}
-
+*/
 	@Override
 	public void sendSpawnMob(Collection<Player> players, int entityId, double x, double y, double z, float yaw, float pitch, int creatureTypeId) {
 		sendPacket(players, createSpawnMobPacket(entityId, x, y, z, yaw, pitch, creatureTypeId));
@@ -316,7 +320,8 @@ public class CraftNetwork implements Network {
 
 	@Override
 	public void sendSpawnOther(Collection<Player> players, Entity entity, Location location, OtherType otherType, int dataValue) {
-		sendSpawnOther(players, entity.getEntityId(), location.getX(), location.getY(), location.getZ(), otherType.getId(), dataValue);
+		final Vector position = location.getPosition();
+		sendSpawnOther(players, entity.getEntityId(), position.getX(), position.getY(), position.getZ(), otherType.getId(), dataValue);
 	}
 
 	@Override
@@ -331,12 +336,13 @@ public class CraftNetwork implements Network {
 
 	@Override
 	public void sendSignUpdate(Player player, Sign signState) {
-		sendSignUpdate(player, signState.getLocation(), signState.getLines());
+		sendSignUpdate(player, BukkitUtils.wrap(signState.getLocation()), signState.getLines());
 	}
 
 	@Override
 	public void sendSignUpdate(Player player, Location location, String[] lines) {
-		sendSignUpdate(player, location.getBlockX(), location.getBlockY(), location.getBlockZ(), lines);
+		final Vector position = location.getPosition();
+		sendSignUpdate(player, (int) position.getX(), (int) position.getY(), (int) position.getZ(), lines);
 	}
 
 	@Override
@@ -346,17 +352,38 @@ public class CraftNetwork implements Network {
 
 	@Override
 	public void sendSignUpdate(Collection<Player> players, Sign signState) {
-		sendSignUpdate(players, signState.getLocation(), signState.getLines());
+		sendSignUpdate(players, BukkitUtils.wrap(signState.getLocation()), signState.getLines());
 	}
 
 	@Override
 	public void sendSignUpdate(Collection<Player> players, Location location, String[] lines) {
-		sendSignUpdate(players, location.getBlockX(), location.getBlockY(), location.getBlockZ(), lines);
+		final Vector position = location.getPosition();
+		sendSignUpdate(players, (int) position.getX(), (int) position.getY(), (int) position.getZ(), lines);
 	}
 
 	@Override
 	public void sendSignUpdate(Collection<Player> players, int x, int y, int z, String[] lines) {
 		sendPacket(players, createSignUpdatePacket(x, y, z, lines));
+	}
+
+	
+	private Packet11PlayerPosition createPlayerPositionPacket(double x, double y, double z) {
+		final Packet11PlayerPosition p11 = new Packet11PlayerPosition();
+		p11.x = x;
+		p11.y = y + 1.62;
+		p11.stance = y;
+		p11.z = z;
+		return p11;
+	}
+
+	@Override
+	public void sendPlayerPosition(Player player, Vector position) {
+		sendPlayerPosition(player, position.getX(), position.getY(), position.getZ());
+	}
+
+	@Override
+	public void sendPlayerPosition(Player player, double x, double y, double z) {
+		sendPacket(player, createPlayerPositionPacket(x, y, z));
 	}
 
 
@@ -368,6 +395,6 @@ public class CraftNetwork implements Network {
 	}
 
 	private static void sendPacket(final Player player, final Packet packet) {
-		((CraftPlayer) player).getHandle().netServerHandler.sendPacket(packet);
+		((org.bukkit.craftbukkit.entity.CraftPlayer) BukkitUtils.unwrap(player)).getHandle().netServerHandler.sendPacket(packet);
 	}
 }

@@ -23,8 +23,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
-import org.bukkit.util.Vector;
-
+import eu.tomylobo.math.Vector;
 import eu.tomylobo.routes.infrastructure.Node;
 
 /**
@@ -69,7 +68,7 @@ public class ReparametrisingInterpolation implements Interpolation {
 		if (position > 1)
 			return null;
 
-		return baseInterpolation.get1stDerivative(arcToParameter(position)).normalize().multiply(totalArcLength);
+		return baseInterpolation.get1stDerivative(arcToParameter(position)).normalized().multiply(totalArcLength);
 	}
 
 	@Override

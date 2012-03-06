@@ -22,10 +22,9 @@ package eu.tomylobo.routes.infrastructure.editor;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.entity.Player;
-
+import eu.tomylobo.abstraction.Player;
+import eu.tomylobo.abstraction.World;
+import eu.tomylobo.math.Location;
 import eu.tomylobo.routes.fakeentity.FakeEntity;
 import eu.tomylobo.routes.fakeentity.FakeVehicle;
 import eu.tomylobo.routes.fakeentity.VehicleType;
@@ -76,7 +75,7 @@ public class VisualizedRoute {
 		final int endIndex = Math.min(waypointMarkers.size(), startIndex + amount);
 		for (int i = startIndex; i < endIndex; ++i) {
 			Node node = nodes.get(i);
-			final FakeEntity waypointMarker = new FakeVehicle(node.getPosition().toLocation(world), VehicleType.ENDER_CRYSTAL);
+			final FakeEntity waypointMarker = new FakeVehicle(new Location(world, node.getPosition()), VehicleType.ENDER_CRYSTAL);
 			sendFakeEntity(waypointMarker);
 
 			waypointMarkers.set(i, waypointMarker);

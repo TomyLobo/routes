@@ -132,11 +132,15 @@ public class Config {
 			final String key = entry.key;
 			Collection<String> values = section.get(key);
 
-			if (values.size() < 1)
-				throw new CommandException("Key '"+key+"' not found in section '"+sectionName+"' of '"+configFileName+"'.");
+			if (values.size() < 1) {
+				System.out.println("Key '"+key+"' not found in section '"+sectionName+"' of '"+configFileName+"'.");
+				continue;
+			}
 
-			if (values.size() > 1)
-				throw new CommandException("Key '"+key+"' found "+values.size()+" times in section '"+sectionName+"' of '"+configFileName+"'.");
+			if (values.size() > 1) {
+				System.out.println("Key '"+key+"' found "+values.size()+" times in section '"+sectionName+"' of '"+configFileName+"'.");
+				continue;
+			}
 
 			String input = values.iterator().next();
 

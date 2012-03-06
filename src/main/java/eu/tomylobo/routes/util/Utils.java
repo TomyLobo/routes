@@ -21,10 +21,6 @@ package eu.tomylobo.routes.util;
 
 import java.lang.reflect.Field;
 
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.util.Vector;
-
 /**
  * Contains general purpose utility functions.
  * 
@@ -32,23 +28,6 @@ import org.bukkit.util.Vector;
  *
  */
 public class Utils {
-	public static Location locationFromLookAt(World world, Vector start, Vector lookAt) {
-		final Vector diff = lookAt.clone().subtract(start);
-
-		return locationFromEye(world, start, diff);
-	}
-
-	public static Location locationFromEye(World world, Vector start, Vector eye) {
-		final double eyeX = eye.getX();
-		final double eyeZ = eye.getZ();
-		final float yaw = (float) Math.toDegrees(Math.atan2(-eyeX, eyeZ));
-		final double length = Math.sqrt(eyeX * eyeX + eyeZ * eyeZ);
-		final float pitch = (float) Math.toDegrees(Math.atan2(-eye.getY(), length));
-
-		return start.toLocation(world, yaw, pitch);
-	}
-
-	
 	@SuppressWarnings("unchecked")
 	public static <T, E> T getPrivateValue(Class<? super E> class1, E instance, String field) {
 		try

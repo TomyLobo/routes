@@ -19,8 +19,9 @@
 
 package eu.tomylobo.routes.commands;
 
-import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+
+import eu.tomylobo.abstraction.Player;
 import eu.tomylobo.routes.commands.system.Command;
 import eu.tomylobo.routes.commands.system.Context;
 import eu.tomylobo.routes.commands.system.CommandContainer;

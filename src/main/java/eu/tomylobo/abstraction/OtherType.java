@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.tomylobo.routes.util.network;
+package eu.tomylobo.abstraction;
 
 import java.util.HashMap;
 import java.util.Map;

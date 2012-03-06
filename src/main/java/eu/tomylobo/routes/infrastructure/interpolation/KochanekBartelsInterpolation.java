@@ -22,8 +22,7 @@ package eu.tomylobo.routes.infrastructure.interpolation;
 import java.util.Collections;
 import java.util.List;
 
-import org.bukkit.util.Vector;
-
+import eu.tomylobo.math.Vector;
 import eu.tomylobo.routes.infrastructure.Node;
 
 /**
@@ -106,10 +105,10 @@ public class KochanekBartelsInterpolation implements Interpolation {
 	 * @return linear combination of nodes[n-1..n+2] with f1..4
 	 */
 	private Vector linearCombination(int baseIndex, double f1, double f2, double f3, double f4) {
-		final Vector r1 = retrieve(baseIndex - 1).clone().multiply(f1);
-		final Vector r2 = retrieve(baseIndex    ).clone().multiply(f2);
-		final Vector r3 = retrieve(baseIndex + 1).clone().multiply(f3);
-		final Vector r4 = retrieve(baseIndex + 2).clone().multiply(f4);
+		final Vector r1 = retrieve(baseIndex - 1).multiply(f1);
+		final Vector r2 = retrieve(baseIndex    ).multiply(f2);
+		final Vector r3 = retrieve(baseIndex + 1).multiply(f3);
+		final Vector r4 = retrieve(baseIndex + 2).multiply(f4);
 
 		return r1.add(r2).add(r3).add(r4);
 	}
@@ -152,7 +151,7 @@ public class KochanekBartelsInterpolation implements Interpolation {
 		final Vector c = coeffC[index];
 		final Vector d = coeffD[index];
 
-		return a.clone().multiply(remainder).add(b).multiply(remainder).add(c).multiply(remainder).add(d);
+		return a.multiply(remainder).add(b).multiply(remainder).add(c).multiply(remainder).add(d);
 	}
 
 	@Override
@@ -172,7 +171,7 @@ public class KochanekBartelsInterpolation implements Interpolation {
 		final Vector b = coeffB[index];
 		final Vector c = coeffC[index];
 
-		return a.clone().multiply(1.5*position - 3.0*index).add(b).multiply(2.0*position).add(a.clone().multiply(1.5*index).subtract(b).multiply(2.0*index)).add(c).multiply(scaling);
+		return a.multiply(1.5*position - 3.0*index).add(b).multiply(2.0*position).add(a.multiply(1.5*index).subtract(b).multiply(2.0*index)).add(c).multiply(scaling);
 	}
 
 	@Override
@@ -223,20 +222,20 @@ public class KochanekBartelsInterpolation implements Interpolation {
 	}
 
 	private double arcLengthRecursive(int index, double remainderLeft, double remainderRight) {
-		final Vector a = coeffA[index].clone().multiply(3.0);
-		final Vector b = coeffB[index].clone().multiply(2.0);
+		final Vector a = coeffA[index].multiply(3.0);
+		final Vector b = coeffB[index].multiply(2.0);
 		final Vector c = coeffC[index];
 
 		final int nPoints = 8;
 
-		double accum = a.clone().multiply(remainderLeft).add(b).multiply(remainderLeft).add(c).length() / 2.0;
+		double accum = a.multiply(remainderLeft).add(b).multiply(remainderLeft).add(c).length() / 2.0;
 		for (int i = 1; i < nPoints-1; ++i) {
 			double t = ((double) i) / nPoints;
 			t = (remainderRight-remainderLeft)*t + remainderLeft;
-			accum += a.clone().multiply(t).add(b).multiply(t).add(c).length();
+			accum += a.multiply(t).add(b).multiply(t).add(c).length();
 		}
 
-		accum += a.clone().multiply(remainderRight).add(b).multiply(remainderRight).add(c).length() / 2.0;
+		accum += a.multiply(remainderRight).add(b).multiply(remainderRight).add(c).length() / 2.0;
 		return accum * (remainderRight - remainderLeft) / nPoints;
 	}
 
