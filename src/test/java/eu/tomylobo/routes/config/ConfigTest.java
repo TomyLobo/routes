@@ -23,6 +23,7 @@ import org.junit.*;
 
 import eu.tomylobo.routes.Routes;
 import eu.tomylobo.routes.fakeentity.MobType;
+import eu.tomylobo.routes.fakeentity.VehicleType;
 import eu.tomylobo.routes.util.Utils;
 
 import static org.junit.Assert.*;
@@ -42,7 +43,7 @@ public class ConfigTest {
 		config.test = "falsch";
 		config.test2 = -1;
 		config.test3 = -1;
-		config.test4 = MobType.CHICKEN;
+		config.test4 = VehicleType.BOAT;
 		config.test5 = false;
 		config.load();
 

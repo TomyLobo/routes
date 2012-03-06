@@ -52,7 +52,17 @@ public abstract class FakeEntity implements Entity {
 	private Map<Entity, Double> fakePassengers = new HashMap<Entity, Double>();
 	private Set<Player> relevantPlayers = new HashSet<Player>();
 
-	public FakeEntity(Location location, EntityType entityType) {
+	public static FakeEntity create(Location location, EntityType entityType) {
+		if (entityType instanceof MobType)
+			return new FakeMob(location, (MobType) entityType);
+
+		if (entityType instanceof VehicleType)
+			return new FakeVehicle(location, (VehicleType) entityType);
+
+		throw new IllegalArgumentException("Unknown entity type");
+	}
+
+	protected FakeEntity(Location location, EntityType entityType) {
 		if (location == null)
 			throw new IllegalArgumentException("A null Location was passed to the FakeEntity ctor.");
 

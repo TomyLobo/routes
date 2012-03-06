@@ -31,6 +31,9 @@ import com.google.common.collect.Multimap;
 
 import eu.tomylobo.routes.Routes;
 import eu.tomylobo.routes.commands.system.CommandException;
+import eu.tomylobo.routes.fakeentity.EntityType;
+import eu.tomylobo.routes.fakeentity.MobType;
+import eu.tomylobo.routes.fakeentity.VehicleType;
 import eu.tomylobo.routes.util.Ini;
 
 public class Config {
@@ -190,6 +193,14 @@ public class Config {
 
 			if (type.isEnum())
 				return Enum.valueOf((Class<Enum>) type, value);
+
+			if (EntityType.class.isAssignableFrom(type)) {
+				try {
+					return MobType.valueOf(value);
+				} catch (IllegalArgumentException e) {
+					return VehicleType.valueOf(value);
+				}
+			}
 		}
 		catch (Exception e) {
 			throw new CommandException("Exception encountered while parsing '"+value+"' as a '"+type.getSimpleName()+"'.", e);

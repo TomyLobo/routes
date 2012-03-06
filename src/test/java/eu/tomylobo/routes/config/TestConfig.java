@@ -19,6 +19,7 @@
 
 package eu.tomylobo.routes.config;
 
+import eu.tomylobo.routes.fakeentity.EntityType;
 import eu.tomylobo.routes.fakeentity.MobType;
 
 @ConfigFile("testconfig.txt")
@@ -28,12 +29,12 @@ public class TestConfig extends Config {
 
 	@ConfigItem("testsection.testfloat")
 	public float test2 = 1.234f;
-	
+
 	@ConfigItem("testsection.testint")
 	public int test3 = 1234;
 
 	@ConfigItem("testsection.testentitytype")
-	public MobType test4 = MobType.ENDER_DRAGON;
+	public EntityType test4 = MobType.ENDER_DRAGON;
 
 	@ConfigItem("testsection.testboolean")
 	public boolean test5 = true;
