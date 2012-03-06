@@ -23,7 +23,6 @@ import java.util.Collection;
 
 import eu.tomylobo.abstraction.Entity;
 import eu.tomylobo.abstraction.Network;
-import eu.tomylobo.abstraction.OtherType;
 import eu.tomylobo.abstraction.Player;
 import eu.tomylobo.abstraction.block.Sign;
 import eu.tomylobo.math.Location;
@@ -46,7 +45,6 @@ import net.minecraft.server.Packet39AttachEntity;
 import net.minecraft.server.Packet40EntityMetadata;
 
 public class BukkitNetwork implements Network {
-	
 	private Packet38EntityStatus createEffectPacket(int entityId, byte effectData) {
 		return new Packet38EntityStatus(entityId, effectData);
 	}
@@ -290,13 +288,13 @@ public class BukkitNetwork implements Network {
 	public void sendSpawnMob(Player player, int entityId, double x, double y, double z, float yaw, float pitch, int creatureTypeId) {
 		sendPacket(player, createSpawnMobPacket(entityId, x, y, z, yaw, pitch, creatureTypeId));
 	}
-
+/*
 	@Override
 	public void sendSpawnOther(Player player, Entity entity, Location location, OtherType otherType, int dataValue) {
 		final Vector position = location.getPosition();
 		sendSpawnOther(player, entity.getEntityId(), position.getX(), position.getY(), position.getZ(), otherType.getId(), dataValue);
 	}
-
+*/
 	@Override
 	public void sendSpawnOther(Player player, int entityId, double x, double y, double z, int typeId, int dataValue) {
 		sendPacket(player, createSpawnOtherPacket(entityId, x, y, z, typeId, dataValue));
@@ -316,13 +314,13 @@ public class BukkitNetwork implements Network {
 	public void sendSpawnMob(Collection<Player> players, int entityId, double x, double y, double z, float yaw, float pitch, int creatureTypeId) {
 		sendPacket(players, createSpawnMobPacket(entityId, x, y, z, yaw, pitch, creatureTypeId));
 	}
-
+/*
 	@Override
 	public void sendSpawnOther(Collection<Player> players, Entity entity, Location location, OtherType otherType, int dataValue) {
 		final Vector position = location.getPosition();
 		sendSpawnOther(players, entity.getEntityId(), position.getX(), position.getY(), position.getZ(), otherType.getId(), dataValue);
 	}
-
+*/
 	@Override
 	public void sendSpawnOther(Collection<Player> players, int entityId, double x, double y, double z, int typeId, int dataValue) {
 		sendPacket(players, createSpawnOtherPacket(entityId, x, y, z, typeId, dataValue));
@@ -363,7 +361,7 @@ public class BukkitNetwork implements Network {
 		sendPacket(players, createSignUpdatePacket(x, y, z, lines));
 	}
 
-	
+
 	private Packet11PlayerPosition createPlayerPositionPacket(double x, double y, double z) {
 		final Packet11PlayerPosition p11 = new Packet11PlayerPosition();
 		p11.x = x;

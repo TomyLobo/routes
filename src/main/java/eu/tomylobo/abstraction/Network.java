@@ -63,11 +63,11 @@ public interface Network {
 
 	//void sendSpawn(Player player, Entity entity, Location location, EntityType entityType);
 	void sendSpawnMob(Player player, int entityId, double x, double y, double z, float yaw, float pitch, int creatureTypeId);
-	void sendSpawnOther(Player player, Entity entity, Location location, OtherType otherType, int dataValue);
+	//void sendSpawnOther(Player player, Entity entity, Location location, OtherType otherType, int dataValue);
 	void sendSpawnOther(Player player, int entityId, double x, double y, double z, int typeId, int dataValue);
 	//void sendSpawn(Collection<Player> players, Entity entity, Location location, EntityType entityType);
 	void sendSpawnMob(Collection<Player> players, int entityId, double x, double y, double z, float yaw, float pitch, int creatureTypeId);
-	void sendSpawnOther(Collection<Player> players, Entity entity, Location location, OtherType otherType, int dataValue);
+	//void sendSpawnOther(Collection<Player> players, Entity entity, Location location, OtherType otherType, int dataValue);
 	void sendSpawnOther(Collection<Player> players, int entityId, double x, double y, double z, int typeId, int dataValue);
 
 	void sendSignUpdate(Player player, Vector position, Sign signState);
