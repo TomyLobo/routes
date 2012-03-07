@@ -20,39 +20,42 @@
 package eu.tomylobo.routes.util;
 
 import eu.tomylobo.abstraction.Factory;
+import eu.tomylobo.abstraction.MetaPlugin;
 
 public abstract class ScheduledTask implements Runnable {
+	private final MetaPlugin plugin;
 	private Object taskId = null;
 
-	public ScheduledTask() { // TODO: add reference to an abstract plugin
+	public ScheduledTask(MetaPlugin plugin) {
+		this.plugin = plugin;
 	}
 
 	public void scheduleSyncDelayed(long delay) {
-		taskId = Factory.scheduler().scheduleSyncDelayedTask(this, delay);
+		taskId = Factory.scheduler().scheduleSyncDelayedTask(plugin, this, delay);
 	}
 
 
 	public void scheduleSyncDelayed() {
-		taskId = Factory.scheduler().scheduleSyncDelayedTask(this);
+		taskId = Factory.scheduler().scheduleSyncDelayedTask(plugin, this);
 	}
 
 
 	public void scheduleSyncRepeating(long delay, long period) {
-		taskId = Factory.scheduler().scheduleSyncRepeatingTask(this, delay, period);
+		taskId = Factory.scheduler().scheduleSyncRepeatingTask(plugin, this, delay, period);
 	}
 
 
 	public void scheduleAsyncDelayed(long delay) {
-		taskId = Factory.scheduler().scheduleAsyncDelayedTask(this, delay);
+		taskId = Factory.scheduler().scheduleAsyncDelayedTask(plugin, this, delay);
 	}
 
 
 	public void scheduleAsyncDelayed() {
-		taskId = Factory.scheduler().scheduleAsyncDelayedTask(this);
+		taskId = Factory.scheduler().scheduleAsyncDelayedTask(plugin, this);
 	}
 
 	public void scheduleAsyncRepeating(long delay, long period) {
-		taskId = Factory.scheduler().scheduleAsyncRepeatingTask(this, delay, period);
+		taskId = Factory.scheduler().scheduleAsyncRepeatingTask(plugin, this, delay, period);
 	}
 
 	public void cancel() {

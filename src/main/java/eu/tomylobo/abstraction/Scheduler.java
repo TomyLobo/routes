@@ -20,11 +20,11 @@
 package eu.tomylobo.abstraction;
 
 public interface Scheduler {
-	Object scheduleSyncDelayedTask(Runnable task, long delay);
-	Object scheduleSyncDelayedTask(Runnable task);
-	Object scheduleSyncRepeatingTask(Runnable task, long delay, long period);
-	Object scheduleAsyncDelayedTask(Runnable task, long delay);
-	Object scheduleAsyncDelayedTask(Runnable task);
-	Object scheduleAsyncRepeatingTask(Runnable task, long delay, long period);
+	Object scheduleSyncDelayedTask(MetaPlugin plugin, Runnable task, long delay);
+	Object scheduleSyncDelayedTask(MetaPlugin plugin, Runnable task);
+	Object scheduleSyncRepeatingTask(MetaPlugin plugin, Runnable task, long delay, long period);
+	Object scheduleAsyncDelayedTask(MetaPlugin plugin, Runnable task, long delay);
+	Object scheduleAsyncDelayedTask(MetaPlugin plugin, Runnable task);
+	Object scheduleAsyncRepeatingTask(MetaPlugin plugin, Runnable task, long delay, long period);
 	void cancelTask(Object taskId);
 }

@@ -20,6 +20,7 @@
 package eu.tomylobo.routes.sign;
 
 import eu.tomylobo.abstraction.Player;
+import eu.tomylobo.routes.Routes;
 import eu.tomylobo.routes.util.ScheduledTask;
 
 public class SignSession {
@@ -27,7 +28,7 @@ public class SignSession {
 	private final Player player;
 	private TrackedSign currentTrackedSign;
 	private int currentIndex = -1;
-	private ScheduledTask signResetTask = new ScheduledTask() {
+	private ScheduledTask signResetTask = new ScheduledTask(Routes.getInstance()) {
 		@Override
 		public void run() {
 			close();

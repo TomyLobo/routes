@@ -52,7 +52,7 @@ public final class Route {
 	//private Interpolation interpolation = new LinearInterpolation();
 	private Interpolation interpolation = new ReparametrisingInterpolation(new KochanekBartelsInterpolation());
 
-	private ScheduledTask task = new ScheduledTask() {
+	private ScheduledTask task = new ScheduledTask(Routes.getInstance()) {
 		@Override
 		public void run() {
 			clearVisualization();

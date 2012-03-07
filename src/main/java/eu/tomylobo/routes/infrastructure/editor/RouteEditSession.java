@@ -41,7 +41,7 @@ public class RouteEditSession {
 		final RoutesConfig config = Routes.getInstance().config;
 		this.visualizedRoute = new VisualizedRoute(route, config.editorDotsPerMeter, player);
 
-		flashTask = new ScheduledTask() {
+		flashTask = new ScheduledTask(Routes.getInstance()) {
 			boolean on = true;
 			int lastSegmentIndex;
 

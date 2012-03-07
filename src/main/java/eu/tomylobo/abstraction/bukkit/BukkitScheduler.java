@@ -22,15 +22,13 @@ package eu.tomylobo.abstraction.bukkit;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
+import eu.tomylobo.abstraction.MetaPlugin;
 import eu.tomylobo.abstraction.Scheduler;
-import eu.tomylobo.routes.Routes;
 
 public class BukkitScheduler implements Scheduler {
-	Plugin plugin = (Plugin) Routes.getInstance().getFrameworkPlugin();
-
 	@Override
-	public Object scheduleSyncDelayedTask(Runnable task, long delay) {
-		int taskId = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, task, delay);
+	public Object scheduleSyncDelayedTask(MetaPlugin plugin, Runnable task, long delay) {
+		int taskId = Bukkit.getScheduler().scheduleSyncDelayedTask((Plugin) plugin.getFrameworkPlugin(), task, delay);
 		if (taskId == -1)
 			return null;
 
@@ -38,8 +36,8 @@ public class BukkitScheduler implements Scheduler {
 	}
 
 	@Override
-	public Object scheduleSyncDelayedTask(Runnable task) {
-		int taskId = Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, task);
+	public Object scheduleSyncDelayedTask(MetaPlugin plugin, Runnable task) {
+		int taskId = Bukkit.getScheduler().scheduleSyncDelayedTask((Plugin) plugin.getFrameworkPlugin(), task);
 		if (taskId == -1)
 			return null;
 
@@ -47,8 +45,8 @@ public class BukkitScheduler implements Scheduler {
 	}
 
 	@Override
-	public Object scheduleSyncRepeatingTask(Runnable task, long delay, long period) {
-		int taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, task, delay, period);
+	public Object scheduleSyncRepeatingTask(MetaPlugin plugin, Runnable task, long delay, long period) {
+		int taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask((Plugin) plugin.getFrameworkPlugin(), task, delay, period);
 		if (taskId == -1)
 			return null;
 
@@ -56,8 +54,8 @@ public class BukkitScheduler implements Scheduler {
 	}
 
 	@Override
-	public Object scheduleAsyncDelayedTask(Runnable task, long delay) {
-		int taskId = Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, task, delay);
+	public Object scheduleAsyncDelayedTask(MetaPlugin plugin, Runnable task, long delay) {
+		int taskId = Bukkit.getScheduler().scheduleAsyncDelayedTask((Plugin) plugin.getFrameworkPlugin(), task, delay);
 		if (taskId == -1)
 			return null;
 
@@ -65,8 +63,8 @@ public class BukkitScheduler implements Scheduler {
 	}
 
 	@Override
-	public Object scheduleAsyncDelayedTask(Runnable task) {
-		int taskId = Bukkit.getScheduler().scheduleAsyncDelayedTask(plugin, task);
+	public Object scheduleAsyncDelayedTask(MetaPlugin plugin, Runnable task) {
+		int taskId = Bukkit.getScheduler().scheduleAsyncDelayedTask((Plugin) plugin.getFrameworkPlugin(), task);
 		if (taskId == -1)
 			return null;
 
@@ -74,8 +72,8 @@ public class BukkitScheduler implements Scheduler {
 	}
 
 	@Override
-	public Object scheduleAsyncRepeatingTask(Runnable task, long delay, long period) {
-		int taskId = Bukkit.getScheduler().scheduleAsyncRepeatingTask(plugin, task, delay, period);
+	public Object scheduleAsyncRepeatingTask(MetaPlugin plugin, Runnable task, long delay, long period) {
+		int taskId = Bukkit.getScheduler().scheduleAsyncRepeatingTask((Plugin) plugin.getFrameworkPlugin(), task, delay, period);
 		if (taskId == -1)
 			return null;
 
