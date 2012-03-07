@@ -23,10 +23,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
 import eu.tomylobo.abstraction.Scheduler;
-import eu.tomylobo.routes.BukkitRoutes;
+import eu.tomylobo.routes.Routes;
 
 public class BukkitScheduler implements Scheduler {
-	Plugin plugin = BukkitRoutes.getInstance();
+	Plugin plugin = Routes.getInstance().plugin;
 
 	@Override
 	public Object scheduleSyncDelayedTask(Runnable task, long delay) {

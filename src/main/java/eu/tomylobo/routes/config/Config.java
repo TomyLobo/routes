@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
-import eu.tomylobo.routes.BukkitRoutes;
+import eu.tomylobo.routes.Routes;
 import eu.tomylobo.routes.fakeentity.EntityType;
 import eu.tomylobo.routes.fakeentity.MobType;
 import eu.tomylobo.routes.fakeentity.VehicleType;
@@ -108,11 +108,11 @@ public class Config {
 			section.put(key, convertFrom(value));
 		}
 
-		Ini.save(BukkitRoutes.getInstance().getConfigFileName(configFileName), sections);
+		Ini.save(Routes.getInstance().getConfigFileName(configFileName), sections);
 	}
 
 	public void load() {
-		final Multimap<String, Multimap<String, String>> sections = Ini.load(BukkitRoutes.getInstance().getConfigFileName(configFileName));
+		final Multimap<String, Multimap<String, String>> sections = Ini.load(Routes.getInstance().getConfigFileName(configFileName));
 		if (sections == null) {
 			System.out.println("Config file missing, creating default.");
 			save();

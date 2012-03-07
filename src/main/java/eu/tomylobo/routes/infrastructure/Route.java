@@ -29,7 +29,7 @@ import com.google.common.collect.Multimap;
 import eu.tomylobo.abstraction.World;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.math.Vector;
-import eu.tomylobo.routes.BukkitRoutes;
+import eu.tomylobo.routes.Routes;
 import eu.tomylobo.routes.infrastructure.editor.VisualizedRoute;
 import eu.tomylobo.routes.infrastructure.interpolation.Interpolation;
 import eu.tomylobo.routes.infrastructure.interpolation.KochanekBartelsInterpolation;
@@ -115,7 +115,7 @@ public final class Route {
 		if (nodesDirty) {
 			interpolation.setNodes(nodes);
 			nodesDirty = false;
-			BukkitRoutes.getInstance().transportSystem.save();
+			Routes.getInstance().transportSystem.save();
 		}
 	}
 

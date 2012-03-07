@@ -19,7 +19,7 @@
 
 package eu.tomylobo.routes.commands.system;
 
-import eu.tomylobo.routes.BukkitRoutes;
+import eu.tomylobo.routes.Routes;
 
 /**
  * Base class for all classes that contain commands.
@@ -28,9 +28,9 @@ import eu.tomylobo.routes.BukkitRoutes;
  *
  */
 public class CommandContainer {
-	protected final BukkitRoutes plugin;
+	protected final Routes plugin;
 
 	public CommandContainer() {
-		this.plugin = BukkitRoutes.getInstance();
+		this.plugin = Routes.getInstance();
 	}
 }

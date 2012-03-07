@@ -26,7 +26,7 @@ import java.util.Map;
 import eu.tomylobo.abstraction.Entity;
 import eu.tomylobo.abstraction.Player;
 import eu.tomylobo.math.Location;
-import eu.tomylobo.routes.BukkitRoutes;
+import eu.tomylobo.routes.Routes;
 import eu.tomylobo.routes.commands.system.CommandException;
 import eu.tomylobo.routes.fakeentity.EntityType;
 import eu.tomylobo.routes.fakeentity.FakeEntity;
@@ -45,11 +45,11 @@ import eu.tomylobo.routes.util.ScheduledTask;
  *
  */
 public class TravelAgency extends ScheduledTask {
-	private final BukkitRoutes plugin;
+	private final Routes plugin;
 
 	private final Map<Entity, Traveller> travellers = new HashMap<Entity, Traveller>();
 
-	public TravelAgency(BukkitRoutes plugin) {
+	public TravelAgency(Routes plugin) {
 		this.plugin = plugin;
 
 		scheduleSyncRepeating(0, 1);

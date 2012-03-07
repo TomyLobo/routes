@@ -24,58 +24,17 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import eu.tomylobo.abstraction.bukkit.BukkitUtils;
-import eu.tomylobo.routes.commands.system.CommandSystem;
-import eu.tomylobo.routes.config.RoutesConfig;
-import eu.tomylobo.routes.infrastructure.TransportSystem;
-import eu.tomylobo.routes.infrastructure.editor.RouteEditor;
-import eu.tomylobo.routes.sign.SignHandler;
-import eu.tomylobo.routes.travel.TravelAgency;
 
 public class BukkitRoutes extends JavaPlugin {
-	private static BukkitRoutes instance;
-	{
-		instance = this;
-	}
-
-	public static BukkitRoutes getInstance() {
-		return instance;
-	}
-
-	public RoutesConfig config = new RoutesConfig();
-
-	public CommandSystem commandSystem;
-	public TravelAgency travelAgency;
-	public final TransportSystem transportSystem = new TransportSystem(this);
-	public SignHandler signHandler;
-	public RouteEditor routeEditor;
+	private Routes routes = new Routes(this);
 
 	@Override
 	public void onEnable() {
-		commandSystem = new CommandSystem();
-		travelAgency = new TravelAgency(this);
-		signHandler = new SignHandler(this);
-		routeEditor = new RouteEditor(this);
-		load();
+		routes.onEnable();
 	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		return commandSystem.dispatch(BukkitUtils.wrap(sender), command.getName(), label, args);
-	}
-
-	public void save() {
-		config.save();
-		transportSystem.save();
-		signHandler.save();
-	}
-
-	public void load() {
-		config.load();
-		transportSystem.load();
-		signHandler.load();
-	}
-
-	public String getConfigFileName(String baseFileName) {
-		return getDataFolder() + "/" + baseFileName;
+		return routes.commandSystem.dispatch(BukkitUtils.wrap(sender), command.getName(), label, args);
 	}
 }

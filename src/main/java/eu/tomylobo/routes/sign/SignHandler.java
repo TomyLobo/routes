@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -39,7 +40,7 @@ import eu.tomylobo.abstraction.block.BlockState;
 import eu.tomylobo.abstraction.block.Sign;
 import eu.tomylobo.abstraction.bukkit.BukkitUtils;
 import eu.tomylobo.math.Location;
-import eu.tomylobo.routes.BukkitRoutes;
+import eu.tomylobo.routes.Routes;
 import eu.tomylobo.routes.commands.system.CommandException;
 import eu.tomylobo.routes.fakeentity.MobType;
 import eu.tomylobo.routes.trace.SignShape;
@@ -47,14 +48,14 @@ import eu.tomylobo.routes.trace.SignTraceResult;
 import eu.tomylobo.routes.util.Ini;
 
 public class SignHandler implements Listener {
-	private final BukkitRoutes plugin;
+	private final Routes plugin;
 	private Map<Location, TrackedSign> trackedSigns = new HashMap<Location, TrackedSign>();
 	public Map<Player, SignSession> sessions = new HashMap<Player, SignSession>();
 
-	public SignHandler(BukkitRoutes plugin) {
+	public SignHandler(Routes plugin) {
 		this.plugin = plugin;
 
-		plugin.getServer().getPluginManager().registerEvents(this, plugin);
+		Bukkit.getServer().getPluginManager().registerEvents(this, plugin.plugin);
 	}
 
 	private SignSession getOrCreateSession(Player player) {
