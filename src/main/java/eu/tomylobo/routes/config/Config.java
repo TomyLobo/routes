@@ -30,7 +30,6 @@ import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
 import eu.tomylobo.routes.BukkitRoutes;
-import eu.tomylobo.routes.commands.system.CommandException;
 import eu.tomylobo.routes.fakeentity.EntityType;
 import eu.tomylobo.routes.fakeentity.MobType;
 import eu.tomylobo.routes.fakeentity.VehicleType;
@@ -154,8 +153,13 @@ public class Config {
 					type = field.get(this).getClass();
 				}
 
-				field.set(this, convertTo(type, input));
-			} catch (IllegalAccessException e) {
+				final Object converted = convertTo(type, input);
+				if (converted == null)
+					continue;
+
+				field.set(this, converted);
+			}
+			catch (IllegalAccessException e) {
 				e.printStackTrace();
 				continue;
 			}
@@ -173,9 +177,15 @@ public class Config {
 			return ((Enum<?>) value).name();
 		}
 
-		throw new CommandException("No converter found for class '"+value.getClass()+"'.");
+		throw new RuntimeException("No converter found for class '"+value.getClass()+"'.");
 	}
 
+	/**
+	 * 
+	 * @param type
+	 * @param value
+	 * @return null in the event of a conversion error.
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private Object convertTo(Class<?> type, String value) {
 		try {
@@ -203,9 +213,11 @@ public class Config {
 			}
 		}
 		catch (Exception e) {
-			throw new CommandException("Exception encountered while parsing '"+value+"' as a '"+type.getSimpleName()+"'.", e);
+			System.out.println("Exception encountered while parsing '"+value+"' as a '"+type.getSimpleName()+"'.");
+			e.printStackTrace();
+			return null;
 		}
 
-		throw new CommandException("No converter found for class '"+type+"'.");
+		throw new RuntimeException("No converter found for class '"+type+"'.");
 	}
 }
