@@ -31,6 +31,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.plugin.Plugin;
 
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
@@ -55,7 +56,7 @@ public class SignHandler implements Listener {
 	public SignHandler(Routes plugin) {
 		this.plugin = plugin;
 
-		Bukkit.getServer().getPluginManager().registerEvents(this, plugin.plugin);
+		Bukkit.getServer().getPluginManager().registerEvents(this, (Plugin) plugin.getFrameworkPlugin());
 	}
 
 	private SignSession getOrCreateSession(Player player) {

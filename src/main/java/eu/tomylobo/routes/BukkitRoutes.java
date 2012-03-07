@@ -19,22 +19,10 @@
 
 package eu.tomylobo.routes;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.plugin.java.JavaPlugin;
+import eu.tomylobo.abstraction.bukkit.BukkitPlugin;
 
-import eu.tomylobo.abstraction.bukkit.BukkitUtils;
-
-public class BukkitRoutes extends JavaPlugin {
-	private Routes routes = new Routes(this);
-
-	@Override
-	public void onEnable() {
-		routes.onEnable();
-	}
-
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		return routes.commandSystem.dispatch(BukkitUtils.wrap(sender), command.getName(), label, args);
+public class BukkitRoutes extends BukkitPlugin {
+	public BukkitRoutes() {
+		super(new Routes());
 	}
 }

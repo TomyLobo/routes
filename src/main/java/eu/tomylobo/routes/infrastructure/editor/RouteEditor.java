@@ -29,6 +29,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.Plugin;
 
 import eu.tomylobo.abstraction.Player;
 import eu.tomylobo.abstraction.bukkit.BukkitUtils;
@@ -43,7 +44,7 @@ public class RouteEditor implements Listener {
 	public RouteEditor(Routes plugin) {
 		this.plugin = plugin;
 
-		Bukkit.getServer().getPluginManager().registerEvents(this, plugin.plugin);
+		Bukkit.getServer().getPluginManager().registerEvents(this, (Plugin) plugin.getFrameworkPlugin());
 	}
 
 	// TODO: convert event handler

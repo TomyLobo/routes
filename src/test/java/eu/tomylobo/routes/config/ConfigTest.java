@@ -31,7 +31,7 @@ import static org.junit.Assert.*;
 public class ConfigTest {
 	@Test
 	public void configTest() {
-		Utils.setPrivateValue(Routes.class, null, "instance", new Routes(null) {
+		Utils.setPrivateValue(Routes.class, null, "instance", new Routes() {
 			@Override
 			public String getConfigFileName(String baseFileName) {
 				return baseFileName;
