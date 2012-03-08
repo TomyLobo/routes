@@ -21,7 +21,7 @@ package eu.tomylobo.routes.fakeentity;
 
 import net.minecraft.server.Packet23VehicleSpawn;
 
-import eu.tomylobo.abstraction.Factory;
+import eu.tomylobo.abstraction.Environment;
 import eu.tomylobo.abstraction.Player;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.math.Vector;
@@ -43,7 +43,7 @@ public class FakeVehicle extends FakeEntity {
 	@Override
 	public void sendImplementation(Player player) {
 		Vector position = location.getPosition();
-		Factory.network().sendSpawnOther(
+		Environment.network().sendSpawnOther(
 				player, entityId,
 				position.getX(), position.getY(), position.getZ(),
 				vehicleTypeId, 0

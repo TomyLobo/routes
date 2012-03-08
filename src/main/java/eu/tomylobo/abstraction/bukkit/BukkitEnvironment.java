@@ -17,25 +17,27 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.tomylobo.abstraction;
+package eu.tomylobo.abstraction.bukkit;
 
-import eu.tomylobo.abstraction.bukkit.BukkitFactory;
+import org.bukkit.Bukkit;
 
-public abstract class Factory {
-	private static final Factory instance = new BukkitFactory();
+import eu.tomylobo.abstraction.Environment;
 
-	protected abstract World worldImpl(String worldName);
-	public static World world(String worldName) {
-		return instance.worldImpl(worldName);
+public class BukkitEnvironment extends Environment {
+	@Override
+	protected BukkitWorld worldImpl(String worldName) {
+		return BukkitUtils.wrap(Bukkit.getServer().getWorld(worldName));
 	}
 
-	protected abstract Network networkImpl();
-	public static Network network() {
-		return instance.networkImpl();
+	private final BukkitNetwork networkInstance = new BukkitNetwork();
+	@Override
+	protected BukkitNetwork networkImpl() {
+		return networkInstance;
 	}
 
-	protected abstract Scheduler schedulerImpl();
-	public static Scheduler scheduler() {
-		return instance.schedulerImpl();
+	private final BukkitScheduler schedulerInstance = new BukkitScheduler();
+	@Override
+	protected BukkitScheduler schedulerImpl() {
+		return schedulerInstance;
 	}
 }

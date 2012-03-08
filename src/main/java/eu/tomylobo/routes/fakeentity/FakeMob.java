@@ -19,7 +19,7 @@
 
 package eu.tomylobo.routes.fakeentity;
 
-import eu.tomylobo.abstraction.Factory;
+import eu.tomylobo.abstraction.Environment;
 import eu.tomylobo.abstraction.Player;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.math.Vector;
@@ -41,7 +41,7 @@ public class FakeMob extends FakeEntity {
 	@Override
 	public void sendImplementation(Player player) {
 		Vector position = location.getPosition();
-		Factory.network().sendSpawnMob(
+		Environment.network().sendSpawnMob(
 				player, entityId,
 				position.getX(), position.getY(), position.getZ(),
 				location.getYaw() + yawOffset, location.getPitch(),

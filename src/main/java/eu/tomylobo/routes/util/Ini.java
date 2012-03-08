@@ -22,7 +22,7 @@ package eu.tomylobo.routes.util;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
-import eu.tomylobo.abstraction.Factory;
+import eu.tomylobo.abstraction.Environment;
 import eu.tomylobo.abstraction.World;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.math.Vector;
@@ -156,7 +156,7 @@ public final class Ini {
 
 	public static World loadWorld(Multimap<String, String> section, String format) {
 		final String worldName = getOnlyValue(section.get(String.format(format, "world")));
-		return worldName.equals("null") ? null : Factory.world(worldName);
+		return worldName.equals("null") ? null : Environment.world(worldName);
 	}
 
 

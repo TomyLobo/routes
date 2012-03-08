@@ -24,7 +24,7 @@ import java.util.Collection;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
-import eu.tomylobo.abstraction.Factory;
+import eu.tomylobo.abstraction.Environment;
 import eu.tomylobo.abstraction.Player;
 import eu.tomylobo.abstraction.block.Sign;
 import eu.tomylobo.math.Location;
@@ -180,7 +180,7 @@ public class TrackedSign {
 			setMarked(sign, index, true);
 		}
 
-		Factory.network().sendSignUpdate(player, location.getPosition(), sign);
+		Environment.network().sendSignUpdate(player, location.getPosition(), sign);
 	}
 
 	private void setMarked(final Sign sign, int index, boolean marked) {

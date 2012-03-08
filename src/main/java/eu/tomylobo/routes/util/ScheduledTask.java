@@ -19,7 +19,7 @@
 
 package eu.tomylobo.routes.util;
 
-import eu.tomylobo.abstraction.Factory;
+import eu.tomylobo.abstraction.Environment;
 import eu.tomylobo.abstraction.MetaPlugin;
 
 public abstract class ScheduledTask implements Runnable {
@@ -31,35 +31,35 @@ public abstract class ScheduledTask implements Runnable {
 	}
 
 	public void scheduleSyncDelayed(long delay) {
-		taskId = Factory.scheduler().scheduleSyncDelayedTask(plugin, this, delay);
+		taskId = Environment.scheduler().scheduleSyncDelayedTask(plugin, this, delay);
 	}
 
 
 	public void scheduleSyncDelayed() {
-		taskId = Factory.scheduler().scheduleSyncDelayedTask(plugin, this);
+		taskId = Environment.scheduler().scheduleSyncDelayedTask(plugin, this);
 	}
 
 
 	public void scheduleSyncRepeating(long delay, long period) {
-		taskId = Factory.scheduler().scheduleSyncRepeatingTask(plugin, this, delay, period);
+		taskId = Environment.scheduler().scheduleSyncRepeatingTask(plugin, this, delay, period);
 	}
 
 
 	public void scheduleAsyncDelayed(long delay) {
-		taskId = Factory.scheduler().scheduleAsyncDelayedTask(plugin, this, delay);
+		taskId = Environment.scheduler().scheduleAsyncDelayedTask(plugin, this, delay);
 	}
 
 
 	public void scheduleAsyncDelayed() {
-		taskId = Factory.scheduler().scheduleAsyncDelayedTask(plugin, this);
+		taskId = Environment.scheduler().scheduleAsyncDelayedTask(plugin, this);
 	}
 
 	public void scheduleAsyncRepeating(long delay, long period) {
-		taskId = Factory.scheduler().scheduleAsyncRepeatingTask(plugin, this, delay, period);
+		taskId = Environment.scheduler().scheduleAsyncRepeatingTask(plugin, this, delay, period);
 	}
 
 	public void cancel() {
-		Factory.scheduler().cancelTask(taskId);
+		Environment.scheduler().cancelTask(taskId);
 		taskId = null;
 	}
 }

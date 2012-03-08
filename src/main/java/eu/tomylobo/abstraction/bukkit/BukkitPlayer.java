@@ -19,7 +19,7 @@
 
 package eu.tomylobo.abstraction.bukkit;
 
-import eu.tomylobo.abstraction.Factory;
+import eu.tomylobo.abstraction.Environment;
 import eu.tomylobo.abstraction.Player;
 import eu.tomylobo.math.Location;
 
@@ -32,7 +32,7 @@ public class BukkitPlayer extends BukkitEntity implements Player {
 	public void teleport(Location location, boolean withAngles, boolean notify) {
 		super.teleport(location, withAngles, notify);
 		if (notify) {
-			Factory.network().sendPlayerPosition(this, location.getPosition());
+			Environment.network().sendPlayerPosition(this, location.getPosition());
 		}
 	}
 

@@ -20,7 +20,7 @@
 package eu.tomylobo.routes.fakeentity;
 
 import eu.tomylobo.abstraction.Entity;
-import eu.tomylobo.abstraction.Factory;
+import eu.tomylobo.abstraction.Environment;
 import eu.tomylobo.abstraction.Player;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.math.Vector;
@@ -87,18 +87,18 @@ public abstract class FakeEntity implements Entity {
 	abstract public void sendImplementation(Player player);
 
 	public final void delete() {
-		Factory.network().sendDestroyEntity(relevantPlayers, entityId);
+		Environment.network().sendDestroyEntity(relevantPlayers, entityId);
 		relevantPlayers.clear();
 	}
 
 	public final void delete(Player player) {
-		Factory.network().sendDestroyEntity(player, entityId);
+		Environment.network().sendDestroyEntity(player, entityId);
 		relevantPlayers.remove(player);
 	}
 
 	@Override
 	public void setVelocity(Vector velocity) {
-		Factory.network().sendVelocity(relevantPlayers, this, velocity);
+		Environment.network().sendVelocity(relevantPlayers, this, velocity);
 
 		for (Entry<Entity, Double> entry : fakePassengers.entrySet()) {
 			entry.getKey().setVelocity(velocity);
@@ -108,7 +108,7 @@ public abstract class FakeEntity implements Entity {
 	public boolean setOrientation(Location location) {
 		this.location = this.location.setAngles(location.getYaw(), location.getPitch());
 
-		Factory.network().sendOrientation(
+		Environment.network().sendOrientation(
 				relevantPlayers, entityId,
 				location.getYaw()+yawOffset, location.getPitch()
 		);
@@ -126,7 +126,7 @@ public abstract class FakeEntity implements Entity {
 		this.location = location;
 
 		final Vector position = location.getPosition();
-		Factory.network().sendTeleport(
+		Environment.network().sendTeleport(
 				relevantPlayers, entityId,
 				position.getX(), position.getY(), position.getZ(),
 				location.getYaw()+yawOffset, location.getPitch()
@@ -188,10 +188,10 @@ public abstract class FakeEntity implements Entity {
 			if (this.passenger == null)
 				return true;
 
-			Factory.network().sendAttachToVehicle(relevantPlayers, this.passenger, null);
+			Environment.network().sendAttachToVehicle(relevantPlayers, this.passenger, null);
 		}
 		else {
-			Factory.network().sendAttachToVehicle(relevantPlayers, passenger, this);
+			Environment.network().sendAttachToVehicle(relevantPlayers, passenger, this);
 		}
 
 		this.passenger = passenger;
@@ -246,7 +246,7 @@ public abstract class FakeEntity implements Entity {
 	}
 */
 	public void setData(int index, Object value) {
-		Factory.network().sendSetData(relevantPlayers, entityId, index, value);
+		Environment.network().sendSetData(relevantPlayers, entityId, index, value);
 	}
 
 	public double getMountedYOffset() {
