@@ -19,6 +19,9 @@
 
 package eu.tomylobo.abstraction.bukkit;
 
+import java.util.IdentityHashMap;
+import java.util.Map;
+
 import eu.tomylobo.abstraction.CommandSender;
 import eu.tomylobo.abstraction.Entity;
 import eu.tomylobo.abstraction.Player;
@@ -27,8 +30,14 @@ import eu.tomylobo.math.Location;
 import eu.tomylobo.math.Vector;
 
 public class BukkitUtils {
+	private static final Map<org.bukkit.World, BukkitWorld> wrappedWorlds = new IdentityHashMap<org.bukkit.World, BukkitWorld>();
+
 	public static BukkitWorld wrap(org.bukkit.World backend) {
-		return new BukkitWorld(backend);
+		BukkitWorld bukkitWorld = wrappedWorlds.get(backend);
+		if (bukkitWorld == null)
+			wrappedWorlds.put(backend, bukkitWorld = new BukkitWorld(backend));
+
+		return bukkitWorld;
 	}
 
 	public static Vector wrap(org.bukkit.util.Vector vector) {
