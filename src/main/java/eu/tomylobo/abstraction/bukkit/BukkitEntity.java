@@ -19,8 +19,6 @@
 
 package eu.tomylobo.abstraction.bukkit;
 
-import org.bukkit.craftbukkit.entity.CraftEntity;
-
 import eu.tomylobo.abstraction.Entity;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.math.Vector;
@@ -56,7 +54,7 @@ public class BukkitEntity implements Entity {
 	}
 
 	private net.minecraft.server.Entity getCBHandle() {
-		return ((CraftEntity) backend).getHandle();
+		return ((org.bukkit.craftbukkit.entity.CraftEntity) backend).getHandle();
 	}
 
 	@Override

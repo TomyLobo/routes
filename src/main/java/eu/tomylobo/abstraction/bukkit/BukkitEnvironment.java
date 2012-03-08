@@ -19,14 +19,12 @@
 
 package eu.tomylobo.abstraction.bukkit;
 
-import org.bukkit.Bukkit;
-
 import eu.tomylobo.abstraction.Environment;
 
 public class BukkitEnvironment extends Environment {
 	@Override
 	protected BukkitWorld worldImpl(String worldName) {
-		return BukkitUtils.wrap(Bukkit.getServer().getWorld(worldName));
+		return BukkitUtils.wrap(org.bukkit.Bukkit.getServer().getWorld(worldName));
 	}
 
 	private final BukkitNetwork networkInstance = new BukkitNetwork();
