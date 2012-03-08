@@ -40,6 +40,11 @@ public class BukkitUtils {
 		return bukkitWorld;
 	}
 
+	public static org.bukkit.World unwrap(World world) {
+		return ((BukkitWorld) world).backend;
+	}
+
+
 	public static Vector wrap(org.bukkit.util.Vector vector) {
 		return new Vector(vector.getX(), vector.getY(), vector.getZ());
 	}
@@ -69,6 +74,11 @@ public class BukkitUtils {
 		return new BukkitPlayer(player);
 	}
 
+	public static org.bukkit.entity.Player unwrap(Player player) {
+		return (org.bukkit.entity.Player) ((BukkitPlayer) player).backend;
+	}
+
+
 	public static BukkitEntity wrap(org.bukkit.entity.Entity entity) {
 		if (entity instanceof org.bukkit.entity.Player)
 			return wrap((org.bukkit.entity.Player) entity);
@@ -79,19 +89,13 @@ public class BukkitUtils {
 	public static org.bukkit.entity.Entity unwrap(Entity entity) {
 		return ((BukkitEntity) entity).backend;
 	}
-	public static org.bukkit.entity.Entity unwrap(Player player) {
-		return unwrap((Entity) player);
-	}
+
 
 	public static CommandSender wrap(org.bukkit.command.CommandSender sender) {
 		if (sender instanceof org.bukkit.entity.Player)
 			return wrap((org.bukkit.entity.Player) sender);
 
 		return new BukkitCommandSender(sender);
-	}
-
-	public static org.bukkit.World unwrap(World world) {
-		return ((BukkitWorld) world).backend;
 	}
 
 	public static org.bukkit.command.CommandSender unwrap(CommandSender sender) {
