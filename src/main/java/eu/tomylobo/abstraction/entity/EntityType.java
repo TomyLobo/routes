@@ -17,15 +17,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.tomylobo.abstraction;
+package eu.tomylobo.abstraction.entity;
 
-import eu.tomylobo.math.Location;
-
-public interface Player extends Entity, CommandSender {
-	int getItemTypeInHand();
-
-	boolean getAllowFlight();
-	void setAllowFlight(boolean b);
-
-	Location getEyeLocation();
+public interface EntityType {
+	float getYawOffset();
+	float getHeight();
 }

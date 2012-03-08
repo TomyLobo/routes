@@ -23,9 +23,9 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 
 import eu.tomylobo.abstraction.CommandSender;
-import eu.tomylobo.abstraction.Entity;
-import eu.tomylobo.abstraction.Player;
 import eu.tomylobo.abstraction.World;
+import eu.tomylobo.abstraction.entity.Entity;
+import eu.tomylobo.abstraction.entity.Player;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.math.Vector;
 

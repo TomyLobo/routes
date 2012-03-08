@@ -22,12 +22,12 @@ package eu.tomylobo.routes.infrastructure.editor;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.tomylobo.abstraction.Player;
 import eu.tomylobo.abstraction.World;
+import eu.tomylobo.abstraction.entity.Player;
+import eu.tomylobo.abstraction.entity.VehicleType;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.routes.fakeentity.FakeEntity;
 import eu.tomylobo.routes.fakeentity.FakeVehicle;
-import eu.tomylobo.routes.fakeentity.VehicleType;
 import eu.tomylobo.routes.infrastructure.Node;
 import eu.tomylobo.routes.infrastructure.Route;
 import eu.tomylobo.routes.util.Statistics;

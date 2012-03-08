@@ -19,8 +19,8 @@
 
 package eu.tomylobo.routes.config;
 
-import eu.tomylobo.routes.fakeentity.EntityType;
-import eu.tomylobo.routes.fakeentity.MobType;
+import eu.tomylobo.abstraction.entity.EntityType;
+import eu.tomylobo.abstraction.entity.MobType;
 
 @ConfigFile("testconfig.txt")
 public class TestConfig extends Config {

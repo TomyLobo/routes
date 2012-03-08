@@ -23,17 +23,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import eu.tomylobo.abstraction.Entity;
-import eu.tomylobo.abstraction.Player;
+import eu.tomylobo.abstraction.entity.Entity;
+import eu.tomylobo.abstraction.entity.EntityType;
+import eu.tomylobo.abstraction.entity.MobType;
+import eu.tomylobo.abstraction.entity.Player;
+import eu.tomylobo.abstraction.entity.VehicleType;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.routes.Routes;
 import eu.tomylobo.routes.commands.system.CommandException;
-import eu.tomylobo.routes.fakeentity.EntityType;
 import eu.tomylobo.routes.fakeentity.FakeEntity;
 import eu.tomylobo.routes.fakeentity.FakeMob;
 import eu.tomylobo.routes.fakeentity.FakeVehicle;
-import eu.tomylobo.routes.fakeentity.MobType;
-import eu.tomylobo.routes.fakeentity.VehicleType;
 import eu.tomylobo.routes.infrastructure.Route;
 import eu.tomylobo.routes.util.ScheduledTask;
 

@@ -20,10 +20,10 @@
 package eu.tomylobo.routes.trace;
 
 import eu.tomylobo.abstraction.block.Sign;
+import eu.tomylobo.abstraction.entity.VehicleType;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.math.Vector;
 import eu.tomylobo.routes.fakeentity.FakeVehicle;
-import eu.tomylobo.routes.fakeentity.VehicleType;
 
 public class SignShape extends Plane {
 	private static final double SIGN_SCALE = 2.0 / 3.0;

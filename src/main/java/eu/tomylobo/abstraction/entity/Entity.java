@@ -17,9 +17,23 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.tomylobo.routes.fakeentity;
+package eu.tomylobo.abstraction.entity;
 
-public interface EntityType {
-	float getYawOffset();
-	float getHeight();
+import eu.tomylobo.math.Location;
+import eu.tomylobo.math.Vector;
+
+public interface Entity {
+	int getEntityId();
+
+	Location getLocation();
+	void teleport(Location location);
+	void teleport(Location location, boolean withAngles, boolean notify);
+
+	void setVelocity(Vector multiply);
+
+	Entity getPassenger();
+	boolean setPassenger(Entity passenger);
+
+	boolean isDead();
+	void remove();
 }

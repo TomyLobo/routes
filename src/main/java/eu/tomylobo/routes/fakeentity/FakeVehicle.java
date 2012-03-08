@@ -22,7 +22,8 @@ package eu.tomylobo.routes.fakeentity;
 import net.minecraft.server.Packet23VehicleSpawn;
 
 import eu.tomylobo.abstraction.Environment;
-import eu.tomylobo.abstraction.Player;
+import eu.tomylobo.abstraction.entity.Player;
+import eu.tomylobo.abstraction.entity.VehicleType;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.math.Vector;
 

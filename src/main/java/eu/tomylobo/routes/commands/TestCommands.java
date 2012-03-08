@@ -19,7 +19,9 @@
 
 package eu.tomylobo.routes.commands;
 
-import eu.tomylobo.abstraction.Player;
+import eu.tomylobo.abstraction.entity.MobType;
+import eu.tomylobo.abstraction.entity.Player;
+import eu.tomylobo.abstraction.entity.VehicleType;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.routes.commands.system.Command;
 import eu.tomylobo.routes.commands.system.Context;
@@ -27,8 +29,6 @@ import eu.tomylobo.routes.commands.system.CommandContainer;
 import eu.tomylobo.routes.fakeentity.FakeEntity;
 import eu.tomylobo.routes.fakeentity.FakeMob;
 import eu.tomylobo.routes.fakeentity.FakeVehicle;
-import eu.tomylobo.routes.fakeentity.MobType;
-import eu.tomylobo.routes.fakeentity.VehicleType;
 import eu.tomylobo.routes.infrastructure.Route;
 import eu.tomylobo.routes.util.Remover;
 

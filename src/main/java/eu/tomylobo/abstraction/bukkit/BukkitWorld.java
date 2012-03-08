@@ -22,10 +22,10 @@ package eu.tomylobo.abstraction.bukkit;
 import java.util.ArrayList;
 import java.util.List;
 
-import eu.tomylobo.abstraction.Player;
 import eu.tomylobo.abstraction.World;
 import eu.tomylobo.abstraction.block.BlockState;
 import eu.tomylobo.abstraction.block.Sign;
+import eu.tomylobo.abstraction.entity.Player;
 import eu.tomylobo.math.Vector;
 
 public class BukkitWorld implements World {

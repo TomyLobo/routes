@@ -29,10 +29,10 @@ import java.util.regex.Pattern;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
+import eu.tomylobo.abstraction.entity.EntityType;
+import eu.tomylobo.abstraction.entity.MobType;
+import eu.tomylobo.abstraction.entity.VehicleType;
 import eu.tomylobo.routes.Routes;
-import eu.tomylobo.routes.fakeentity.EntityType;
-import eu.tomylobo.routes.fakeentity.MobType;
-import eu.tomylobo.routes.fakeentity.VehicleType;
 import eu.tomylobo.routes.util.Ini;
 
 public class Config {

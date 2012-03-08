@@ -19,9 +19,12 @@
 
 package eu.tomylobo.routes.fakeentity;
 
-import eu.tomylobo.abstraction.Entity;
 import eu.tomylobo.abstraction.Environment;
-import eu.tomylobo.abstraction.Player;
+import eu.tomylobo.abstraction.entity.Entity;
+import eu.tomylobo.abstraction.entity.EntityType;
+import eu.tomylobo.abstraction.entity.MobType;
+import eu.tomylobo.abstraction.entity.Player;
+import eu.tomylobo.abstraction.entity.VehicleType;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.math.Vector;
 

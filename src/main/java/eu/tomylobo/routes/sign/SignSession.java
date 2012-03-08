@@ -19,7 +19,7 @@
 
 package eu.tomylobo.routes.sign;
 
-import eu.tomylobo.abstraction.Player;
+import eu.tomylobo.abstraction.entity.Player;
 import eu.tomylobo.routes.Routes;
 import eu.tomylobo.routes.util.ScheduledTask;
 

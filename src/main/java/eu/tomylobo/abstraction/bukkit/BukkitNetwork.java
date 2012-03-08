@@ -21,15 +21,15 @@ package eu.tomylobo.abstraction.bukkit;
 
 import java.util.Collection;
 
-import eu.tomylobo.abstraction.Entity;
 import eu.tomylobo.abstraction.Network;
-import eu.tomylobo.abstraction.Player;
 import eu.tomylobo.abstraction.block.Sign;
+import eu.tomylobo.abstraction.entity.Entity;
+import eu.tomylobo.abstraction.entity.EntityType;
+import eu.tomylobo.abstraction.entity.MobType;
+import eu.tomylobo.abstraction.entity.Player;
+import eu.tomylobo.abstraction.entity.VehicleType;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.math.Vector;
-import eu.tomylobo.routes.fakeentity.EntityType;
-import eu.tomylobo.routes.fakeentity.MobType;
-import eu.tomylobo.routes.fakeentity.VehicleType;
 import eu.tomylobo.routes.util.Utils;
 
 import net.minecraft.server.DataWatcher;

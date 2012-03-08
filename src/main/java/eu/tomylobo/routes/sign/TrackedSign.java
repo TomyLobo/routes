@@ -25,8 +25,8 @@ import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
 import eu.tomylobo.abstraction.Environment;
-import eu.tomylobo.abstraction.Player;
 import eu.tomylobo.abstraction.block.Sign;
+import eu.tomylobo.abstraction.entity.Player;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.routes.util.Ini;
 

@@ -19,10 +19,10 @@
 
 package eu.tomylobo.routes.commands;
 
+import eu.tomylobo.abstraction.entity.MobType;
 import eu.tomylobo.routes.commands.system.Command;
 import eu.tomylobo.routes.commands.system.Context;
 import eu.tomylobo.routes.commands.system.CommandContainer;
-import eu.tomylobo.routes.fakeentity.MobType;
 
 /**
  * Contains all commands connected to travelling management.

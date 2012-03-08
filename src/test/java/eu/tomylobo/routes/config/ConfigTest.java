@@ -21,9 +21,9 @@ package eu.tomylobo.routes.config;
 
 import org.junit.*;
 
+import eu.tomylobo.abstraction.entity.MobType;
+import eu.tomylobo.abstraction.entity.VehicleType;
 import eu.tomylobo.routes.Routes;
-import eu.tomylobo.routes.fakeentity.MobType;
-import eu.tomylobo.routes.fakeentity.VehicleType;
 import eu.tomylobo.routes.util.Utils;
 
 import static org.junit.Assert.*;

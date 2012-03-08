@@ -19,7 +19,7 @@
 
 package eu.tomylobo.routes.travel;
 
-import eu.tomylobo.abstraction.Entity;
+import eu.tomylobo.abstraction.entity.Entity;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.routes.infrastructure.Route;
 

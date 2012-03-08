@@ -21,7 +21,7 @@ package eu.tomylobo.routes.infrastructure.editor;
 
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import eu.tomylobo.abstraction.Player;
+import eu.tomylobo.abstraction.entity.Player;
 import eu.tomylobo.routes.Routes;
 import eu.tomylobo.routes.config.RoutesConfig;
 import eu.tomylobo.routes.infrastructure.Route;

@@ -17,23 +17,16 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.tomylobo.abstraction;
+package eu.tomylobo.abstraction.entity;
 
+import eu.tomylobo.abstraction.CommandSender;
 import eu.tomylobo.math.Location;
-import eu.tomylobo.math.Vector;
 
-public interface Entity {
-	int getEntityId();
+public interface Player extends Entity, CommandSender {
+	int getItemTypeInHand();
 
-	Location getLocation();
-	void teleport(Location location);
-	void teleport(Location location, boolean withAngles, boolean notify);
+	boolean getAllowFlight();
+	void setAllowFlight(boolean b);
 
-	void setVelocity(Vector multiply);
-
-	Entity getPassenger();
-	boolean setPassenger(Entity passenger);
-
-	boolean isDead();
-	void remove();
+	Location getEyeLocation();
 }

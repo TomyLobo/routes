@@ -22,7 +22,7 @@ package eu.tomylobo.routes.commands.system;
 import java.util.Arrays;
 
 import eu.tomylobo.abstraction.CommandSender;
-import eu.tomylobo.abstraction.Player;
+import eu.tomylobo.abstraction.entity.Player;
 
 /**
  * Holds all information about a command invocation.

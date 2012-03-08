@@ -22,6 +22,7 @@ package eu.tomylobo.abstraction;
 import java.util.List;
 
 import eu.tomylobo.abstraction.block.BlockState;
+import eu.tomylobo.abstraction.entity.Player;
 import eu.tomylobo.math.Vector;
 
 public interface World {

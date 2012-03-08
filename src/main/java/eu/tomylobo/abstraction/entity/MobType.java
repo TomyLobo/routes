@@ -17,47 +17,54 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.tomylobo.routes.fakeentity;
+package eu.tomylobo.abstraction.entity;
+
+import eu.tomylobo.routes.fakeentity.FakeMob;
 
 /**
- * Types of mobs, for use with {@link FakeVehicle}.
+ * Types of mobs, for use with {@link FakeMob}.
  *
  * @author TomyLobo
  *
  */
-public enum VehicleType implements EntityType {
-	BOAT(1, 0.6f, 270),
-	MINECART(10, 0.7f, 270),
-	MINECART_CHEST(11, 0.7f, 270),
-	MINECART_FURNACE(12, 0.7f, 270),
-	PRIMED_TNT(50, 0.98f),
-	ENDER_CRYSTAL(51, 2f),
-	ARROW(60, 0.5f),
-	SNOWBALL(61, 0.25f),
-	EGG(62, 0.25f),
-	FIREBALL(63, 1f),
-	SMALL_FIREBALL(64, 0.3125f),
-	ENDER_PEARL(65, 0.25f),
-	FALLING_SAND(70, 0.98f),
-	FALLING_GRAVEL(71, 0.98f),
-	ENDER_EYE(72, 0.25f),
-	POTION(73, 0.25f),
-	FALLING_DRAGON_EGG(74, 0.98f),
-	FISHING_HOOK(90, 0.25f);
+public enum MobType implements EntityType {
+	CREEPER(50), // default
+	SKELETON(51), // default
+	SPIDER(52, 0.9f),
+	GIANT(53, 1.8f*6f),
+	ZOMBIE(54), // default
+	SLIME(55, 0.6f),// * size
+	GHAST(56, 4f),
+	PIG_ZOMBIE(57), // default
+	ENDERMAN(58, 2.9f),
+	CAVE_SPIDER(59, 0.6f),
+	SILVERFISH(60, 0.7f),
+	BLAZE(61), // default
+	LAVA_SLIME(62, 0.6f),// * size, like slime
+	ENDER_DRAGON(63, 8f, 180),
+	PIG(90, 0.9f),
+	SHEEP(91, 1.3f),
+	COW(92, 1.3f),
+	CHICKEN(93, 0.7f),
+	SQUID(94, 0.95f),
+	WOLF(95, 0.8f),
+	MUSHROOM_COW(96, 1.3f),
+	SNOW_MAN(97, 1.8f),
+	VILLAGER(120); // default
 
 	private final int id;
 	private final float height;
 	private final float yawOffset;
 
-	private VehicleType(int id) {
+	private MobType(int id) {
 		this(id, 1.8f);
 	}
 
-	private VehicleType(int id, float height) {
+	private MobType(int id, float height) {
 		this(id, height, 0);
 	}
 
-	private VehicleType(int id, float height, float yawOffset) {
+	private MobType(int id, float height, float yawOffset) {
 		this.id = id;
 		this.height = height;
 		this.yawOffset = yawOffset;

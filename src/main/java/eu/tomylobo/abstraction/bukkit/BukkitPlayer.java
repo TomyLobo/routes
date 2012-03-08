@@ -20,7 +20,7 @@
 package eu.tomylobo.abstraction.bukkit;
 
 import eu.tomylobo.abstraction.Environment;
-import eu.tomylobo.abstraction.Player;
+import eu.tomylobo.abstraction.entity.Player;
 import eu.tomylobo.math.Location;
 
 public class BukkitPlayer extends BukkitEntity implements Player {
