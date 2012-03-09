@@ -38,4 +38,8 @@ public class Sign extends BlockState {
 	public String[] getLines() {
 		return lines;
 	}
+
+	public String getLine(int i) {
+		return lines[i];
+	}
 }
