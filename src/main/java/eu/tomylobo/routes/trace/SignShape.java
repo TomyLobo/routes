@@ -20,10 +20,8 @@
 package eu.tomylobo.routes.trace;
 
 import eu.tomylobo.abstraction.block.Sign;
-import eu.tomylobo.abstraction.entity.VehicleType;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.math.Vector;
-import eu.tomylobo.routes.fakeentity.FakeVehicle;
 
 public class SignShape extends Plane {
 	private static final double SIGN_SCALE = 2.0 / 3.0;
@@ -72,8 +70,6 @@ public class SignShape extends Plane {
 
 		final Vector normal = originLocation.getDirection();
 		originLocation = originLocation.add(0, yOffset, 0).add(normal.multiply(zOffset));
-
-		new FakeVehicle(originLocation, VehicleType.ENDER_EYE).send();
 
 		return originLocation;
 	}
