@@ -27,6 +27,11 @@ public class BukkitEnvironment extends Environment {
 		return BukkitUtils.wrap(org.bukkit.Bukkit.getServer().getWorld(worldName));
 	}
 
+	@Override
+	protected BukkitPlayer getPlayerImpl(String playerName) {
+		return BukkitUtils.wrap(org.bukkit.Bukkit.getServer().getPlayer(playerName));
+	}
+
 	private final BukkitNetwork networkInstance = new BukkitNetwork();
 	@Override
 	protected BukkitNetwork networkImpl() {

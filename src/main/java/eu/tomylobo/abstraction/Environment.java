@@ -20,6 +20,7 @@
 package eu.tomylobo.abstraction;
 
 import eu.tomylobo.abstraction.bukkit.BukkitEnvironment;
+import eu.tomylobo.abstraction.entity.Player;
 
 public abstract class Environment {
 	private static final Environment instance = new BukkitEnvironment();
@@ -27,6 +28,11 @@ public abstract class Environment {
 	protected abstract World getWorldImpl(String worldName);
 	public static World getWorld(String worldName) {
 		return instance.getWorldImpl(worldName);
+	}
+
+	protected abstract Player getPlayerImpl(String playerName);
+	public static Player getPlayer(String playerName) {
+		return instance.getPlayerImpl(playerName);
 	}
 
 	protected abstract Network networkImpl();
