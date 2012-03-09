@@ -23,24 +23,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.bukkit.Bukkit;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.plugin.Plugin;
-
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
+import eu.tomylobo.abstraction.Environment;
 import eu.tomylobo.abstraction.block.BlockState;
 import eu.tomylobo.abstraction.block.Sign;
-import eu.tomylobo.abstraction.bukkit.BukkitUtils;
 import eu.tomylobo.abstraction.entity.MobType;
 import eu.tomylobo.abstraction.entity.Player;
+import eu.tomylobo.abstraction.event.Event;
+import eu.tomylobo.abstraction.event.EventHandler;
+import eu.tomylobo.abstraction.event.EventPriority;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.routes.Routes;
 import eu.tomylobo.routes.commands.system.CommandException;
@@ -48,7 +41,7 @@ import eu.tomylobo.routes.trace.SignShape;
 import eu.tomylobo.routes.trace.SignTraceResult;
 import eu.tomylobo.routes.util.Ini;
 
-public class SignHandler implements Listener {
+public class SignHandler {
 	private final Routes plugin;
 	private Map<Location, TrackedSign> trackedSigns = new HashMap<Location, TrackedSign>();
 	public Map<Player, SignSession> sessions = new HashMap<Player, SignSession>();
@@ -56,7 +49,7 @@ public class SignHandler implements Listener {
 	public SignHandler(Routes plugin) {
 		this.plugin = plugin;
 
-		Bukkit.getServer().getPluginManager().registerEvents(this, (Plugin) plugin.getFrameworkPlugin());
+		Environment.dispatcher().registerEvents(this, plugin);
 	}
 
 	private SignSession getOrCreateSession(Player player) {
@@ -68,21 +61,20 @@ public class SignHandler implements Listener {
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-	public void onSignChange(SignChangeEvent event) {
-		final Location block = BukkitUtils.wrap(event.getBlock().getLocation());
-		final Sign sign = (Sign) block.getBlockState();
+	public void onSignChange(Event event) {
+		final Location location = event.getLocation();
+		final Sign sign = (Sign) event.getBlockState();
 
 		boolean hasDestinations = false;
 		for (int i = 0; i < 4; ++i) {
-			final String line = event.getLine(i);
-			sign.setLine(i, line);
+			final String line = sign.getLine(i);
 			if (line.startsWith(plugin.config.signsRoutePrefix)) {
 				hasDestinations = true;
 			}
 		}
 
 		if (hasDestinations) {
-			trackedSigns.put(block, new TrackedSign(block, sign));
+			trackedSigns.put(location, new TrackedSign(location, sign));
 			save();
 
 			event.getPlayer().sendMessage("Added tracked sign.");
@@ -91,10 +83,10 @@ public class SignHandler implements Listener {
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-	public void onBlockBreak(BlockBreakEvent event) {
-		final Location block = BukkitUtils.wrap(event.getBlock().getLocation());
+	public void onBlockBreak(Event event) {
+		final Location location = event.getLocation();
 
-		final TrackedSign trackedSign = trackedSigns.remove(block);
+		final TrackedSign trackedSign = trackedSigns.remove(location);
 		if (trackedSign == null)
 			return;
 
@@ -104,24 +96,21 @@ public class SignHandler implements Listener {
 	}
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-	public void onPlayerInteract(PlayerInteractEvent event) {
-		if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
-			return; // We only want RIGHT_CLICK_BLOCK
-
-		final Location block = BukkitUtils.wrap(event.getClickedBlock().getLocation());
-		final BlockState blockState = block.getBlockState();
+	public void onPlayerRightClickBlock(Event event) {
+		final Location location = event.getLocation();
+		final BlockState blockState = location.getBlockState();
 
 		if (!(blockState instanceof Sign))
 			return; // We only want signs
 
-		TrackedSign trackedSign = trackedSigns.get(block);
+		TrackedSign trackedSign = trackedSigns.get(location);
 		if (trackedSign == null)
 			return; // We only want tracked signs
 
-		final Player player = BukkitUtils.wrap(event.getPlayer());
+		final Player player = event.getPlayer();
 		final Location eyeLocation = player.getEyeLocation();
 
-		final SignShape shape = new SignShape(block);
+		final SignShape shape = new SignShape(location);
 		final SignTraceResult trace = shape.trace(eyeLocation);
 
 		final int index = trace.index;
