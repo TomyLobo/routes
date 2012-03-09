@@ -39,9 +39,8 @@ public class TrackedSign {
 	private int selected = -1;
 	private final int entryCount;
 
-	public TrackedSign(Location location) {
+	public TrackedSign(Location location, Sign sign) {
 		this.location = location;
-		Sign sign = (Sign) location.getBlockState();
 		String[] lines = sign.getLines();
 		entries = new String[lines.length];
 

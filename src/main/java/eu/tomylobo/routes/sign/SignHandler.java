@@ -82,7 +82,7 @@ public class SignHandler implements Listener {
 		}
 
 		if (hasDestinations) {
-			trackedSigns.put(block, new TrackedSign(block));
+			trackedSigns.put(block, new TrackedSign(block, sign));
 			save();
 
 			event.getPlayer().sendMessage("Added tracked sign.");
