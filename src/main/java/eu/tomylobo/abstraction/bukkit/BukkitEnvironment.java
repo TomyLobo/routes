@@ -19,7 +19,11 @@
 
 package eu.tomylobo.abstraction.bukkit;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import eu.tomylobo.abstraction.Environment;
+import eu.tomylobo.abstraction.entity.Player;
 
 public class BukkitEnvironment extends Environment {
 	@Override
@@ -30,6 +34,16 @@ public class BukkitEnvironment extends Environment {
 	@Override
 	protected BukkitPlayer getPlayerImpl(String playerName) {
 		return BukkitUtils.wrap(org.bukkit.Bukkit.getServer().getPlayer(playerName));
+	}
+
+	@Override
+	protected List<Player> getPlayersImpl() {
+		final org.bukkit.entity.Player[] players = org.bukkit.Bukkit.getServer().getOnlinePlayers();
+		final List<Player> ret = new ArrayList<Player>(players.length);
+		for (org.bukkit.entity.Player player : players) {
+			ret.add(BukkitUtils.wrap(player));
+		}
+		return ret;
 	}
 
 	private final BukkitNetwork networkInstance = new BukkitNetwork();
