@@ -24,9 +24,9 @@ import eu.tomylobo.abstraction.bukkit.BukkitEnvironment;
 public abstract class Environment {
 	private static final Environment instance = new BukkitEnvironment();
 
-	protected abstract World worldImpl(String worldName);
-	public static World world(String worldName) {
-		return instance.worldImpl(worldName);
+	protected abstract World getWorldImpl(String worldName);
+	public static World getWorld(String worldName) {
+		return instance.getWorldImpl(worldName);
 	}
 
 	protected abstract Network networkImpl();

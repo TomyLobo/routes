@@ -23,7 +23,7 @@ import eu.tomylobo.abstraction.Environment;
 
 public class BukkitEnvironment extends Environment {
 	@Override
-	protected BukkitWorld worldImpl(String worldName) {
+	protected BukkitWorld getWorldImpl(String worldName) {
 		return BukkitUtils.wrap(org.bukkit.Bukkit.getServer().getWorld(worldName));
 	}
 

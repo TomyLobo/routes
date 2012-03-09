@@ -156,7 +156,7 @@ public final class Ini {
 
 	public static World loadWorld(Multimap<String, String> section, String format) {
 		final String worldName = getOnlyValue(section.get(String.format(format, "world")));
-		return worldName.equals("null") ? null : Environment.world(worldName);
+		return worldName.equals("null") ? null : Environment.getWorld(worldName);
 	}
 
 
