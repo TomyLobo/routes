@@ -19,11 +19,9 @@
 
 package eu.tomylobo.routes.infrastructure.editor;
 
-import org.bukkit.event.player.PlayerInteractEvent;
-
 import eu.tomylobo.abstraction.entity.Player;
+import eu.tomylobo.abstraction.event.PlayerClickEvent;
 import eu.tomylobo.routes.Routes;
-import eu.tomylobo.routes.config.RoutesConfig;
 import eu.tomylobo.routes.infrastructure.Route;
 import eu.tomylobo.routes.util.ScheduledTask;
 
@@ -38,10 +36,10 @@ public class RouteEditSession {
 		this.player = player;
 		this.route = route;
 		this.segmentIndex = route.getNodes().size() - 1;
-		final RoutesConfig config = Routes.getInstance().config;
-		this.visualizedRoute = new VisualizedRoute(route, config.editorDotsPerMeter, player);
+		final Routes plugin = Routes.getInstance();
+		this.visualizedRoute = new VisualizedRoute(route, plugin.config.editorDotsPerMeter, player);
 
-		flashTask = new ScheduledTask(Routes.getInstance()) {
+		flashTask = new ScheduledTask(plugin) {
 			boolean on = true;
 			int lastSegmentIndex;
 
@@ -58,14 +56,11 @@ public class RouteEditSession {
 			}
 		};
 
-		flashTask.scheduleSyncRepeating(0, config.editorFlashTicks);
+		flashTask.scheduleSyncRepeating(0, plugin.config.editorFlashTicks);
 	}
 
-	public void interact(PlayerInteractEvent event) {
-		switch (event.getAction()) {
-		case RIGHT_CLICK_AIR:
-			System.out.println("air");
-		case RIGHT_CLICK_BLOCK:
+	public void interact(PlayerClickEvent event) {
+		if (event.isRightClick()) {
 			route.addNodes(++segmentIndex, player.getLocation());
 			visualizedRoute.refresh(segmentIndex - 2, 3, 4);
 		}

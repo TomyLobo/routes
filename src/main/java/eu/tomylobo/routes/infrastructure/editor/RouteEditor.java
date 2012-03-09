@@ -22,21 +22,16 @@ package eu.tomylobo.routes.infrastructure.editor;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
-import org.bukkit.event.Event.Result;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.Plugin;
-
-import eu.tomylobo.abstraction.bukkit.BukkitUtils;
+import eu.tomylobo.abstraction.Environment;
 import eu.tomylobo.abstraction.entity.Player;
+import eu.tomylobo.abstraction.event.Event;
+import eu.tomylobo.abstraction.event.EventHandler;
+import eu.tomylobo.abstraction.event.EventPriority;
+import eu.tomylobo.abstraction.event.PlayerClickEvent;
 import eu.tomylobo.routes.Routes;
 import eu.tomylobo.routes.infrastructure.Route;
 
-public class RouteEditor implements Listener {
+public class RouteEditor {
 	private final Map<Player, RouteEditSession> editedRoutes = new HashMap<Player, RouteEditSession>();
 
 	private final Routes plugin;
@@ -44,16 +39,15 @@ public class RouteEditor implements Listener {
 	public RouteEditor(Routes plugin) {
 		this.plugin = plugin;
 
-		Bukkit.getServer().getPluginManager().registerEvents(this, (Plugin) plugin.getFrameworkPlugin());
+		Environment.dispatcher().registerEvents(this, plugin);
 	}
 
-	// TODO: convert event handler
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void onPlayerInteract(PlayerInteractEvent event) {
-		if (event.useItemInHand() == Result.DENY)
+	public void onPlayerClick(PlayerClickEvent event) {
+		if (event.isCancelled())
 			return;
 
-		final Player player = BukkitUtils.wrap(event.getPlayer());
+		final Player player = event.getPlayer();
 
 		final int inHand = player.getItemTypeInHand();
 		if (inHand == plugin.config.editorTool) {
@@ -65,9 +59,9 @@ public class RouteEditor implements Listener {
 		}
 	}
 
-	// TODO: convert event handler
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-	public void onPlayerQuit(PlayerQuitEvent event) {
+	public void onPlayerQuit(Event event) {
+		System.out.println("quit");
 		final RouteEditSession routeEditSession = editedRoutes.remove(event.getPlayer());
 		if (routeEditSession != null) {
 			routeEditSession.close();
