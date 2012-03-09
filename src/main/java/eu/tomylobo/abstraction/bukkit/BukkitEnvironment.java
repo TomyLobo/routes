@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import eu.tomylobo.abstraction.Environment;
+import eu.tomylobo.abstraction.bukkit.event.BukkitDispatcher;
 import eu.tomylobo.abstraction.entity.Player;
 
 public class BukkitEnvironment extends Environment {
@@ -56,5 +57,11 @@ public class BukkitEnvironment extends Environment {
 	@Override
 	protected BukkitScheduler schedulerImpl() {
 		return schedulerInstance;
+	}
+
+	private final BukkitDispatcher dispatcherInstance = new BukkitDispatcher();
+	@Override
+	protected BukkitDispatcher dispatcherImpl() {
+		return dispatcherInstance;
 	}
 }

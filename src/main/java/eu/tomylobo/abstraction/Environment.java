@@ -23,6 +23,7 @@ import java.util.List;
 
 import eu.tomylobo.abstraction.bukkit.BukkitEnvironment;
 import eu.tomylobo.abstraction.entity.Player;
+import eu.tomylobo.abstraction.event.Dispatcher;
 
 public abstract class Environment {
 	private static final Environment instance = new BukkitEnvironment();
@@ -50,5 +51,9 @@ public abstract class Environment {
 	protected abstract Scheduler schedulerImpl();
 	public static Scheduler scheduler() {
 		return instance.schedulerImpl();
+	}
+	protected abstract Dispatcher dispatcherImpl();
+	public static Dispatcher dispatcher() {
+		return instance.dispatcherImpl();
 	}
 }
