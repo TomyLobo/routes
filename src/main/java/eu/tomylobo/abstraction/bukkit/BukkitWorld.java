@@ -73,7 +73,7 @@ public class BukkitWorld implements World {
 		switch (type) {
 		case 63: // SIGN_POST
 		case 68: // WALL_SIGN
-			final String[] lines = ((Sign) block.getState()).getLines();
+			final String[] lines = ((org.bukkit.block.Sign) block.getState()).getLines();
 			return new Sign(type, data, lines);
 
 		default:
@@ -86,6 +86,17 @@ public class BukkitWorld implements World {
 		final org.bukkit.block.Block block = backend.getBlockAt((int) position.getX(), (int) position.getY(), (int) position.getZ());
 
 		block.setTypeIdAndData(blockState.getType(), (byte) blockState.getData(), true);
+
+		if (blockState instanceof Sign) {
+			String[] lines = ((Sign) blockState).getLines();
+			final org.bukkit.block.Sign sign = (org.bukkit.block.Sign) block.getState();
+
+			for (int i = 0; i < lines.length; ++i) {
+				sign.setLine(i, lines[i]);
+			}
+
+			sign.update();
+		}
 	}
 
 	@Override
