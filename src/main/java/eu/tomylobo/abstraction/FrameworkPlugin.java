@@ -19,6 +19,9 @@
 
 package eu.tomylobo.abstraction;
 
+import java.io.File;
+
 public interface FrameworkPlugin {
 	MetaPlugin getMetaPlugin();
+	File getDataFolder();
 }
