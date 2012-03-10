@@ -52,10 +52,10 @@ public class Routes implements MetaPlugin {
 		return plugin.getDataFolder() + "/" + baseFileName;
 	}
 
-	private BukkitRoutes plugin;
+	private FrameworkPlugin plugin;
 	@Override
 	public void setFrameworkPlugin(FrameworkPlugin plugin) {
-		this.plugin = (BukkitRoutes) plugin;
+		this.plugin = plugin;
 	}
 
 	@Override
