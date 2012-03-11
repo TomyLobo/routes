@@ -51,7 +51,7 @@ public class BukkitDispatcher implements Dispatcher {
 			final eu.tomylobo.abstraction.event.EventPriority priority = eventHandler.priority();
 			EventPriority bukkitPriority = priorityMap[priority.getIndex()];
 
-			ListenerExecutor listenerExecutor = new ListenerExecutor(bukkitEvent, listener, method);
+			BukkitEventTransposer listenerExecutor = new BukkitEventTransposer(bukkitEvent, listener, method);
 
 			final boolean ignoreCancelled = eventHandler.ignoreCancelled();
 

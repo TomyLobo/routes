@@ -17,37 +17,38 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.tomylobo.abstraction.bukkit.event;
+package eu.tomylobo.abstraction.spout.event;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.bukkit.event.EventException;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.EventExecutor;
+import org.spout.api.event.EventExecutor;
+import org.spout.api.exception.EventException;
 
-public class ListenerExecutor implements Listener, EventExecutor {
+public class SpoutEventTransposer implements EventExecutor {
 	private final Object listener;
 	private final Method handler;
-	private final BukkitEvent bukkitEvent;
+	private final SpoutEvent spoutEvent;
+	private final boolean ignoreCancelled;
 
-	public ListenerExecutor(BukkitEvent bukkitEvent, Object listener, Method handler) {
-		this.bukkitEvent = bukkitEvent;
+	public SpoutEventTransposer(SpoutEvent spoutEvent, Object listener, Method handler, boolean ignoreCancelled) {
+		this.spoutEvent = spoutEvent;
 		this.listener = listener;
 		this.handler = handler;
+		this.ignoreCancelled = ignoreCancelled;
 	}
 
 	@Override
-	public void execute(Listener me, org.bukkit.event.Event backend) throws EventException {
-		if (me != this)
-			throw new EventException("ListenerExecutor got passed a different listener!");
+	public void execute(org.spout.api.event.Event backend) throws EventException {
+		if (ignoreCancelled && backend.isCancelled())
+			return;
 
 		try {
-			bukkitEvent.invoke(listener, handler, backend);
+			spoutEvent.invoke(listener, handler, backend);
 		} catch (IllegalAccessException e) {
-			throw new EventException(e, "Could not access wrapper");
+			throw new EventException("Could not access handler", e);
 		} catch (InvocationTargetException e) {
-			throw new EventException(e.getCause(), "Exception caught from wrapper");
+			throw new EventException("Exception caught from handler", e.getCause());
 		}
 	}
 }

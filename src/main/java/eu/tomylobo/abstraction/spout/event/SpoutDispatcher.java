@@ -55,7 +55,7 @@ public class SpoutDispatcher implements Dispatcher {
 			final boolean ignoreCancelled = eventHandler.ignoreCancelled();
 			Order spoutPriority = (ignoreCancelled ? priorityMapCancelled : priorityMap)[priority.getIndex()];
 
-			ListenerExecutor listenerExecutor = new ListenerExecutor(spoutEvent, listener, method, ignoreCancelled);
+			SpoutEventTransposer listenerExecutor = new SpoutEventTransposer(spoutEvent, listener, method, ignoreCancelled);
 
 			Spout.getEventManager().registerEvent(eventClass, spoutPriority, listenerExecutor, frameworkPlugin);
 		}
