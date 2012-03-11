@@ -107,3 +107,15 @@ Event system
   Cancelled events are still passed by default.  
   All of these options can be overridden.
 
+
+Command system (planning)
+--------------
+
+#### Strategy 1
+* Take command system from WorldEdit
+* Remove genericity and simplify everything
+
+#### Strategy 2
+* Take command system from routes
+* Add flag support
+* Add help+usage
