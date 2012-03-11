@@ -1,8 +1,7 @@
 package eu.tomylobo.routes;
 
 import eu.tomylobo.abstraction.CommandSender;
-import eu.tomylobo.abstraction.plugin.FrameworkPlugin;
-import eu.tomylobo.abstraction.plugin.MetaPlugin;
+import eu.tomylobo.abstraction.plugin.AbstractMetaPlugin;
 import eu.tomylobo.routes.commands.system.CommandSystem;
 import eu.tomylobo.routes.config.RoutesConfig;
 import eu.tomylobo.routes.infrastructure.TransportSystem;
@@ -10,16 +9,7 @@ import eu.tomylobo.routes.infrastructure.editor.RouteEditor;
 import eu.tomylobo.routes.sign.SignHandler;
 import eu.tomylobo.routes.travel.TravelAgency;
 
-public class Routes implements MetaPlugin {
-	private static Routes instance;
-	{
-		instance = this;
-	}
-
-	public static Routes getInstance() {
-		return instance;
-	}
-
+public class Routes extends AbstractMetaPlugin {
 	public RoutesConfig config = new RoutesConfig();
 
 	public CommandSystem commandSystem;
@@ -28,6 +18,16 @@ public class Routes implements MetaPlugin {
 	public SignHandler signHandler;
 	public RouteEditor routeEditor;
 
+	protected static AbstractMetaPlugin instance;
+	{
+		instance = this;
+	}
+
+	public static Routes getInstance() {
+		return (Routes) instance;
+	}
+
+	@Override
 	public void onEnable() {
 		commandSystem = new CommandSystem();
 		travelAgency = new TravelAgency(this);
@@ -49,25 +49,8 @@ public class Routes implements MetaPlugin {
 	}
 
 	public String getConfigFileName(String baseFileName) {
-		return plugin.getDataFolder() + "/" + baseFileName;
+		return getDataFolder() + "/" + baseFileName;
 	}
-
-	private FrameworkPlugin plugin;
-	@Override
-	public void setFrameworkPlugin(FrameworkPlugin plugin) {
-		this.plugin = plugin;
-	}
-
-	@Override
-	public FrameworkPlugin getFrameworkPlugin() {
-		return plugin;
-	}
-
-	@Override
-	public void onLoad() { }
-
-	@Override
-	public void onDisable() { }
 
 	@Override
 	public boolean onCommand(CommandSender sender, String commandName, String label, String[] args) {

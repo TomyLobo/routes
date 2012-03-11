@@ -12,19 +12,24 @@ An abstract base class for Bukkit FrameworkPlugins, manages things like
 passing onLoad/Enable/Disable/Command to the MetaPlugin.  
 Could be extended to pass commands directly to a command system.
 
-	 /         Abstraction layer        \ 
-	+------------------------------------+--------------+
-	|                                    |              |\
-	|   MetaPlugin      FrameworkPlugin  |  JavaPlugin  |
-	|        |                 |         |       |      |  Bukkit
-	|        |           BukkitPlugin----+-------+      |
-	|        |                 |         |              |/
-	+--------+-----------------+---------+--------------+
-	|        |                 |         |
-	|  YourMainClass   YourBukkitPlugin  |
-	|                                    |
-	+------------------------------------+
-	 \            Your plugin           /
+#### AbstractMetaPlugin
+An abstract base class for MetaPlugins, manages the reference to the framework
+plugin.  
+Could also be extended to pass commands directly to a command system.
+
+	 /          Abstraction layer          \
+	+---------------------------------------+--------------+
+	|                                       |              |\
+	|      MetaPlugin      FrameworkPlugin  |  JavaPlugin  |
+	|           |                 |         |       |      |  Bukkit
+	|  AbstractMetaPlugin   BukkitPlugin----+-------+      |
+	|           |                 |         |              |/
+	+-----------+-----------------+---------+--------------+
+	|           |                 |         |
+	|     YourMainClass   YourBukkitPlugin  |
+	|                                       |
+	+---------------------------------------+
+	 \             Your plugin             /
 
 #### Relationships between the classes
 Hierarchy:
