@@ -61,7 +61,6 @@ public class RouteEditor {
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onPlayerQuit(Event event) {
-		System.out.println("quit");
 		final RouteEditSession routeEditSession = editedRoutes.remove(event.getPlayer());
 		if (routeEditSession != null) {
 			routeEditSession.close();
