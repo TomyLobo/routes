@@ -23,10 +23,15 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import eu.tomylobo.abstraction.Environment;
 import eu.tomylobo.abstraction.plugin.FrameworkPlugin;
 import eu.tomylobo.abstraction.plugin.MetaPlugin;
 
 public abstract class BukkitPlugin extends JavaPlugin implements FrameworkPlugin {
+	static {
+		Environment.init(BukkitEnvironment.class);
+	}
+
 	private final MetaPlugin metaPlugin;
 
 	public BukkitPlugin(MetaPlugin metaPlugin) {

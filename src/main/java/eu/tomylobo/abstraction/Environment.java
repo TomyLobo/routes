@@ -21,12 +21,27 @@ package eu.tomylobo.abstraction;
 
 import java.util.List;
 
-import eu.tomylobo.abstraction.bukkit.BukkitEnvironment;
 import eu.tomylobo.abstraction.entity.Player;
 import eu.tomylobo.abstraction.event.Dispatcher;
 
 public abstract class Environment {
-	private static final Environment instance = new BukkitEnvironment();
+	public static void init(Class<? extends Environment> environmentClass) {
+		if (instance == null) {
+			try {
+				instance = environmentClass.newInstance();
+			} catch (InstantiationException e) {
+				throw new RuntimeException("Could not instantiate "+environmentClass.getSimpleName(), e);
+			} catch (IllegalAccessException e) {
+				throw new RuntimeException("Could not instantiate "+environmentClass.getSimpleName(), e);
+			}
+		}
+		else if (!environmentClass.isInstance(instance)) {
+			throw new RuntimeException("Could not instantiate "+environmentClass.getSimpleName()+
+					": already got a "+instance.getClass().getSimpleName());
+		}
+	}
+
+	private static Environment instance;
 
 	protected abstract World getWorldImpl(String worldName);
 	public static World getWorld(String worldName) {
