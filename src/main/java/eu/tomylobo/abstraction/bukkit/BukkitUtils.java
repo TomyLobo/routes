@@ -126,6 +126,9 @@ public class BukkitUtils {
 	}
 
 	public static org.bukkit.command.CommandSender unwrap(CommandSender sender) {
+		if (sender instanceof Player)
+			return unwrap((Player) sender);
+
 		return ((BukkitCommandSender) sender).backend;
 	}
 }
