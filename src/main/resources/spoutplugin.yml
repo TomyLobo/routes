@@ -1,0 +1,14 @@
+name: routes
+main: eu.tomylobo.routes.SpoutRoutes
+author: TomyLobo
+description: Allows creating horse/boat/dragon routes
+url: https://github.com/TomyLobo/routes
+version: 'maven-version-number'
+platform: SERVER
+depend: [Vanilla]
+
+commands:
+  routes:
+    aliases: [ro]
+  travel:
+    aliases: [tr]
