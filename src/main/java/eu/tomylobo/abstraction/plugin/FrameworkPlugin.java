@@ -17,14 +17,11 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.tomylobo.abstraction;
+package eu.tomylobo.abstraction.plugin;
 
+import java.io.File;
 
-public interface MetaPlugin {
-	FrameworkPlugin getFrameworkPlugin();
-	void onLoad();
-	void onEnable();
-	void onDisable();
-	boolean onCommand(CommandSender sender, String commandName, String label, String[] args);
-	void setFrameworkPlugin(FrameworkPlugin plugin);
+public interface FrameworkPlugin {
+	MetaPlugin getMetaPlugin();
+	File getDataFolder();
 }

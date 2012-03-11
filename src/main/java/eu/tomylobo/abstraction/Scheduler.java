@@ -19,6 +19,8 @@
 
 package eu.tomylobo.abstraction;
 
+import eu.tomylobo.abstraction.plugin.MetaPlugin;
+
 public interface Scheduler {
 	Object scheduleSyncDelayedTask(MetaPlugin plugin, Runnable task, long delay);
 	Object scheduleSyncDelayedTask(MetaPlugin plugin, Runnable task);

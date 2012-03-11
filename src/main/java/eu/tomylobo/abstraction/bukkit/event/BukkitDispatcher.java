@@ -23,9 +23,9 @@ import java.lang.reflect.Method;
 
 import org.bukkit.event.EventPriority;
 
-import eu.tomylobo.abstraction.MetaPlugin;
 import eu.tomylobo.abstraction.event.Dispatcher;
 import eu.tomylobo.abstraction.event.EventHandler;
+import eu.tomylobo.abstraction.plugin.MetaPlugin;
 
 public class BukkitDispatcher implements Dispatcher {
 	EventPriority[] priorityMap = { EventPriority.LOWEST, EventPriority.LOW, EventPriority.NORMAL, EventPriority.HIGH, EventPriority.HIGHEST, EventPriority.MONITOR };

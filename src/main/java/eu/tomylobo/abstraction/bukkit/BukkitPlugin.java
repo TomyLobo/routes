@@ -23,8 +23,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import eu.tomylobo.abstraction.FrameworkPlugin;
-import eu.tomylobo.abstraction.MetaPlugin;
+import eu.tomylobo.abstraction.plugin.FrameworkPlugin;
+import eu.tomylobo.abstraction.plugin.MetaPlugin;
 
 public abstract class BukkitPlugin extends JavaPlugin implements FrameworkPlugin {
 	private final MetaPlugin metaPlugin;

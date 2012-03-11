@@ -19,7 +19,7 @@
 
 package eu.tomylobo.abstraction.event;
 
-import eu.tomylobo.abstraction.MetaPlugin;
+import eu.tomylobo.abstraction.plugin.MetaPlugin;
 
 public interface Dispatcher {
 	void registerEvents(Object listener, MetaPlugin plugin);

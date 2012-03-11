@@ -20,7 +20,7 @@
 package eu.tomylobo.routes.util;
 
 import eu.tomylobo.abstraction.Environment;
-import eu.tomylobo.abstraction.MetaPlugin;
+import eu.tomylobo.abstraction.plugin.MetaPlugin;
 
 public abstract class ScheduledTask implements Runnable {
 	private final MetaPlugin plugin;

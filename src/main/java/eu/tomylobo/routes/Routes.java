@@ -1,8 +1,8 @@
 package eu.tomylobo.routes;
 
 import eu.tomylobo.abstraction.CommandSender;
-import eu.tomylobo.abstraction.FrameworkPlugin;
-import eu.tomylobo.abstraction.MetaPlugin;
+import eu.tomylobo.abstraction.plugin.FrameworkPlugin;
+import eu.tomylobo.abstraction.plugin.MetaPlugin;
 import eu.tomylobo.routes.commands.system.CommandSystem;
 import eu.tomylobo.routes.config.RoutesConfig;
 import eu.tomylobo.routes.infrastructure.TransportSystem;

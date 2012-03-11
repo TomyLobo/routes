@@ -22,8 +22,8 @@ package eu.tomylobo.abstraction.bukkit;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 
-import eu.tomylobo.abstraction.MetaPlugin;
 import eu.tomylobo.abstraction.Scheduler;
+import eu.tomylobo.abstraction.plugin.MetaPlugin;
 
 public class BukkitScheduler implements Scheduler {
 	@Override
