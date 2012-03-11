@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
 
 /**
  * Marks a method as a command for use with the command system.<br />
- * Aliases and permissions are managed by bukkit.<br />
+ * Aliases and permissions are managed by the environment.<br />
  * Flags are managed by the commands themselves. 
  *
  * @author TomyLobo

@@ -37,7 +37,7 @@ import java.util.Set;
 /**
  * A client-side-only entity.
  * 
- * This class only implements part of the bukkit Entity interface and doesn't
+ * This class only implements part of the Entity interface and doesn't
  * simulate movement beyond what is explicitly set.
  * 
  * @author TomyLobo
@@ -174,12 +174,7 @@ public abstract class FakeEntity implements Entity {
 	public boolean isDead() {
 		return isDead;
 	}
-/*
-	@Override
-	public Server getServer() {
-		return Bukkit.getServer();
-	}
-*/
+
 	@Override
 	public Entity getPassenger() {
 		return passenger;

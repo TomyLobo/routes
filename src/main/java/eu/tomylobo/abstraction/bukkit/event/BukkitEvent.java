@@ -148,8 +148,8 @@ public enum BukkitEvent {
 		if (backend instanceof Cancellable) {
 			final boolean oldCancelled;
 			if (backend instanceof PlayerInteractEvent) {
-				PlayerInteractEvent backend1 = (PlayerInteractEvent) backend;
-				oldCancelled = backend1.useInteractedBlock() == Result.DENY && backend1.useItemInHand() == Result.DENY;
+				PlayerInteractEvent playerInteractEvent = (PlayerInteractEvent) backend;
+				oldCancelled = playerInteractEvent.useInteractedBlock() == Result.DENY && playerInteractEvent.useItemInHand() == Result.DENY;
 			}
 			else {
 				oldCancelled = ((Cancellable) backend).isCancelled();
