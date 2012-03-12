@@ -19,6 +19,7 @@
 
 package eu.tomylobo.abstraction.spout;
 
+import org.spout.api.entity.Position;
 import org.spout.api.math.Vector3m;
 import org.spout.vanilla.entity.VanillaEntity;
 
@@ -42,7 +43,11 @@ public class SpoutEntity implements Entity {
 	public void teleport(Location location, boolean withAngles, boolean notify) {
 		// TODO: spout
 		//if (withAngles) {
-			backend.setPosition(SpoutUtils.unwrap(location));
+			final Position position = SpoutUtils.unwrap(location);
+			backend.setPosition(position.getPosition());
+			backend.setPitch(position.getPitch());
+			backend.setYaw(position.getYaw());
+			backend.setRoll(position.getRoll());
 			// TODO: implement notify=false
 		/*}
 		else {
