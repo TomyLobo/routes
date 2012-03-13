@@ -23,8 +23,10 @@ import java.lang.reflect.Method;
 
 import org.bukkit.event.EventPriority;
 
+import eu.tomylobo.abstraction.Environment;
 import eu.tomylobo.abstraction.event.Dispatcher;
 import eu.tomylobo.abstraction.event.EventHandler;
+import eu.tomylobo.abstraction.event.Platform;
 import eu.tomylobo.abstraction.plugin.MetaPlugin;
 
 public class BukkitDispatcher implements Dispatcher {
@@ -32,10 +34,15 @@ public class BukkitDispatcher implements Dispatcher {
 
 	@Override
 	public void registerEvents(Object listener, MetaPlugin plugin) {
-		org.bukkit.plugin.Plugin bukkitPlugin =  (org.bukkit.plugin.Plugin) plugin.getFrameworkPlugin();
+		final org.bukkit.plugin.Plugin bukkitPlugin =  (org.bukkit.plugin.Plugin) plugin.getFrameworkPlugin();
 
-		for (Method method : listener.getClass().getMethods()) {
-			EventHandler eventHandler = method.getAnnotation(EventHandler.class);
+		final Class<? extends Object> listenerClass = listener.getClass();
+		final Platform platform = listenerClass.getAnnotation(Platform.class);
+		if (platform != null && !Environment.isPlatform(platform.value()))
+			return;
+
+		for (Method method : listenerClass.getMethods()) {
+			final EventHandler eventHandler = method.getAnnotation(EventHandler.class);
 
 			if (eventHandler == null)
 				continue;
@@ -45,17 +52,19 @@ public class BukkitDispatcher implements Dispatcher {
 				eventName = method.getName();
 			}
 
-			final BukkitEvent bukkitEvent = BukkitEvent.valueOf(eventName);
-			Class<? extends org.bukkit.event.Event> eventClass = bukkitEvent.getBukkitEventClass();
+			final BukkitEvent bukkitEvent;
+			try {
+				bukkitEvent = BukkitEvent.valueOf(eventName);
+			} catch (IllegalArgumentException e) {
+				continue;
+			}
 
 			final eu.tomylobo.abstraction.event.EventPriority priority = eventHandler.priority();
-			EventPriority bukkitPriority = priorityMap[priority.getIndex()];
-
-			BukkitEventTransposer listenerExecutor = new BukkitEventTransposer(bukkitEvent, listener, method);
+			final EventPriority bukkitPriority = priorityMap[priority.getIndex()];
 
 			final boolean ignoreCancelled = eventHandler.ignoreCancelled();
 
-			org.bukkit.Bukkit.getPluginManager().registerEvent(eventClass, listenerExecutor, bukkitPriority, listenerExecutor, bukkitPlugin, ignoreCancelled);
+			bukkitEvent.register(listener, method, bukkitPlugin, bukkitPriority, ignoreCancelled);
 		}
 	}
 }

@@ -21,11 +21,12 @@ package eu.tomylobo.abstraction.spout.event;
 
 import java.lang.reflect.Method;
 
-import org.spout.api.Spout;
 import org.spout.api.event.Order;
 
+import eu.tomylobo.abstraction.Environment;
 import eu.tomylobo.abstraction.event.Dispatcher;
 import eu.tomylobo.abstraction.event.EventHandler;
+import eu.tomylobo.abstraction.event.Platform;
 import eu.tomylobo.abstraction.plugin.FrameworkPlugin;
 import eu.tomylobo.abstraction.plugin.MetaPlugin;
 
@@ -35,10 +36,15 @@ public class SpoutDispatcher implements Dispatcher {
 
 	@Override
 	public void registerEvents(Object listener, MetaPlugin plugin) {
-		FrameworkPlugin frameworkPlugin = plugin.getFrameworkPlugin();
+		final FrameworkPlugin frameworkPlugin = plugin.getFrameworkPlugin();
 
-		for (Method method : listener.getClass().getMethods()) {
-			EventHandler eventHandler = method.getAnnotation(EventHandler.class);
+		final Class<? extends Object> listenerClass = listener.getClass();
+		final Platform platform = listenerClass.getAnnotation(Platform.class);
+		if (platform != null && !Environment.isPlatform(platform.value()))
+			return;
+
+		for (Method method : listenerClass.getMethods()) {
+			final EventHandler eventHandler = method.getAnnotation(EventHandler.class);
 
 			if (eventHandler == null)
 				continue;
@@ -48,16 +54,19 @@ public class SpoutDispatcher implements Dispatcher {
 				eventName = method.getName();
 			}
 
-			final SpoutEvent spoutEvent = SpoutEvent.valueOf(eventName);
-			Class<? extends org.spout.api.event.Event> eventClass = spoutEvent.getSpoutEventClass();
+			final SpoutEvent spoutEvent;
+			try {
+				spoutEvent = SpoutEvent.valueOf(eventName);
+			} catch (IllegalArgumentException e) {
+				continue;
+			}
 
 			final eu.tomylobo.abstraction.event.EventPriority priority = eventHandler.priority();
 			final boolean ignoreCancelled = eventHandler.ignoreCancelled();
-			Order spoutPriority = (ignoreCancelled ? priorityMapCancelled : priorityMap)[priority.getIndex()];
 
-			SpoutEventTransposer listenerExecutor = new SpoutEventTransposer(spoutEvent, listener, method, ignoreCancelled);
+			final Order spoutPriority = (ignoreCancelled ? priorityMapCancelled : priorityMap)[priority.getIndex()];
 
-			Spout.getEventManager().registerEvent(eventClass, spoutPriority, listenerExecutor, frameworkPlugin);
+			spoutEvent.register(listener, method, frameworkPlugin, spoutPriority, ignoreCancelled);
 		}
 	}
 }

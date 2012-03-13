@@ -23,16 +23,36 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.spout.api.Source;
+import org.spout.api.Spout;
 import org.spout.api.event.Cancellable;
+import org.spout.api.event.Order;
 import org.spout.api.event.block.BlockChangeEvent;
 import org.spout.api.event.player.PlayerInteractEvent;
 import org.spout.api.event.player.PlayerJoinEvent;
 import org.spout.api.event.player.PlayerLeaveEvent;
 
 import eu.tomylobo.abstraction.event.Event;
+import eu.tomylobo.abstraction.plugin.FrameworkPlugin;
 import eu.tomylobo.abstraction.spout.SpoutUtils;
 
 public enum SpoutEvent {
+	onSpoutEvent(org.spout.api.event.Event.class) {
+		@Override
+		public Event wrap(org.spout.api.event.Event backend) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void register(Object listener, Method method, FrameworkPlugin frameworkPlugin, Order spoutPriority, boolean ignoreCancelled) {
+			SpoutSimpleEventExecutor listenerExecutor = new SpoutSimpleEventExecutor(listener, method);
+
+			
+			@SuppressWarnings("unchecked")
+			final Class<? extends org.spout.api.event.Event> eventClass = (Class<? extends org.spout.api.event.Event>) method.getParameterTypes()[0];
+			Spout.getEventManager().registerEvent(eventClass, spoutPriority, listenerExecutor, frameworkPlugin);
+		}
+	},
 	onSignChange(BlockChangeEvent.class) { @Override public Event wrap(org.spout.api.event.Event backend) {
 		// TODO: spout
 		return null;
@@ -157,6 +177,10 @@ public enum SpoutEvent {
 		this.spoutEventClass = spoutEventClass;
 	}
 
+	public Class<? extends org.spout.api.event.Event> getSpoutEventClass() {
+		return spoutEventClass;
+	}
+
 
 	public abstract Event wrap(org.spout.api.event.Event backend);
 
@@ -178,10 +202,11 @@ public enum SpoutEvent {
 		}
 	}
 
-	public Class<? extends org.spout.api.event.Event> getSpoutEventClass() {
-		return spoutEventClass;
-	}
+	public void register(Object listener, Method method, FrameworkPlugin frameworkPlugin, Order spoutPriority, boolean ignoreCancelled) {
+		SpoutEventTransposer listenerExecutor = new SpoutEventTransposer(this, listener, method, ignoreCancelled);
 
+		Spout.getEventManager().registerEvent(spoutEventClass, spoutPriority, listenerExecutor, frameworkPlugin);
+	}
 
 	private static boolean isBreak(final BlockChangeEvent blockPlaceEvent) {
 		return blockPlaceEvent.getSnapshot().getMaterial().getId() == 0;

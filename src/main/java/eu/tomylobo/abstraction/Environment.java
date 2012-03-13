@@ -42,6 +42,9 @@ public abstract class Environment {
 	}
 
 	private static Environment instance;
+	public static boolean isPlatform(Class<? extends Environment> platform) {
+		return platform.isInstance(instance);
+	}
 
 	protected abstract World getWorldImpl(String worldName);
 	public static World getWorld(String worldName) {

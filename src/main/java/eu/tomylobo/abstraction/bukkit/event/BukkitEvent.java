@@ -24,6 +24,7 @@ import java.lang.reflect.Method;
 
 import org.bukkit.block.Block;
 import org.bukkit.event.Cancellable;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Event.Result;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -31,12 +32,27 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.Plugin;
 
 import eu.tomylobo.abstraction.block.Sign;
 import eu.tomylobo.abstraction.bukkit.BukkitUtils;
 import eu.tomylobo.abstraction.event.Event;
 
 public enum BukkitEvent {
+	onBukkitEvent(org.bukkit.event.Event.class) {
+		@Override public Event wrap(org.bukkit.event.Event backend) {
+			return null;
+		}
+
+		@Override
+		public void register(Object listener, Method method, Plugin bukkitPlugin, EventPriority bukkitPriority, boolean ignoreCancelled) {
+			BukkitSimpleEventExecutor listenerExecutor = new BukkitSimpleEventExecutor(listener, method);
+
+			@SuppressWarnings("unchecked")
+			final Class<? extends org.bukkit.event.Event> eventClass = (Class<? extends org.bukkit.event.Event>) method.getParameterTypes()[0];
+			org.bukkit.Bukkit.getPluginManager().registerEvent(eventClass, listenerExecutor, bukkitPriority, listenerExecutor, bukkitPlugin, ignoreCancelled);
+		}
+	},
 	onSignChange(SignChangeEvent.class) { @Override public Event wrap(org.bukkit.event.Event backend) {
 		final Event event = new Event();
 
@@ -137,6 +153,10 @@ public enum BukkitEvent {
 		this.bukkitEventClass = bukkitEventClass;
 	}
 
+	public Class<? extends org.bukkit.event.Event> getBukkitEventClass() {
+		return bukkitEventClass;
+	}
+
 
 	public abstract Event wrap(org.bukkit.event.Event backend);
 
@@ -165,7 +185,9 @@ public enum BukkitEvent {
 		}
 	}
 
-	public Class<? extends org.bukkit.event.Event> getBukkitEventClass() {
-		return bukkitEventClass;
+	public void register(Object listener, Method method, org.bukkit.plugin.Plugin bukkitPlugin, EventPriority bukkitPriority, final boolean ignoreCancelled) {
+		BukkitEventTransposer listenerExecutor = new BukkitEventTransposer(this, listener, method);
+
+		org.bukkit.Bukkit.getPluginManager().registerEvent(bukkitEventClass, listenerExecutor, bukkitPriority, listenerExecutor, bukkitPlugin, ignoreCancelled);
 	}
 }
