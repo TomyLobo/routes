@@ -20,6 +20,7 @@
 package eu.tomylobo.abstraction.bukkit;
 
 import eu.tomylobo.abstraction.CommandSender;
+import eu.tomylobo.abstraction.PermissionUtils;
 
 public class BukkitCommandSender implements CommandSender {
 	final org.bukkit.command.CommandSender backend;
@@ -40,6 +41,11 @@ public class BukkitCommandSender implements CommandSender {
 
 	@Override
 	public boolean hasPermission(String permission) {
+		return PermissionUtils.hasPermission(this, permission);
+	}
+
+	@Override
+	public boolean hasExactPermission(String permission) {
 		return backend.hasPermission(permission);
 	}
 

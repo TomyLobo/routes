@@ -20,6 +20,7 @@
 package eu.tomylobo.abstraction.spout;
 
 import eu.tomylobo.abstraction.CommandSender;
+import eu.tomylobo.abstraction.PermissionUtils;
 
 public class SpoutCommandSender implements CommandSender {
 	final org.spout.api.command.CommandSource backend;
@@ -40,6 +41,11 @@ public class SpoutCommandSender implements CommandSender {
 
 	@Override
 	public boolean hasPermission(String permission) {
+		return PermissionUtils.hasPermission(this, permission);
+	}
+
+	@Override
+	public boolean hasExactPermission(String permission) {
 		return backend.hasPermission(permission);
 	}
 

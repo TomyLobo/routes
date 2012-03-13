@@ -23,6 +23,7 @@ import org.spout.api.entity.PlayerController;
 import org.spout.api.inventory.ItemStack;
 
 import eu.tomylobo.abstraction.Environment;
+import eu.tomylobo.abstraction.PermissionUtils;
 import eu.tomylobo.abstraction.entity.Player;
 import eu.tomylobo.math.Location;
 
@@ -74,6 +75,11 @@ public class SpoutPlayer extends SpoutEntity implements Player {
 
 	@Override
 	public boolean hasPermission(String permission) {
+		return PermissionUtils.hasPermission(this, permission);
+	}
+
+	@Override
+	public boolean hasExactPermission(String permission) {
 		return backend.hasPermission(permission);
 	}
 

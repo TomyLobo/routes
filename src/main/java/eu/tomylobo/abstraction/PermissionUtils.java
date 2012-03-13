@@ -19,9 +19,27 @@
 
 package eu.tomylobo.abstraction;
 
-public interface CommandSender {
-	void sendMessage(String message);
-	String getName();
-	boolean hasPermission(String permission);
-	boolean hasExactPermission(String permission);
+public class PermissionUtils {
+	public static boolean hasPermission(CommandSender sender, String permission) {
+		if (sender.hasExactPermission(permission))
+			return true;
+
+		if (sender.hasExactPermission("*"))
+			return true;
+
+		String[] parts = permission.split("\\.");
+		if (parts.length < 2)
+			return false;
+
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < parts.length-1; ++i) {
+			sb.append(parts[i]);
+			sb.append('.');
+
+			if (sender.hasExactPermission(sb.toString()+'*'))
+				return true;
+		}
+
+		return false;
+	}
 }

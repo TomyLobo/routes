@@ -20,6 +20,7 @@
 package eu.tomylobo.abstraction.bukkit;
 
 import eu.tomylobo.abstraction.Environment;
+import eu.tomylobo.abstraction.PermissionUtils;
 import eu.tomylobo.abstraction.entity.Player;
 import eu.tomylobo.math.Location;
 
@@ -63,6 +64,11 @@ public class BukkitPlayer extends BukkitEntity implements Player {
 
 	@Override
 	public boolean hasPermission(String permission) {
+		return PermissionUtils.hasPermission(this, permission);
+	}
+
+	@Override
+	public boolean hasExactPermission(String permission) {
 		return ((org.bukkit.entity.Player) backend).hasPermission(permission);
 	}
 
