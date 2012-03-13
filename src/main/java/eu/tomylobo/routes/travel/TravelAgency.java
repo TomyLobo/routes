@@ -56,10 +56,12 @@ public class TravelAgency extends ScheduledTask {
 		scheduleSyncRepeating(0, 1);
 	}
 
-	public void addTravellerWithMount(String routeName, final Player player, EntityType entityType) throws CommandException {
+	public void addTravellerWithMount(String routeName, final Player player, EntityType entityType, String command) throws CommandException {
 		final Route route = plugin.transportSystem.getRoute(routeName);
 		if (route == null)
 			throw new CommandException("Route '"+routeName+"' not found.");
+
+		route.checkPermission(player, command);
 
 		final boolean oldAllowFlight = player.getAllowFlight();
 		player.setAllowFlight(true);

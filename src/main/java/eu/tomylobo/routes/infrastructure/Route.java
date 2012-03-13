@@ -27,9 +27,11 @@ import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
 import eu.tomylobo.abstraction.World;
+import eu.tomylobo.abstraction.entity.Player;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.math.Vector;
 import eu.tomylobo.routes.Routes;
+import eu.tomylobo.routes.commands.system.PermissionDeniedException;
 import eu.tomylobo.routes.infrastructure.editor.VisualizedRoute;
 import eu.tomylobo.routes.infrastructure.interpolation.Interpolation;
 import eu.tomylobo.routes.infrastructure.interpolation.KochanekBartelsInterpolation;
@@ -200,6 +202,15 @@ public final class Route {
 
 	public int getSegment(double position) {
 		return interpolation.getSegment(position);
+	}
+
+	public void checkPermission(Player player, String command) {
+		if (!hasPermission(player, command))
+			throw new PermissionDeniedException();
+	}
+
+	public boolean hasPermission(Player player, String command) {
+		return player.hasPermission("routes."+command+"."+name);
 	}
 
 	public String getName() {

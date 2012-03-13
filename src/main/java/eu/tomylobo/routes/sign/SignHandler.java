@@ -139,7 +139,7 @@ public class SignHandler {
 			final String routeName = trackedSign.getEntry(index);
 
 			try {
-				plugin.travelAgency.addTravellerWithMount(routeName, player, MobType.ENDER_DRAGON);
+				plugin.travelAgency.addTravellerWithMount(routeName, player, MobType.ENDER_DRAGON, "travel.sign");
 				player.sendMessage("Travelling on route '"+routeName+"'.");
 			}
 			catch (CommandException e) {
