@@ -68,8 +68,8 @@ public class RoutesCommands extends CommandContainer {
 		final Player player = context.getPlayer();
 		final String routeName = context.getString(0);
 
-		final Route route = new Route();
-		plugin.transportSystem.addRoute(routeName, route);
+		final Route route = new Route(routeName);
+		plugin.transportSystem.addRoute(route);
 
 		plugin.routeEditor.edit(player, route);
 

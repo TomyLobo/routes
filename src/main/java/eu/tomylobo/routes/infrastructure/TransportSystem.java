@@ -47,15 +47,15 @@ public class TransportSystem {
 		return routes.get(routeName);
 	}
 
-	public void addRoute(String routeName, Route route) {
-		routes.put(routeName, route);
+	public void addRoute(Route route) {
+		routes.put(route.getName(), route);
 		save();
 	}
 
 	public void save() {
 		Multimap<String, Multimap<String, String>> sections = LinkedListMultimap.create();
 		for (Entry<String, Route> entry : routes.entrySet()) {
-			entry.getValue().save(sections, entry.getKey());
+			entry.getValue().save(sections);
 		}
 
 		Ini.save(plugin.getConfigFileName("routes.txt"), sections);
@@ -74,11 +74,11 @@ public class TransportSystem {
 				continue;
 
 			final String routeName = sectionName.substring(6);
-			final Route route = new Route();
+			final Route route = new Route(routeName);
 
-			route.load(sections, routeName);
+			route.load(sections);
 
-			routes.put(routeName, route);
+			addRoute(route);
 		}
 	}
 }

@@ -44,6 +44,7 @@ import eu.tomylobo.routes.util.ScheduledTask;
  *
  */
 public final class Route {
+	private final String name;
 	private World world;
 
 	private final List<Node> nodes = new ArrayList<Node>();
@@ -60,6 +61,11 @@ public final class Route {
 	};
 
 	private VisualizedRoute visualizedRoute;
+
+	public Route(String name) {
+		super();
+		this.name = name;
+	}
 
 	public List<Node> getNodes() {
 		return nodes;
@@ -133,8 +139,8 @@ public final class Route {
 		task.scheduleSyncDelayed(ticks);
 	}
 
-	public void save(Multimap<String, Multimap<String, String>> sections, String routeName) {
-		final String routeSectionName = "route "+routeName;
+	public void save(Multimap<String, Multimap<String, String>> sections) {
+		final String routeSectionName = "route "+name;
 		final Multimap<String, String> routeSection = LinkedListMultimap.create();
 
 		Ini.saveWorld(routeSection, "%s", world);
@@ -145,13 +151,13 @@ public final class Route {
 		for (int i = 0; i < nodes.size(); ++i) {
 			final Node node = nodes.get(i);
 
-			final String nodeName = routeName + "-" + i;
+			final String nodeName = name + "-" + i;
 			node.save(sections, nodeName);
 		}
 	}
 
-	public void load(Multimap<String, Multimap<String, String>> sections, String routeName) {
-		final String routeSectionName = "route "+routeName;
+	public void load(Multimap<String, Multimap<String, String>> sections) {
+		final String routeSectionName = "route "+name;
 		final Multimap<String, String> routeSection = Ini.getOnlyValue(sections.get(routeSectionName));
 
 		world = Ini.loadWorld(routeSection, "%s");
@@ -160,7 +166,7 @@ public final class Route {
 		nodes.clear();
 		((ArrayList<Node>) nodes).ensureCapacity(nNodes);
 		for (int i = 0; i < nNodes; ++i) {
-			final String nodeName = routeName + "-" + i;
+			final String nodeName = name + "-" + i;
 
 			nodes.add(new Node(sections, nodeName));
 		}
@@ -194,5 +200,9 @@ public final class Route {
 
 	public int getSegment(double position) {
 		return interpolation.getSegment(position);
+	}
+
+	public String getName() {
+		return name;
 	}
 }

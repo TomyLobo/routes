@@ -47,7 +47,7 @@ public class TestCommands extends CommandContainer {
 
 	@Command(permissions = "routes.test")
 	public void routes_test1(Context context) {
-		Route route = new Route();
+		Route route = new Route("test");
 
 		final Player player = context.getPlayer();
 		final Location location = player.getLocation();
@@ -69,7 +69,7 @@ public class TestCommands extends CommandContainer {
 				location
 		);
 
-		plugin.transportSystem.addRoute("test", route);
+		plugin.transportSystem.addRoute(route);
 		context.sendMessage("Created a test route.");
 	}
 
