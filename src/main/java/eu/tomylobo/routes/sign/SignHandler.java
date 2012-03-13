@@ -23,17 +23,25 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.spout.api.event.player.PlayerInteractEvent;
+import org.spout.api.geo.cuboid.Block;
+import org.spout.api.geo.discrete.Point;
+
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 
 import eu.tomylobo.abstraction.Environment;
 import eu.tomylobo.abstraction.block.BlockState;
 import eu.tomylobo.abstraction.block.Sign;
+import eu.tomylobo.abstraction.bukkit.BukkitEnvironment;
 import eu.tomylobo.abstraction.entity.MobType;
 import eu.tomylobo.abstraction.entity.Player;
 import eu.tomylobo.abstraction.event.Event;
 import eu.tomylobo.abstraction.event.EventHandler;
 import eu.tomylobo.abstraction.event.EventPriority;
+import eu.tomylobo.abstraction.event.Platform;
+import eu.tomylobo.abstraction.spout.SpoutEnvironment;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.routes.Routes;
 import eu.tomylobo.routes.commands.system.CommandException;
@@ -50,6 +58,9 @@ public class SignHandler {
 		this.plugin = plugin;
 
 		Environment.dispatcher().registerEvents(this, plugin);
+
+		bukkitTest = new BukkitTest();
+		spoutTest = new SpoutTest();
 	}
 
 	private SignSession getOrCreateSession(Player player) {
@@ -164,4 +175,33 @@ public class SignHandler {
 			trackedSigns.put(trackedSign.getLocation(), trackedSign);
 		}
 	}
+
+	@Platform(BukkitEnvironment.class)
+	public class BukkitTest {
+		{
+			Environment.dispatcher().registerEvents(this, plugin);
+		}
+
+		@EventHandler
+		public void onBukkitEvent(PlayerInteractEntityEvent event) {
+			event.getPlayer().sendMessage("Stop messing with that "+event.getRightClicked().getType().getName()+"!");
+		}
+	}
+
+	@Platform(SpoutEnvironment.class)
+	public class SpoutTest {
+		{
+			Environment.dispatcher().registerEvents(this, plugin);
+		}
+
+		@EventHandler
+		public void onSpoutEvent(PlayerInteractEvent event) {
+			final Point point = event.getInteractedPoint();
+			Block block = point.getWorld().getBlock(point);
+			event.getPlayer().sendMessage("Stop messing with that "+block.getBlockMaterial()+"!");
+		}
+	}
+
+	final BukkitTest bukkitTest;
+	final SpoutTest spoutTest;
 }
