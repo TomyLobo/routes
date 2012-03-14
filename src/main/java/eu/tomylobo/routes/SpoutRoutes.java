@@ -19,7 +19,7 @@
 
 package eu.tomylobo.routes;
 
-import eu.tomylobo.abstraction.spout.SpoutPlugin;
+import eu.tomylobo.abstraction.platform.spout.SpoutPlugin;
 
 public class SpoutRoutes extends SpoutPlugin {
 	public SpoutRoutes() {

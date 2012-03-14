@@ -19,7 +19,7 @@
 
 package eu.tomylobo.routes;
 
-import eu.tomylobo.abstraction.bukkit.BukkitPlugin;
+import eu.tomylobo.abstraction.platform.bukkit.BukkitPlugin;
 
 public class BukkitRoutes extends BukkitPlugin {
 	public BukkitRoutes() {

@@ -26,7 +26,7 @@ import java.util.Set;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-import eu.tomylobo.abstraction.bukkit.BukkitCommandSender;
+import eu.tomylobo.abstraction.platform.bukkit.BukkitCommandSender;
 
 public class PermissionUtilsTest {
 	public static class TestCommandSender extends BukkitCommandSender {
