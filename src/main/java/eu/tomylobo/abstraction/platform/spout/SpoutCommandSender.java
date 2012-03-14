@@ -20,7 +20,7 @@
 package eu.tomylobo.abstraction.platform.spout;
 
 import eu.tomylobo.abstraction.CommandSender;
-import eu.tomylobo.abstraction.PermissionUtils;
+import eu.tomylobo.abstraction.platform.PermissionUtils;
 
 public class SpoutCommandSender implements CommandSender {
 	final org.spout.api.command.CommandSource backend;

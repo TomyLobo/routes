@@ -17,7 +17,9 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.tomylobo.abstraction;
+package eu.tomylobo.abstraction.platform;
+
+import eu.tomylobo.abstraction.CommandSender;
 
 public class PermissionUtils {
 	public static boolean hasPermission(CommandSender sender, String permission) {

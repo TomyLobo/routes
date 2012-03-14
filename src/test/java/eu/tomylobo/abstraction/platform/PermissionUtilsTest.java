@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-package eu.tomylobo.abstraction;
+package eu.tomylobo.abstraction.platform;
 
 import java.util.Arrays;
 import java.util.HashSet;

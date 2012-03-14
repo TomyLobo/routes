@@ -20,7 +20,7 @@
 package eu.tomylobo.abstraction.platform.bukkit;
 
 import eu.tomylobo.abstraction.CommandSender;
-import eu.tomylobo.abstraction.PermissionUtils;
+import eu.tomylobo.abstraction.platform.PermissionUtils;
 
 public class BukkitCommandSender implements CommandSender {
 	final org.bukkit.command.CommandSender backend;
