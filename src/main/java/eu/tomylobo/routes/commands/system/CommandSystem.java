@@ -48,10 +48,26 @@ public class CommandSystem {
 					final Command commandAnnotation = method.getAnnotation(Command.class);
 					final String[] permissions = commandAnnotation.permissions();
 
-					commands.put(method.getName(), new Invoker(this, method, instance, permissions));
+					final Invoker invoker = new Invoker(this, method, instance, permissions);
+
+					if (commandAnnotation.names().length > 0) {
+						registerInvoker(invoker, commandAnnotation.names());
+					}
+					else {
+						registerInvoker(invoker, method.getName());
+					}
 				}
 				else if (method.isAnnotationPresent(NestedCommand.class)) {
-					commands.put(method.getName(), new NestedInvoker(this, method, instance));
+					final NestedCommand nestedCommandAnnotation = method.getAnnotation(NestedCommand.class);
+
+					final Invoker invoker = new NestedInvoker(this, method, instance);
+
+					if (nestedCommandAnnotation.names().length > 0) {
+						registerInvoker(invoker, nestedCommandAnnotation.names());
+					}
+					else {
+						registerInvoker(invoker, method.getName());
+					}
 				}
 			}
 		}
@@ -68,11 +84,24 @@ public class CommandSystem {
 				final Command commandAnnotation = method.getAnnotation(Command.class);
 				final String[] permissions = commandAnnotation.permissions();
 
-				commands.put(method.getName(), new SenderMappedInvoker(this, method, map, permissions));
+				final Invoker invoker = new SenderMappedInvoker(this, method, map, permissions);
+
+				if (commandAnnotation.names().length > 0) {
+					registerInvoker(invoker, commandAnnotation.names());
+				}
+				else {
+					registerInvoker(invoker, method.getName());
+				}
 			}
 			else if (method.isAnnotationPresent(NestedCommand.class)) {
 				throw new RuntimeException("Cannot have @NestedCommand on "+method+", because it was registered with registerPlayerMap.");
 			}
+		}
+	}
+
+	private void registerInvoker(Invoker invoker, String... names) {
+		for (String name : names) {
+			commands.put(name, invoker);
 		}
 	}
 

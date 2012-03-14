@@ -38,8 +38,17 @@ public @interface Command {
 	public static final String DISABLED = "\u1f4a9";
 
 	/**
-	 * One of these permissions has to be given for the command to work.<br />
+	 * One of these permissions is required for the command to work.<br />
 	 * Passing {@link #DISABLED} or omitting this field means that no permission check is done.
 	 */
 	String[] permissions() default DISABLED;
+
+	/**
+	 * The command can be run using either of these names.<br />
+	 * Spaces in the command name must be represented as underscores.<br />
+	 * <br />
+	 * Omitting this field instructs the command system to use the method name
+	 * as the command name.
+	 */
+	String[] names() default {};
 }

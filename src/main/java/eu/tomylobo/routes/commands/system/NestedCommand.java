@@ -36,4 +36,12 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface NestedCommand {
+	/**
+	 * The command can be run using either of these names.<br />
+	 * Spaces in the command name must be represented as underscores.<br />
+	 * <br />
+	 * Omitting this field instructs the command system to use the method name
+	 * as the command name.
+	 */
+	String[] names() default {};
 }
