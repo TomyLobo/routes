@@ -170,7 +170,7 @@ public final class Route {
 		for (int i = 0; i < nNodes; ++i) {
 			final String nodeName = name + "-" + i;
 
-			nodes.add(new Node(sections, nodeName));
+			addNodes(new Node(sections, nodeName));
 		}
 		nodesDirty = true;
 	}
