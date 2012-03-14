@@ -19,13 +19,21 @@
 
 package eu.tomylobo.routes.infrastructure.editor;
 
+import java.util.List;
+
 import eu.tomylobo.abstraction.entity.Player;
 import eu.tomylobo.abstraction.event.PlayerClickEvent;
+import eu.tomylobo.math.Location;
+import eu.tomylobo.math.Vector;
 import eu.tomylobo.routes.Routes;
+import eu.tomylobo.routes.infrastructure.Node;
 import eu.tomylobo.routes.infrastructure.Route;
 import eu.tomylobo.routes.util.ScheduledTask;
 
 public class RouteEditSession {
+	private static final double NODE_RADIUS = 1.2;
+	private static final double NODE_RADIUS_SQ = NODE_RADIUS * NODE_RADIUS;
+
 	private final Player player;
 	private final Route route;
 	private final VisualizedRoute visualizedRoute;
@@ -64,6 +72,42 @@ public class RouteEditSession {
 			route.addNodes(++segmentIndex, player.getLocation());
 			visualizedRoute.refresh(segmentIndex - 2, 3, 4);
 		}
+		else {
+			final Location location = event.getPlayer().getEyeLocation();
+			final Vector playerPosition = location.getPosition();
+			final Vector playerDirection = location.getDirection();
+
+			double minPlayerDistanceSq = Routes.getInstance().config.editorSelectRange;
+			minPlayerDistanceSq *= minPlayerDistanceSq;
+			int closestNodeIndex = -1;
+
+			final List<Node> nodes = route.getNodes();
+			for (int i = 0; i < nodes.size(); ++i) {
+				Node node = nodes.get(i);
+				final Vector position = node.getPosition();
+				final Vector diff = playerPosition.subtract(position);
+
+				final double playerDistanceSq = diff.lengthSq();
+				if (playerDistanceSq > minPlayerDistanceSq)
+					continue; // Exclude points that are too far away or further away than the closest point so far
+
+				final double dot = diff.dot(playerDirection);
+				if (dot > 0)
+					continue; // Exclude points behind us
+
+				final double tangentialDistanceSq = diff.distanceSq(playerDirection.multiply(dot));
+				if (tangentialDistanceSq > NODE_RADIUS_SQ)
+					continue; // Exclude points that the line of sight missed
+
+				minPlayerDistanceSq = playerDistanceSq;
+				closestNodeIndex = i;
+			}
+
+			if (closestNodeIndex == -1)
+				return;
+
+			selectSegment(closestNodeIndex);
+		}
 	}
 
 	public void close() {
@@ -76,6 +120,8 @@ public class RouteEditSession {
 			return;
 
 		segmentIndex = index;
+
+		// Run flash task twice to make the flashing portion update instantly
 		flashTask.run();
 		flashTask.run();
 	}

@@ -32,6 +32,9 @@ public class RoutesConfig extends Config {
 	@ConfigItem("editor.flashTicks")
 	public long editorFlashTicks = 5;
 
+	@ConfigItem("editor.selectRange")
+	public double editorSelectRange = 32;
+
 	// [signs]
 
 	@ConfigItem("signs.routePrefix")
