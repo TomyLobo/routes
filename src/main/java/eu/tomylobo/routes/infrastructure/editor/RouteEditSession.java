@@ -26,6 +26,8 @@ import eu.tomylobo.abstraction.event.PlayerClickEvent;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.math.Vector;
 import eu.tomylobo.routes.Routes;
+import eu.tomylobo.routes.commands.system.Command;
+import eu.tomylobo.routes.commands.system.Context;
 import eu.tomylobo.routes.infrastructure.Node;
 import eu.tomylobo.routes.infrastructure.Route;
 import eu.tomylobo.routes.util.ScheduledTask;
@@ -124,5 +126,12 @@ public class RouteEditSession {
 		// Run flash task twice to make the flashing portion update instantly
 		flashTask.run();
 		flashTask.run();
+	}
+
+	@Command(permissions = "routes.edit")
+	public void routes_close(Context context) {
+		Routes.getInstance().routeEditor.close(player);
+
+		context.sendMessage("Closed editor session.");
 	}
 }

@@ -40,6 +40,7 @@ public class RouteEditor {
 		this.plugin = plugin;
 
 		Environment.dispatcher().registerEvents(this, plugin);
+		plugin.getCommandSystem().registerPlayerMap(RouteEditSession.class, editedRoutes);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
