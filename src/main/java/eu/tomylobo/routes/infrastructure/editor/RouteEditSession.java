@@ -23,6 +23,7 @@ import java.util.List;
 
 import eu.tomylobo.abstraction.entity.Player;
 import eu.tomylobo.abstraction.event.PlayerClickEvent;
+import eu.tomylobo.abstraction.plugin.MetaPlugin;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.math.Vector;
 import eu.tomylobo.routes.Routes;
@@ -33,6 +34,31 @@ import eu.tomylobo.routes.infrastructure.Route;
 import eu.tomylobo.routes.util.ScheduledTask;
 
 public class RouteEditSession {
+	private final class FlashTask extends ScheduledTask {
+		boolean on = true;
+		int lastSegmentIndex;
+
+		private FlashTask(MetaPlugin plugin) {
+			super(plugin);
+		}
+
+		@Override
+		public void run() {
+			on = !on;
+
+			if (!on) {
+				// If we're turning it off, save the segment index so it'll be turned back on.
+				lastSegmentIndex = segmentIndex;
+			}
+
+			visualizedRoute.showSegment(lastSegmentIndex, on);
+		}
+
+		public void reset() {
+			on = true;
+		}
+	}
+
 	private static final double NODE_RADIUS = 1.2;
 	private static final double NODE_RADIUS_SQ = NODE_RADIUS * NODE_RADIUS;
 
@@ -40,7 +66,7 @@ public class RouteEditSession {
 	private final Route route;
 	private final VisualizedRoute visualizedRoute;
 	private int segmentIndex;
-	private ScheduledTask flashTask;
+	private FlashTask flashTask;
 
 	public RouteEditSession(Player player, Route route) {
 		this.player = player;
@@ -49,22 +75,7 @@ public class RouteEditSession {
 		final Routes plugin = Routes.getInstance();
 		this.visualizedRoute = new VisualizedRoute(route, plugin.config.editorDotsPerMeter, player);
 
-		flashTask = new ScheduledTask(plugin) {
-			boolean on = true;
-			int lastSegmentIndex;
-
-			@Override
-			public void run() {
-				on = !on;
-
-				if (!on) {
-					// If we're turning it off, save the segment index so it'll be turned back on.
-					lastSegmentIndex = segmentIndex;
-				}
-
-				visualizedRoute.showSegment(lastSegmentIndex, on);
-			}
-		};
+		flashTask = new FlashTask(plugin);
 
 		flashTask.scheduleSyncRepeating(0, plugin.config.editorFlashTicks);
 	}
@@ -128,10 +139,36 @@ public class RouteEditSession {
 		flashTask.run();
 	}
 
+	public void refreshNode(int index) {
+		visualizedRoute.refresh(index - 2, 4, 4); // TODO: maybe 1/3 is enough?
+		flashTask.reset();
+	}
+
+
 	@Command(permissions = "routes.edit")
 	public void routes_close(Context context) {
 		Routes.getInstance().routeEditor.close(player);
 
 		context.sendMessage("Closed editor session.");
+	}
+
+	@Command(names = { "routes_nodeproperties", "routes_np" }, permissions = "routes.edit")
+	public void routes_nodeproperties(Context context) {
+		// Tension     T = +1-->Tight             T = -1--> Round
+		// Bias        B = +1-->Post Shoot        B = -1--> Pre shoot
+		// Continuity  C = +1-->Inverted corners  C = -1--> Box corners
+
+		double tension = context.getDouble(0);
+		double bias = context.getDouble(1);
+		double continuity = context.getDouble(2);
+
+		Node node = route.getNodes().get(segmentIndex);
+		node.setTension(tension);
+		node.setBias(bias);
+		node.setContinuity(continuity);
+
+		refreshNode(segmentIndex);
+
+		context.sendFormattedMessage("Set node #%d properties: tension=%.2f", segmentIndex, tension, bias, continuity);
 	}
 }

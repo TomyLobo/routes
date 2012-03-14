@@ -1,5 +1,6 @@
-- add a way to control the attributes of waypoints
-	- selector tool, flashing waypoints
+- add visual a way to control the attributes of waypoints
+	- spout
+	- mapping to mouse movement
 - restrict distance to the start of the route for /travel
 	- make sure signs are not affected
 - add ways to post-process routes for certain entity types
