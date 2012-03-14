@@ -57,6 +57,9 @@ public class Vector {
 	public double length() {
 		return Math.sqrt(x * x + y * y + z * z);
 	}
+	public double lengthSq() {
+		return x * x + y * y + z * z;
+	}
 
 	public Vector subtract(Vector other) {
 		return new Vector(x - other.x, y - other.y, z - other.z);
@@ -64,6 +67,10 @@ public class Vector {
 
 	public double distance(Vector other) {
 		return subtract(other).length();
+	}
+
+	public double distanceSq(Vector other) {
+		return subtract(other).lengthSq();
 	}
 
 	public Vector normalized() {
