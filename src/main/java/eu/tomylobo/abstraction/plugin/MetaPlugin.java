@@ -20,7 +20,7 @@
 package eu.tomylobo.abstraction.plugin;
 
 import eu.tomylobo.abstraction.CommandSender;
-
+import eu.tomylobo.routes.commands.system.CommandSystem;
 
 public interface MetaPlugin {
 	FrameworkPlugin getFrameworkPlugin();
@@ -29,4 +29,5 @@ public interface MetaPlugin {
 	void onDisable();
 	boolean onCommand(CommandSender sender, String commandName, String label, String[] args);
 	void setFrameworkPlugin(FrameworkPlugin plugin);
+	CommandSystem getCommandSystem();
 }

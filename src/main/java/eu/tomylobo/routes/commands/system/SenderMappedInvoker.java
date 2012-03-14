@@ -21,28 +21,24 @@ package eu.tomylobo.routes.commands.system;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 import eu.tomylobo.abstraction.CommandSender;
 
-/**
- * Invokes nested commands instead of invoking the instance directly.
- *
- * @author TomyLobo
- *
- */
-public class NestedInvoker extends Invoker {
-	public NestedInvoker(CommandSystem commandSystem, Method method, Object instance) {
-		super(commandSystem, method, instance, null);
+public class SenderMappedInvoker extends Invoker {
+	private final Map<? extends CommandSender, ?> map;
+
+	public <T> SenderMappedInvoker(CommandSystem commandSystem, Method method, Map<? extends CommandSender, T> map, String[] permissions) {
+		super(commandSystem, method, null, permissions);
+		this.map = map;
 	}
 
 	@Override
 	public void invoke(Context context) throws CommandException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-		if (!commandSystem.dispatch(context.getNested()))
-			super.invoke(context);
-	}
+		Object instance = map.get(context.getSender());
+		if (instance == null)
+			throw new CommandException("You cannot currently run this command.");
 
-	@Override
-	protected boolean hasPermission(CommandSender sender) {
-		return true;
+		invokeInternal(context, instance);
 	}
 }

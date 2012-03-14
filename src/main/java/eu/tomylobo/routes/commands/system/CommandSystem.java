@@ -25,9 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import eu.tomylobo.abstraction.CommandSender;
-import eu.tomylobo.routes.commands.RoutesCommands;
-import eu.tomylobo.routes.commands.TestCommands;
-import eu.tomylobo.routes.commands.TravelCommands;
 
 /**
  * The framework for command invocation.<br />
@@ -39,32 +36,42 @@ import eu.tomylobo.routes.commands.TravelCommands;
 public class CommandSystem {
 	private final Map<String, Invoker> commands = new HashMap<String, Invoker>();
 
-	public CommandSystem() {
-		@SuppressWarnings("unchecked")
-		Class<? extends CommandContainer>[] classes = (Class<? extends CommandContainer>[]) new Class[] {
-			RoutesCommands.class,
-			TravelCommands.class,
-			TestCommands.class
-		};
+	/**
+	 * Registers a command class instance for all players.
+	 *
+	 * @param instances
+	 */
+	public void register(Object... instances) {
+		for (Object instance : instances) {
+			for (Method method : instance.getClass().getMethods()) {
+				if (method.isAnnotationPresent(Command.class)) {
+					final Command commandAnnotation = method.getAnnotation(Command.class);
+					final String[] permissions = commandAnnotation.permissions();
 
-		for (Class<? extends CommandContainer> clazz : classes) {
-			try {
-				CommandContainer instance = clazz.newInstance();
-				for (Method method : clazz.getMethods()) {
-					if (method.isAnnotationPresent(Command.class)) {
-						final Command commandAnnotation = method.getAnnotation(Command.class);
-						final String[] permissions = commandAnnotation.permissions();
-
-						commands.put(method.getName(), new Invoker(method, instance, permissions));
-					}
-					else if (method.isAnnotationPresent(NestedCommand.class)) {
-						commands.put(method.getName(), new NestedInvoker(method, instance));
-					}
+					commands.put(method.getName(), new Invoker(this, method, instance, permissions));
+				}
+				else if (method.isAnnotationPresent(NestedCommand.class)) {
+					commands.put(method.getName(), new NestedInvoker(this, method, instance));
 				}
 			}
-			catch (Exception e) {
-				e.printStackTrace();
-				continue;
+		}
+	}
+
+	/**
+	 * Registers a command class, where each player has their own instance.
+	 *
+	 * @param instances
+	 */
+	public <T> void registerPlayerMap(Class<T> cls, Map<? extends CommandSender, T> map) {
+		for (Method method : cls.getMethods()) {
+			if (method.isAnnotationPresent(Command.class)) {
+				final Command commandAnnotation = method.getAnnotation(Command.class);
+				final String[] permissions = commandAnnotation.permissions();
+
+				commands.put(method.getName(), new SenderMappedInvoker(this, method, map, permissions));
+			}
+			else if (method.isAnnotationPresent(NestedCommand.class)) {
+				throw new RuntimeException("Cannot have @NestedCommand on "+method+", because it was registered with registerPlayerMap.");
 			}
 		}
 	}

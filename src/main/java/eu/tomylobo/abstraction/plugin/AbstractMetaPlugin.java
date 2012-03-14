@@ -3,9 +3,11 @@ package eu.tomylobo.abstraction.plugin;
 import java.io.File;
 
 import eu.tomylobo.abstraction.CommandSender;
+import eu.tomylobo.routes.commands.system.CommandSystem;
 
 public abstract class AbstractMetaPlugin implements MetaPlugin {
-	protected FrameworkPlugin frameworkPlugin;
+	private FrameworkPlugin frameworkPlugin;
+	private final CommandSystem commandSystem = new CommandSystem();
 
 	@Override
 	public void setFrameworkPlugin(FrameworkPlugin frameworkPlugin) {
@@ -28,10 +30,14 @@ public abstract class AbstractMetaPlugin implements MetaPlugin {
 
 	@Override
 	public boolean onCommand(CommandSender sender, String commandName, String label, String[] args) {
-		return false;
+		return getCommandSystem().dispatch(sender, commandName, label, args);
 	}
 
 	public File getDataFolder() {
 		return frameworkPlugin.getDataFolder();
+	}
+
+	public CommandSystem getCommandSystem() {
+		return commandSystem;
 	}
 }

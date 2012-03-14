@@ -31,17 +31,24 @@ import eu.tomylobo.abstraction.CommandSender;
  *
  */
 public class Invoker {
-	protected Method method;
-	protected CommandContainer instance;
-	protected String[] permissions;
+	protected final CommandSystem commandSystem;
+	protected final Method method;
+	protected final Object instance;
+	protected final String[] permissions;
 
-	public Invoker(Method method, CommandContainer instance, String[] permissions) {
+	public Invoker(CommandSystem commandSystem, Method method, Object instance, String[] permissions) {
+		this.commandSystem = commandSystem;
 		this.method = method;
 		this.instance = instance;
 		this.permissions = permissions;
 	}
 
 	public void invoke(Context context) throws CommandException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+		invokeInternal(context, instance);
+	}
+
+	protected void invokeInternal(Context context, Object instance)
+			throws IllegalAccessException, InvocationTargetException {
 		if (!hasPermission(context.getSender()))
 			throw new PermissionDeniedException();
 		try {
