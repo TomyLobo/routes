@@ -38,7 +38,7 @@ public class VisualizedRoute {
 
 	private final List<FakeEntity> waypointMarkers = new ArrayList<FakeEntity>();
 	private final List<List<FakeEntity>> lineMarkers = new ArrayList<List<FakeEntity>>();
-	private Player player;
+	private final Player player;
 
 	/**
 	 * Visualizes a route for everyone.
@@ -151,7 +151,7 @@ public class VisualizedRoute {
 			return;
 
 		if (show) {
-			waypointMarkers.get(index).send();
+			sendFakeEntity(waypointMarkers.get(index));
 			for (FakeEntity lineMarker : lineMarkers.get(index)) {
 				sendFakeEntity(lineMarker);
 			}
