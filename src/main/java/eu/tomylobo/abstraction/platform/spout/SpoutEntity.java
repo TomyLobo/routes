@@ -20,7 +20,6 @@
 package eu.tomylobo.abstraction.platform.spout;
 
 import org.spout.api.entity.Position;
-import org.spout.api.math.Vector3m;
 import org.spout.vanilla.entity.VanillaEntity;
 
 import eu.tomylobo.abstraction.entity.Entity;
@@ -71,8 +70,7 @@ public class SpoutEntity implements Entity {
 	public void setVelocity(Vector velocity) {
 		// TODO: spout
 		final VanillaEntity vanillaEntity = (VanillaEntity) backend.getController();
-		final Vector3m vec3m = (Vector3m) vanillaEntity.getVelocity();
-		vec3m.set(unwrap(velocity));
+		vanillaEntity.setVelocity(unwrap(velocity));
 	}
 
 	@Override
