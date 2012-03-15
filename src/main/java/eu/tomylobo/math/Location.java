@@ -109,6 +109,11 @@ public class Location {
 		return position.hashCode() + 19 * world.hashCode();
 	}
 
+	@Override
+	public String toString() {
+		return String.format("(%s%s %.1f/%.1f)", world.getName(), position, yaw, pitch);
+	}
+
 
 	public static Location fromLookAt(World world, Vector start, Vector lookAt) {
 		final Vector diff = lookAt.subtract(start);

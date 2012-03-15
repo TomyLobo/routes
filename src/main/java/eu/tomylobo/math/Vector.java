@@ -108,7 +108,12 @@ public class Vector {
 		return doubleHashCode(x) + 19 * (doubleHashCode(y) + 19 * (doubleHashCode(z)));
 	}
 
-	private int doubleHashCode(double value) {
+	@Override
+	public String toString() {
+		return String.format("(%.2f, %.2f, %.2f)", x, y, z);
+	}
+
+	private static int doubleHashCode(double value) {
 		long bits = Double.doubleToLongBits(value);
 		return (int)(bits ^ (bits >>> 32));
 	}
