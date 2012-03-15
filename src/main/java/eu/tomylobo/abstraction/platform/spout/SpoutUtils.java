@@ -55,6 +55,9 @@ public class SpoutUtils {
 	}
 
 	public static SpoutWorld wrap(org.spout.api.geo.World backend) {
+		if (backend == null)
+			return null;
+
 		SpoutWorld spoutWorld = wrappedWorlds.get(backend);
 		if (spoutWorld == null)
 			wrappedWorlds.put(backend, spoutWorld = new SpoutWorld(backend));
@@ -63,6 +66,9 @@ public class SpoutUtils {
 	}
 
 	public static org.spout.api.geo.World unwrap(World world) {
+		if (world == null)
+			return null;
+
 		return ((SpoutWorld) world).backend;
 	}
 
@@ -106,6 +112,9 @@ public class SpoutUtils {
 
 
 	public static SpoutPlayer wrap(org.spout.api.player.Player backend) {
+		if (backend == null)
+			return null;
+
 		SpoutPlayer spoutPlayer = wrappedPlayers.get(backend);
 		if (spoutPlayer == null) {
 			wrappedPlayers.put(backend, spoutPlayer = new SpoutPlayer(backend));
@@ -115,11 +124,17 @@ public class SpoutUtils {
 	}
 
 	public static org.spout.api.player.Player unwrap(Player player) {
+		if (player == null)
+			return null;
+
 		return ((SpoutPlayer) player).backend;
 	}
 
 
 	public static SpoutEntity wrap(org.spout.api.entity.Entity backend) {
+		if (backend == null)
+			return null;
+
 		if (backend instanceof org.spout.api.player.Player)
 			return wrap((org.spout.api.player.Player) backend);
 
@@ -127,11 +142,17 @@ public class SpoutUtils {
 	}
 
 	public static org.spout.api.entity.Entity unwrap(Entity entity) {
+		if (entity == null)
+			return null;
+
 		return ((SpoutEntity) entity).backend;
 	}
 
 
 	public static CommandSender wrap(org.spout.api.command.CommandSource backend) {
+		if (backend == null)
+			return null;
+
 		if (backend instanceof org.spout.api.player.Player)
 			return wrap((org.spout.api.player.Player) backend);
 
@@ -139,6 +160,9 @@ public class SpoutUtils {
 	}
 
 	public static org.spout.api.command.CommandSource unwrap(CommandSender sender) {
+		if (sender == null)
+			return null;
+
 		if (sender instanceof Player)
 			return unwrap((Player) sender);
 		

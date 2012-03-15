@@ -55,6 +55,9 @@ public class BukkitUtils {
 	}
 
 	public static BukkitWorld wrap(org.bukkit.World backend) {
+		if (backend == null)
+			return null;
+
 		BukkitWorld bukkitWorld = wrappedWorlds.get(backend);
 		if (bukkitWorld == null)
 			wrappedWorlds.put(backend, bukkitWorld = new BukkitWorld(backend));
@@ -63,6 +66,9 @@ public class BukkitUtils {
 	}
 
 	public static org.bukkit.World unwrap(World world) {
+		if (world == null)
+			return null;
+
 		return ((BukkitWorld) world).backend;
 	}
 
@@ -93,6 +99,9 @@ public class BukkitUtils {
 
 
 	public static BukkitPlayer wrap(org.bukkit.entity.Player backend) {
+		if (backend == null)
+			return null;
+
 		BukkitPlayer bukkitPlayer = wrappedPlayers.get(backend);
 		if (bukkitPlayer == null) {
 			wrappedPlayers.put(backend, bukkitPlayer = new BukkitPlayer(backend));
@@ -102,11 +111,17 @@ public class BukkitUtils {
 	}
 
 	public static org.bukkit.entity.Player unwrap(Player player) {
+		if (player == null)
+			return null;
+
 		return (org.bukkit.entity.Player) ((BukkitPlayer) player).backend;
 	}
 
 
 	public static BukkitEntity wrap(org.bukkit.entity.Entity backend) {
+		if (backend == null)
+			return null;
+
 		if (backend instanceof org.bukkit.entity.Player)
 			return wrap((org.bukkit.entity.Player) backend);
 
@@ -114,11 +129,17 @@ public class BukkitUtils {
 	}
 
 	public static org.bukkit.entity.Entity unwrap(Entity entity) {
+		if (entity == null)
+			return null;
+
 		return ((BukkitEntity) entity).backend;
 	}
 
 
 	public static CommandSender wrap(org.bukkit.command.CommandSender backend) {
+		if (backend == null)
+			return null;
+
 		if (backend instanceof org.bukkit.entity.Player)
 			return wrap((org.bukkit.entity.Player) backend);
 
@@ -126,6 +147,9 @@ public class BukkitUtils {
 	}
 
 	public static org.bukkit.command.CommandSender unwrap(CommandSender sender) {
+		if (sender == null)
+			return null;
+
 		if (sender instanceof Player)
 			return unwrap((Player) sender);
 
