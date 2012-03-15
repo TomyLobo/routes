@@ -34,6 +34,8 @@ public interface Entity {
 	Entity getPassenger();
 	boolean setPassenger(Entity passenger);
 
+	Entity getVehicle();
+
 	boolean isDead();
 	void remove();
 }

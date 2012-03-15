@@ -26,6 +26,7 @@ import org.spout.vanilla.entity.VanillaEntity;
 import eu.tomylobo.abstraction.entity.Entity;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.math.Vector;
+import static eu.tomylobo.abstraction.platform.spout.SpoutUtils.*;
 
 public class SpoutEntity implements Entity {
 	final org.spout.api.entity.Entity backend;
@@ -43,7 +44,7 @@ public class SpoutEntity implements Entity {
 	public void teleport(Location location, boolean withAngles, boolean notify) {
 		// TODO: spout
 		//if (withAngles) {
-			final Position position = SpoutUtils.unwrap(location);
+			final Position position = unwrap(location);
 			backend.setPosition(position.getPosition());
 			backend.setPitch(position.getPitch());
 			backend.setYaw(position.getYaw());
@@ -71,12 +72,12 @@ public class SpoutEntity implements Entity {
 		// TODO: spout
 		final VanillaEntity vanillaEntity = (VanillaEntity) backend.getController();
 		final Vector3m vec3m = (Vector3m) vanillaEntity.getVelocity();
-		vec3m.set(SpoutUtils.unwrap(velocity));
+		vec3m.set(unwrap(velocity));
 	}
 
 	@Override
 	public Location getLocation() {
-		return SpoutUtils.wrap(backend.getPosition());
+		return wrap(backend.getPosition());
 	}
 
 	@Override
@@ -92,13 +93,13 @@ public class SpoutEntity implements Entity {
 	@Override
 	public Entity getPassenger() {
 		// TODO: spout
-		return null;//SpoutUtils.wrap(backend.getController().getPassenger());
+		return null;//wrap(backend.getController().getPassenger());
 	}
 
 	@Override
 	public boolean setPassenger(Entity passenger) {
 		// TODO: spout
-		//SpoutUtils.unwrap(passenger).getController().attachToEntity(backend);
+		//unwrap(passenger).getController().attachToEntity(backend);
 		return true;
 	}
 
@@ -112,11 +113,17 @@ public class SpoutEntity implements Entity {
 		if (!(obj instanceof SpoutEntity))
 			return false;
 
-		return backend.equals(SpoutUtils.unwrap((SpoutEntity) obj));
+		return backend.equals(unwrap((SpoutEntity) obj));
 	}
 
 	@Override
 	public int hashCode() {
 		return backend.hashCode();
+	}
+
+	@Override
+	public Entity getVehicle() {
+		// TODO: spout
+		return null;
 	}
 }

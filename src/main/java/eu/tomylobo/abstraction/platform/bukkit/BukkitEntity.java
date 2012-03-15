@@ -19,6 +19,7 @@
 
 package eu.tomylobo.abstraction.platform.bukkit;
 
+import static eu.tomylobo.abstraction.platform.bukkit.BukkitUtils.*;
 import eu.tomylobo.abstraction.entity.Entity;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.math.Vector;
@@ -38,7 +39,7 @@ public class BukkitEntity implements Entity {
 	@Override
 	public void teleport(Location location, boolean withAngles, boolean notify) {
 		if (withAngles) {
-			backend.teleport(BukkitUtils.unwrap(location));
+			backend.teleport(unwrap(location));
 			// TODO: implement notify=false
 		}
 		else {
@@ -59,12 +60,12 @@ public class BukkitEntity implements Entity {
 
 	@Override
 	public void setVelocity(Vector velocity) {
-		backend.setVelocity(BukkitUtils.unwrap(velocity));
+		backend.setVelocity(unwrap(velocity));
 	}
 
 	@Override
 	public Location getLocation() {
-		return BukkitUtils.wrap(backend.getLocation());
+		return wrap(backend.getLocation());
 	}
 
 	@Override
@@ -79,12 +80,12 @@ public class BukkitEntity implements Entity {
 
 	@Override
 	public Entity getPassenger() {
-		return BukkitUtils.wrap(backend.getPassenger());
+		return wrap(backend.getPassenger());
 	}
 
 	@Override
 	public boolean setPassenger(Entity passenger) {
-		return backend.setPassenger(BukkitUtils.unwrap(passenger));
+		return backend.setPassenger(unwrap(passenger));
 	}
 
 	@Override
@@ -97,11 +98,16 @@ public class BukkitEntity implements Entity {
 		if (!(obj instanceof BukkitEntity))
 			return false;
 
-		return backend.equals(BukkitUtils.unwrap((BukkitEntity) obj));
+		return backend.equals(unwrap((BukkitEntity) obj));
 	}
 
 	@Override
 	public int hashCode() {
 		return backend.hashCode();
+	}
+
+	@Override
+	public Entity getVehicle() {
+		return wrap(backend.getVehicle());
 	}
 }

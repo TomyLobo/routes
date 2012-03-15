@@ -196,6 +196,11 @@ public abstract class FakeEntity implements Entity {
 
 		return true;
 	}
+
+	@Override
+	public Entity getVehicle() {
+		return null;
+	}
 /*
 	@Override
 	public boolean isEmpty() {
