@@ -19,8 +19,12 @@
 
 package eu.tomylobo.routes.infrastructure.editor;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 
 import eu.tomylobo.abstraction.Environment;
 import eu.tomylobo.abstraction.entity.Player;
@@ -33,6 +37,7 @@ import eu.tomylobo.routes.infrastructure.Route;
 
 public class RouteEditor {
 	private final Map<Player, RouteEditSession> routeEditSessions = new HashMap<Player, RouteEditSession>();
+	private final Multimap<Route, Player> editedRoutes = ArrayListMultimap.create();
 
 	private final Routes plugin;
 
@@ -78,7 +83,12 @@ public class RouteEditor {
 
 		final RouteEditSession newSession = new RouteEditSession(player, route);
 		routeEditSessions.put(player, newSession);
+		editedRoutes.put(route, player);
 		return newSession;
+	}
+
+	public Collection<Player> getPlayersEditing(Route route) {
+		return editedRoutes.get(route);
 	}
 
 	/**
@@ -91,6 +101,7 @@ public class RouteEditor {
 		final RouteEditSession oldSession = routeEditSessions.remove(player);
 		if (oldSession != null) {
 			oldSession.close();
+			editedRoutes.remove(oldSession.getRoute(), player);
 		}
 	}
 }
