@@ -80,7 +80,7 @@ public class RouteEditSession {
 		flashTask.scheduleSyncRepeating(0, plugin.config.editorFlashTicks);
 	}
 
-	public void interact(PlayerClickEvent event) {
+	void interact(PlayerClickEvent event) {
 		if (event.isRightClick()) {
 			route.addNodes(++segmentIndex, player.getLocation());
 			visualizedRoute.refresh(segmentIndex - 2, 3, 4);
