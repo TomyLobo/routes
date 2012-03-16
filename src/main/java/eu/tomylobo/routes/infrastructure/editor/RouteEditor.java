@@ -62,10 +62,7 @@ public class RouteEditor {
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onPlayerQuit(Event event) {
-		final RouteEditSession routeEditSession = routeEditSessions.remove(event.getPlayer());
-		if (routeEditSession != null) {
-			routeEditSession.close();
-		}
+		close(event.getPlayer());
 	}
 
 	/**
@@ -77,10 +74,7 @@ public class RouteEditor {
 	 * @return the new edit session
 	 */
 	public RouteEditSession edit(Player player, Route route) {
-		final RouteEditSession oldSession = routeEditSessions.remove(player);
-		if (oldSession != null) {
-			oldSession.close();
-		}
+		close(player);
 
 		final RouteEditSession newSession = new RouteEditSession(player, route);
 		routeEditSessions.put(player, newSession);
