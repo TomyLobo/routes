@@ -32,7 +32,7 @@ import eu.tomylobo.routes.Routes;
 import eu.tomylobo.routes.infrastructure.Route;
 
 public class RouteEditor {
-	private final Map<Player, RouteEditSession> editedRoutes = new HashMap<Player, RouteEditSession>();
+	private final Map<Player, RouteEditSession> routeEditSessions = new HashMap<Player, RouteEditSession>();
 
 	private final Routes plugin;
 
@@ -40,7 +40,7 @@ public class RouteEditor {
 		this.plugin = plugin;
 
 		Environment.dispatcher().registerEvents(this, plugin);
-		plugin.getCommandSystem().registerPlayerMap(RouteEditSession.class, editedRoutes);
+		plugin.getCommandSystem().registerPlayerMap(RouteEditSession.class, routeEditSessions);
 	}
 
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -52,7 +52,7 @@ public class RouteEditor {
 
 		final int inHand = player.getItemTypeInHand();
 		if (inHand == plugin.config.editorTool) {
-			final RouteEditSession routeEditSession = editedRoutes.get(player);
+			final RouteEditSession routeEditSession = routeEditSessions.get(player);
 			if (routeEditSession == null)
 				return;
 
@@ -62,7 +62,7 @@ public class RouteEditor {
 
 	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
 	public void onPlayerQuit(Event event) {
-		final RouteEditSession routeEditSession = editedRoutes.remove(event.getPlayer());
+		final RouteEditSession routeEditSession = routeEditSessions.remove(event.getPlayer());
 		if (routeEditSession != null) {
 			routeEditSession.close();
 		}
@@ -77,13 +77,13 @@ public class RouteEditor {
 	 * @return the new edit session
 	 */
 	public RouteEditSession edit(Player player, Route route) {
-		final RouteEditSession oldSession = editedRoutes.remove(player);
+		final RouteEditSession oldSession = routeEditSessions.remove(player);
 		if (oldSession != null) {
 			oldSession.close();
 		}
 
 		final RouteEditSession newSession = new RouteEditSession(player, route);
-		editedRoutes.put(player, newSession);
+		routeEditSessions.put(player, newSession);
 		return newSession;
 	}
 
@@ -94,7 +94,7 @@ public class RouteEditor {
 	 * @return
 	 */
 	public void close(Player player) {
-		final RouteEditSession oldSession = editedRoutes.remove(player);
+		final RouteEditSession oldSession = routeEditSessions.remove(player);
 		if (oldSession != null) {
 			oldSession.close();
 		}
