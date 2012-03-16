@@ -112,6 +112,14 @@ public class Context {
 		sender.sendMessage(message);
 	}
 
+	/**
+	 * Same as {@link #getSender()}.{@link CommandSender#sendMessage(String) sendMessage(message)}
+	 *
+	 * @param message The message to be sent.
+	 */
+	public void sendFormattedMessage(String format, Object... args) {
+		sender.sendMessage(String.format(format, args));
+	}
 
 	/**
 	 * Gets the specified argument as a string.
