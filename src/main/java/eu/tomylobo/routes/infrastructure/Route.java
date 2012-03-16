@@ -106,7 +106,7 @@ public final class Route {
 		for (Node node : nodes) {
 			node.setRoute(this);
 		}
-		nodesDirty = true;
+		setDirty();
 	}
 
 	public Location getLocation(double position) {
@@ -172,7 +172,7 @@ public final class Route {
 
 			addNodes(new Node(sections, nodeName));
 		}
-		nodesDirty = true;
+		setDirty();
 	}
 
 	public double length() {
@@ -215,5 +215,10 @@ public final class Route {
 
 	public String getName() {
 		return name;
+	}
+
+	public void removeNode(int index) {
+		nodes.remove(index);
+		setDirty();
 	}
 }
