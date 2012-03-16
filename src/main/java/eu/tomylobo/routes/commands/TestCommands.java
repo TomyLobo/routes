@@ -31,6 +31,7 @@ import eu.tomylobo.routes.fakeentity.FakeMob;
 import eu.tomylobo.routes.fakeentity.FakeVehicle;
 import eu.tomylobo.routes.infrastructure.Route;
 import eu.tomylobo.routes.util.Remover;
+import eu.tomylobo.routes.util.Statistics;
 
 /**
  * Contains all commands that are purely temporary and for testing only.
@@ -103,5 +104,23 @@ public class TestCommands extends CommandContainer {
 		plugin.travelAgency.addTraveller("test", entities[1], 8.0, new Remover(skeleton));
 		route.visualize(1.0, 600);
 		context.sendMessage("Testing route.");
+	}
+
+	Statistics stats = new Statistics();
+	@Command(permissions = "routes.test")
+	public void routes_stats(Context context) {
+		if (context.getString(0, "").equals("reset")) {
+			stats = new Statistics();
+			context.sendMessage("Reset statistics.");
+			return;
+		}
+
+		final Player player = context.getPlayer();
+		final Location location = player.getVehicle().getLocation();
+		context.sendMessage(location.toString());
+
+		final double y = location.getPosition().getY();
+		stats.stat(y-Math.floor(y));
+		context.sendMessage(stats.format());
 	}
 }
