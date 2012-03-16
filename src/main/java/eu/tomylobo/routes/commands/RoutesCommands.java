@@ -79,17 +79,13 @@ public class RoutesCommands extends CommandContainer {
 	@Command(permissions = "routes.show")
 	public void routes_show(Context context) {
 		final String routeName = context.getString(0);
+		final Route route = plugin.transportSystem.getRoute(routeName);
 
 		final int segmentIndex = context.getInt(1, -1);
-
 		if (segmentIndex == -1) {
-			final Route route = plugin.transportSystem.getRoute(routeName);
-
 			route.visualize(plugin.config.showDotsPerMeter, plugin.config.showTicks);
 		}
 		else {
-			final Route route = plugin.transportSystem.getRoute(routeName);
-
 			final VisualizedRoute visualizedRoute = new VisualizedRoute(route, plugin.config.showDotsPerMeter, context.getPlayer());
 
 			final ScheduledTask task = new ScheduledTask(plugin) {
