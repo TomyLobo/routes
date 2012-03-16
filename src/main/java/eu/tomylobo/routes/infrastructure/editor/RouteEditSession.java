@@ -171,4 +171,24 @@ public class RouteEditSession {
 
 		context.sendFormattedMessage("Set node #%d properties: tension=%.2f", segmentIndex, tension, bias, continuity);
 	}
+
+	@Command(names = { "routes_removenode", "routes_rmnode" }, permissions = "routes.edit")
+	public void routes_removenode(Context context) {
+		route.removeNode(segmentIndex);
+		visualizedRoute.refresh(segmentIndex - 2, 4, 3);
+
+		if (segmentIndex > 0) {
+			selectSegment(segmentIndex - 1);
+		}
+
+		context.sendFormattedMessage("Deleted node #%d from route %s", segmentIndex, route.getName());
+	}
+
+	@Command(names = { "routes_movenode", "routes_mvnode" }, permissions = "routes.edit")
+	public void routes_movenode(Context context) {
+		Node node = route.getNodes().get(segmentIndex);
+		node.setPosition(player.getLocation().getPosition());
+
+		refreshNode(segmentIndex);
+	}
 }
