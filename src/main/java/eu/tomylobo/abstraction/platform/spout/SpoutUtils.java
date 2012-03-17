@@ -78,7 +78,7 @@ public class SpoutUtils {
 	}
 
 	public static org.spout.api.math.Vector3 unwrap(Vector vector) {
-		return org.spout.api.math.Vector3.create(vector.getX(), vector.getY(), vector.getZ());
+		return new org.spout.api.math.Vector3(vector.getX(), vector.getY(), vector.getZ());
 	}
 
 
@@ -104,7 +104,7 @@ public class SpoutUtils {
 		);
 	}		
 	public static org.spout.api.geo.discrete.Point unwrapPoint(Location location) {
-		return org.spout.api.geo.discrete.Point.create(
+		return new org.spout.api.geo.discrete.Point(
 				unwrap(location.getPosition()),
 				unwrap(location.getWorld())
 		);
