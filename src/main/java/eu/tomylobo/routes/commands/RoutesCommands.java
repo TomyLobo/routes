@@ -19,6 +19,8 @@
 
 package eu.tomylobo.routes.commands;
 
+import java.util.Collection;
+
 import eu.tomylobo.abstraction.entity.MobType;
 import eu.tomylobo.abstraction.entity.Player;
 import eu.tomylobo.routes.commands.system.Command;
@@ -118,6 +120,21 @@ public class RoutesCommands extends CommandContainer {
 
 		final String routeName = context.getString(0);
 		final Route route = plugin.transportSystem.getRoute(routeName);
+
+		final Collection<Player> playersEditing = plugin.routeEditor.getPlayersEditing(route);
+		if (playersEditing.size() == 1 && playersEditing.iterator().next().equals(player)) {
+			context.sendFormattedMessage("You were already editing the route '%s'", routeName);
+		}
+		else if (!playersEditing.isEmpty()) {
+			context.sendFormattedMessage("The following players are already editing the route '%s'", routeName);
+			StringBuilder sb = new StringBuilder();
+			for (Player editingPlayer : playersEditing) {
+				if (sb.length() != 0)
+					sb.append(", ");
+
+				sb.append(editingPlayer.getName());
+			}
+		}
 
 		final int segmentIndex = context.getInt(1, route.getNodes().size()-1);
 
