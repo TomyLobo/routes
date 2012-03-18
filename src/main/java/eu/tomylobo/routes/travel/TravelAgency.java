@@ -77,6 +77,7 @@ public class TravelAgency extends ScheduledTask {
 		}
 
 		mount.send();
+		player.teleport(location.add(0, mount.getMountedYOffset(), 0));
 		mount.setPassenger(player);
 
 		addTraveller(route, mount, 5.0, new Runnable() {
