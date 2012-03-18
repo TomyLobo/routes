@@ -73,6 +73,11 @@ public class BukkitPlayer extends BukkitEntity implements Player {
 	}
 
 	@Override
+	public double getEyeHeight() {
+		return ((org.bukkit.entity.Player) backend).getEyeHeight();
+	}
+
+	@Override
 	public Location getEyeLocation() {
 		return BukkitUtils.wrap(((org.bukkit.entity.Player) backend).getEyeLocation());
 	}

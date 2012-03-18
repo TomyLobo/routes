@@ -84,6 +84,17 @@ public class SpoutPlayer extends SpoutEntity implements Player {
 	}
 
 	@Override
+	public double getEyeHeight() {
+		// TODO: spout
+		org.spout.api.entity.Entity entity = backend.getEntity();
+		PlayerController controller = (PlayerController) entity.getController();
+		boolean isSneaking = controller == null;
+		final double eyeHeight = isSneaking ? 1.54 : 1.62;
+		return eyeHeight;
+		//return backend.getEyeHeight();
+	}
+
+	@Override
 	public Location getEyeLocation() {
 		// TODO: spout
 		org.spout.api.entity.Entity entity = backend.getEntity();

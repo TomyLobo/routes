@@ -28,5 +28,6 @@ public interface Player extends Entity, CommandSender {
 	boolean getAllowFlight();
 	void setAllowFlight(boolean b);
 
+	double getEyeHeight();
 	Location getEyeLocation();
 }
