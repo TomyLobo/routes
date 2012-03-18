@@ -61,7 +61,24 @@ public class RouteEditor {
 			if (routeEditSession == null)
 				return;
 
-			routeEditSession.interact(event);
+			routeEditSession.onPlayerClick(event);
+		}
+	}
+
+	@EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
+	public void onPlayerMove(Event event) {
+		if (event.isCancelled())
+			return;
+
+		final Player player = event.getPlayer();
+
+		final int inHand = player.getItemTypeInHand();
+		if (inHand == plugin.config.editorTool) {
+			final RouteEditSession routeEditSession = routeEditSessions.get(player);
+			if (routeEditSession == null)
+				return;
+
+			routeEditSession.onPlayerMove(event);
 		}
 	}
 

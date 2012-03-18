@@ -22,6 +22,7 @@ package eu.tomylobo.routes.infrastructure.editor;
 import java.util.List;
 
 import eu.tomylobo.abstraction.entity.Player;
+import eu.tomylobo.abstraction.event.Event;
 import eu.tomylobo.abstraction.event.PlayerClickEvent;
 import eu.tomylobo.abstraction.plugin.MetaPlugin;
 import eu.tomylobo.math.Location;
@@ -87,8 +88,11 @@ public class RouteEditSession {
 		return route;
 	}
 
-	void interact(PlayerClickEvent event) {
-		if (event.isRightClick()) {
+	void onPlayerClick(PlayerClickEvent event) {
+		if (moveNode != null) {
+			stopNodeMoving();
+		}
+		else if (event.isRightClick()) {
 			route.addNodes(++segmentIndex, player.getLocation());
 			broadcastRefreshSegment(segmentIndex - 2, 3, 4);
 		}
@@ -196,14 +200,47 @@ public class RouteEditSession {
 			selectSegment(segmentIndex - 1);
 		}
 
-		context.sendFormattedMessage("Deleted node #%d from route %s", segmentIndex, route.getName());
+		context.sendFormattedMessage("Deleted node #%d from route '%s'", segmentIndex, route.getName());
 	}
+
+
+	private Node moveNode = null;
+	private double moveDistance;
 
 	@Command(names = { "routes_movenode", "routes_mvnode" }, permissions = "routes.edit")
 	public void routes_movenode(Context context) {
-		Node node = route.getNodes().get(segmentIndex);
-		node.setPosition(player.getLocation().getPosition());
+		if (moveNode == null) {
+			moveNode = route.getNodes().get(segmentIndex);
 
+			final Vector diff = moveNode.getPosition().subtract(player.getEyeLocation().getPosition());
+			moveDistance = diff.length();
+
+			final Location playerLocation = player.getLocation();
+			final Location newLocation = Location.fromEye(playerLocation.getWorld(), playerLocation.getPosition(), diff);
+
+			player.teleport(newLocation);
+
+			context.sendFormattedMessage("You can now move node #%d of route '%s' with your editor tool. Click to stop moving.", segmentIndex, route.getName());
+		}
+		else {
+			stopNodeMoving();
+		}
+	}
+
+	public void stopNodeMoving() {
+		moveNode = null;
+
+		player.sendMessage(String.format("No longer moving node #%d of route '%s'", segmentIndex, route.getName()));
+	}
+
+	void onPlayerMove(Event event) {
+		if (moveNode == null)
+			return;
+
+		final Location location = event.getLocation().add(new Vector(0, player.getEyeHeight(), 0));
+		Vector newPosition = location.getDirection().multiply(moveDistance).add(location.getPosition());
+
+		moveNode.setPosition(newPosition);
 		refreshNode(segmentIndex);
 	}
 }
