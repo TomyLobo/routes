@@ -30,7 +30,6 @@ import eu.tomylobo.routes.fakeentity.FakeEntity;
 import eu.tomylobo.routes.fakeentity.FakeVehicle;
 import eu.tomylobo.routes.infrastructure.Node;
 import eu.tomylobo.routes.infrastructure.Route;
-import eu.tomylobo.routes.util.Statistics;
 
 public class VisualizedRoute {
 	private final Route route;
@@ -83,9 +82,6 @@ public class VisualizedRoute {
 
 		int points = (int) Math.ceil(pointsPerMeter * route.length());
 
-		double lastPosition = -1;
-		final Statistics stats = new Statistics();
-
 		for (int i = 0; i < points; ++i) {
 			final double position = ((double) i) / points;
 
@@ -99,22 +95,11 @@ public class VisualizedRoute {
 
 			final Location location = route.getLocation(position);
 
-			// begin statistics
-			if (lastPosition != -1) {
-				final double distance = route.getArcLength(lastPosition, position);
-
-				stats.stat(distance);
-			}
-			lastPosition = position;
-			// end statistics
-
 			final FakeEntity lineMarker = new FakeVehicle(location, VehicleType.ENDER_EYE);
 			sendFakeEntity(lineMarker);
 
 			lineMarkers.get(index).add(lineMarker);
 		}
-
-		System.out.println(stats.format());
 	}
 
 	/**
