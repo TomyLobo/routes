@@ -19,6 +19,9 @@
 
 package eu.tomylobo.routes.fakeentity;
 
+import java.util.List;
+
+import com.google.common.collect.ArrayListMultimap;
 import net.minecraft.server.Packet23VehicleSpawn;
 
 import eu.tomylobo.abstraction.Environment;
@@ -51,6 +54,33 @@ public class FakeVehicle extends FakeEntity {
 		);
 
 		setOrientation(location);
+	}
+
+	private static final ArrayListMultimap<Integer, FakeVehicle> pool = ArrayListMultimap.create();
+
+	public static FakeVehicle poolCreate(Location location, VehicleType vehicleType) {
+		final List<FakeVehicle> list = pool.get(vehicleType.getId());
+		if (!list.isEmpty()) {
+			final FakeVehicle removed = list.remove(0);
+
+			if (removed != null) {
+				removed.teleport(location);
+				return removed;
+			}
+		}
+
+		final FakeVehicle entity = new FakeVehicle(location, vehicleType);
+		return entity;
+	}
+
+	public void poolFree() {
+		pool.put(vehicleTypeId, this);
+	}
+
+	public static void poolClear(VehicleType vehicleType) {
+		for (FakeEntity entity : pool.removeAll(vehicleType.getId())) {
+			entity.remove();
+		}
 	}
 /*
 	@Override
