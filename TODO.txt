@@ -1,8 +1,6 @@
 - add visual a way to control the attributes of waypoints
 	- spout
 	- mapping to mouse movement
-- conservatively recreate fake entities
-	- pool, teleport instead of remaking
 - restrict distance to the start of the route for /travel
 	- make sure signs are not affected
 - add ways to post-process routes for certain entity types

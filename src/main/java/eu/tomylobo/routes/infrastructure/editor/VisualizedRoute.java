@@ -35,8 +35,8 @@ public class VisualizedRoute {
 	private final Route route;
 	private final double pointsPerMeter;
 
-	private final List<FakeEntity> waypointMarkers = new ArrayList<FakeEntity>();
-	private final List<List<FakeEntity>> lineMarkers = new ArrayList<List<FakeEntity>>();
+	private final List<FakeVehicle> waypointMarkers = new ArrayList<FakeVehicle>();
+	private final List<List<FakeVehicle>> lineMarkers = new ArrayList<List<FakeVehicle>>();
 	private final Player player;
 
 	/**
@@ -74,7 +74,7 @@ public class VisualizedRoute {
 		final int endIndex = Math.min(waypointMarkers.size(), startIndex + amount);
 		for (int i = startIndex; i < endIndex; ++i) {
 			Node node = nodes.get(i);
-			final FakeEntity waypointMarker = new FakeVehicle(new Location(world, node.getPosition()), VehicleType.ENDER_CRYSTAL);
+			final FakeVehicle waypointMarker = FakeVehicle.poolCreate(new Location(world, node.getPosition()), VehicleType.ENDER_CRYSTAL);
 			sendFakeEntity(waypointMarker);
 
 			waypointMarkers.set(i, waypointMarker);
@@ -95,7 +95,7 @@ public class VisualizedRoute {
 
 			final Location location = route.getLocation(position);
 
-			final FakeEntity lineMarker = new FakeVehicle(location, VehicleType.ENDER_EYE);
+			final FakeVehicle lineMarker = FakeVehicle.poolCreate(location, VehicleType.ENDER_EYE);
 			sendFakeEntity(lineMarker);
 
 			lineMarkers.get(index).add(lineMarker);
@@ -107,6 +107,13 @@ public class VisualizedRoute {
 	 */
 	public void removeEntities() {
 		removeEntities(0, waypointMarkers.size());
+
+		clearFakeVehiclePools();
+	}
+
+	public void clearFakeVehiclePools() {
+		FakeVehicle.poolClear(VehicleType.ENDER_CRYSTAL);
+		FakeVehicle.poolClear(VehicleType.ENDER_EYE);
 	}
 
 	private void removeEntities(int startIndex, int amount) {
@@ -114,9 +121,9 @@ public class VisualizedRoute {
 		for (int i = startIndex; i < endIndex; ++i) {
 			waypointMarkers.set(i, null).remove();
 
-			List<FakeEntity> list = lineMarkers.get(i);
-			for (FakeEntity entity : list) {
-				entity.remove();
+			List<FakeVehicle> list = lineMarkers.get(i);
+			for (FakeVehicle entity : list) {
+				entity.poolFree();
 			}
 			list.clear();
 		}
@@ -168,7 +175,7 @@ public class VisualizedRoute {
 		while (oldAmount < newAmount) {
 			++oldAmount;
 			waypointMarkers.add(startIndex, null);
-			lineMarkers.add(startIndex, new ArrayList<FakeEntity>());
+			lineMarkers.add(startIndex, new ArrayList<FakeVehicle>());
 		}
 
 		while (oldAmount > newAmount) {
@@ -178,6 +185,8 @@ public class VisualizedRoute {
 		}
 
 		createEntities(startIndex, newAmount);
+
+		clearFakeVehiclePools();
 	}
 
 	private void sendFakeEntity(final FakeEntity fakeEntity) {
