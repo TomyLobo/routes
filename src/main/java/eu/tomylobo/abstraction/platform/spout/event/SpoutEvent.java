@@ -24,13 +24,17 @@ import java.lang.reflect.Method;
 
 import org.spout.api.Source;
 import org.spout.api.Spout;
+import org.spout.api.entity.Controller;
+import org.spout.api.entity.PlayerController;
 import org.spout.api.event.Cancellable;
 import org.spout.api.event.Order;
 import org.spout.api.event.block.BlockChangeEvent;
+import org.spout.api.event.entity.EntityMoveEvent;
 import org.spout.api.event.player.PlayerInteractEvent;
 import org.spout.api.event.player.PlayerJoinEvent;
 import org.spout.api.event.player.PlayerLeaveEvent;
 
+import eu.tomylobo.abstraction.entity.Player;
 import eu.tomylobo.abstraction.event.Event;
 import eu.tomylobo.abstraction.platform.spout.SpoutUtils;
 import eu.tomylobo.abstraction.plugin.FrameworkPlugin;
@@ -168,6 +172,25 @@ public enum SpoutEvent {
 		default:
 			return null;
 		}
+	}},
+
+	onPlayerMove(EntityMoveEvent.class) { @Override public Event wrap(org.spout.api.event.Event backend) {
+		final EntityMoveEvent entityMoveEvent = (EntityMoveEvent) backend;
+		org.spout.api.entity.Entity entity = entityMoveEvent.getEntity();
+		Controller controller = entity.getController();
+
+		if (!(controller instanceof PlayerController))
+			return null;
+
+		org.spout.api.player.Player spoutPlayer = ((PlayerController) controller).getPlayer();
+		Player player = SpoutUtils.wrap(spoutPlayer);
+
+		final Event event = new Event();
+
+		event.setPlayer(player);
+		event.setLocation(SpoutUtils.wrap(entityMoveEvent.getTo()));
+
+		return event;
 	}},
 	;
 

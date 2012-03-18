@@ -31,6 +31,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 
@@ -144,6 +145,16 @@ public enum BukkitEvent {
 		default:
 			return null;
 		}
+	}},
+
+	onPlayerMove(PlayerMoveEvent.class) { @Override public Event wrap(org.bukkit.event.Event backend) {
+		final PlayerMoveEvent playerMoveEvent = (PlayerMoveEvent) backend;
+
+		final Event event = BukkitEventUtils.wrap(backend);
+
+		event.setLocation(BukkitUtils.wrap(playerMoveEvent.getTo()));
+
+		return event;
 	}},
 	;
 
