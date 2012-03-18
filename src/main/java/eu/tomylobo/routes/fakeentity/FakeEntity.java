@@ -82,9 +82,10 @@ public abstract class FakeEntity implements Entity {
 	}
 
 	public void send(Player player) {
-		sendImplementation(player);
-		setPassenger(passenger);
-		relevantPlayers.add(player);
+		if (relevantPlayers.add(player)) {
+			sendImplementation(player);
+			setPassenger(passenger);
+		}
 	}
 
 	abstract public void sendImplementation(Player player);
