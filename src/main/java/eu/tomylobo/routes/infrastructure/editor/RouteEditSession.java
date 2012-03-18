@@ -55,7 +55,10 @@ public class RouteEditSession {
 		}
 
 		public void reset() {
-			on = true;
+			if (!on) {
+				on = true;
+				run();
+			}
 		}
 	}
 
