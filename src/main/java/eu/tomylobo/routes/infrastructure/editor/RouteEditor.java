@@ -104,4 +104,10 @@ public class RouteEditor {
 			editedRoutes.remove(oldSession.getRoute(), player);
 		}
 	}
+
+	public void broadcastRefreshRouteSegment(Route route, int startIndex, int oldAmount, int newAmount) {
+		for (Player player : editedRoutes.get(route)) {
+			routeEditSessions.get(player).refreshSegment(startIndex, oldAmount, newAmount);
+		}
+	}
 }

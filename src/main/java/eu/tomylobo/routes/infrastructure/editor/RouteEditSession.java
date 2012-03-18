@@ -87,7 +87,7 @@ public class RouteEditSession {
 	void interact(PlayerClickEvent event) {
 		if (event.isRightClick()) {
 			route.addNodes(++segmentIndex, player.getLocation());
-			visualizedRoute.refresh(segmentIndex - 2, 3, 4);
+			broadcastRefreshSegment(segmentIndex - 2, 3, 4);
 		}
 		else {
 			final Location location = event.getPlayer().getEyeLocation();
@@ -143,9 +143,17 @@ public class RouteEditSession {
 		flashTask.run();
 	}
 
-	public void refreshNode(int index) {
-		visualizedRoute.refresh(index - 2, 4, 4); // TODO: maybe 1/3 is enough?
+	private void refreshNode(int index) {
+		broadcastRefreshSegment(index - 2, 4, 4);
+	}
+
+	void refreshSegment(int startIndex, int oldAmount, int newAmount) {
+		visualizedRoute.refresh(startIndex, oldAmount, newAmount);
 		flashTask.reset();
+	}
+
+	private void broadcastRefreshSegment(int startIndex, int oldAmount, int newAmount) {
+		Routes.getInstance().routeEditor.broadcastRefreshRouteSegment(route, startIndex, oldAmount, newAmount);
 	}
 
 
@@ -179,7 +187,7 @@ public class RouteEditSession {
 	@Command(names = { "routes_removenode", "routes_rmnode" }, permissions = "routes.edit")
 	public void routes_removenode(Context context) {
 		route.removeNode(segmentIndex);
-		visualizedRoute.refresh(segmentIndex - 2, 4, 3);
+		broadcastRefreshSegment(segmentIndex - 2, 4, 3);
 
 		if (segmentIndex > 0) {
 			selectSegment(segmentIndex - 1);
