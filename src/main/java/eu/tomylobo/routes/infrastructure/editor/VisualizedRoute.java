@@ -119,7 +119,7 @@ public class VisualizedRoute {
 	private void removeEntities(int startIndex, int amount) {
 		final int endIndex = Math.min(waypointMarkers.size(), startIndex + amount);
 		for (int i = startIndex; i < endIndex; ++i) {
-			waypointMarkers.set(i, null).remove();
+			waypointMarkers.set(i, null).poolFree();
 
 			List<FakeVehicle> list = lineMarkers.get(i);
 			for (FakeVehicle entity : list) {
