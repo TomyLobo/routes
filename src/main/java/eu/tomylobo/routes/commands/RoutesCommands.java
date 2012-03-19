@@ -135,13 +135,14 @@ public class RoutesCommands extends CommandContainer {
 				sb.append(editingPlayer.getName());
 			}
 		}
+		else {
+			context.sendFormattedMessage("Editing the route '%s'.", routeName);
+		}
 
 		final int segmentIndex = context.getInt(1, route.getNodes().size()-1);
 
 		RouteEditSession routeEditSession = plugin.routeEditor.edit(player, route);
 		routeEditSession.selectSegment(segmentIndex);
-
-		context.sendMessage("Editing the route '"+routeName+"'.");
 	}
 
 	@Command(permissions = "routes.test")
