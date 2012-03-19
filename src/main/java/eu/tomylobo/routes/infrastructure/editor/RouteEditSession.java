@@ -22,86 +22,40 @@ package eu.tomylobo.routes.infrastructure.editor;
 import java.util.List;
 
 import eu.tomylobo.abstraction.entity.Player;
-import eu.tomylobo.abstraction.event.Event;
-import eu.tomylobo.abstraction.event.PlayerClickEvent;
 import eu.tomylobo.abstraction.plugin.MetaPlugin;
 import eu.tomylobo.math.Location;
 import eu.tomylobo.math.Vector;
 import eu.tomylobo.routes.Routes;
 import eu.tomylobo.routes.commands.system.Command;
+import eu.tomylobo.routes.commands.system.CommandException;
 import eu.tomylobo.routes.commands.system.Context;
 import eu.tomylobo.routes.infrastructure.Node;
 import eu.tomylobo.routes.infrastructure.Route;
 import eu.tomylobo.routes.util.ScheduledTask;
 
 public class RouteEditSession {
-	private final class FlashTask extends ScheduledTask {
-		boolean on = true;
-		int lastSegmentIndex;
+	public abstract class State {
+		void enter(State from) { }
+		void leave(State to) { }
 
-		private FlashTask(MetaPlugin plugin) {
-			super(plugin);
+		void onPlayerClick(boolean rightClick) { }
+		void onPlayerMove(Location to) { }
+		void onSelectSegment() { }
+		void refreshSegment(int startIndex, int oldAmount, int newAmount) {
+			visualizedRoute.refresh(startIndex, oldAmount, newAmount);
 		}
+	}
 
-		@Override
-		public void run() {
-			on = !on;
+	public final State SELECT = new State() {
+		private FlashTask flashTask;
 
-			if (!on) {
-				// If we're turning it off, save the segment index so it'll be turned back on.
-				lastSegmentIndex = segmentIndex;
+		@Override void onPlayerClick(boolean rightClick) {
+			if (rightClick) {
+				route.addNodes(++segmentIndex, player.getLocation());
+				broadcastRefreshSegment(segmentIndex - 2, 3, 4);
+				return;
 			}
-
-			visualizedRoute.showSegment(lastSegmentIndex, on);
-		}
-
-		public void reset() {
-			if (!on) {
-				on = true;
-				run();
-			}
-		}
-	}
-
-	private static final double NODE_RADIUS = 1.2;
-	private static final double NODE_RADIUS_SQ = NODE_RADIUS * NODE_RADIUS;
-
-	private final Player player;
-	private final Route route;
-	private final VisualizedRoute visualizedRoute;
-	private int segmentIndex;
-	private FlashTask flashTask;
-
-	private ScheduledTask moveTask = new ScheduledTask(Routes.getInstance()) { @Override public void run() {
-		handleMove(player.getEyeLocation());
-	}};
-
-	public RouteEditSession(Player player, Route route) {
-		this.player = player;
-		this.route = route;
-		this.segmentIndex = route.getNodes().size() - 1;
-		final Routes plugin = Routes.getInstance();
-		this.visualizedRoute = new VisualizedRoute(route, plugin.config.editorDotsPerMeter, player);
-
-		flashTask = new FlashTask(plugin);
-
-		flashTask.scheduleSyncRepeating(0, plugin.config.editorFlashTicks);
-	}
-
-	public Object getRoute() {
-		return route;
-	}
-
-	void onPlayerClick(PlayerClickEvent event) {
-		if (moveNode != null) {
-			stopNodeMoving();
-		}
-		else if (event.isRightClick()) {
-			route.addNodes(++segmentIndex, player.getLocation());
-			broadcastRefreshSegment(segmentIndex - 2, 3, 4);
-		}
-		else {
-			final Location location = event.getPlayer().getEyeLocation();
+			final Location location = player.getEyeLocation();
 			final Vector playerPosition = location.getPosition();
 			final Vector playerDirection = location.getDirection();
 
@@ -136,10 +90,172 @@ public class RouteEditSession {
 
 			selectSegment(closestNodeIndex);
 		}
+
+		@Override void enter(State from) {
+			final Routes plugin = Routes.getInstance();
+
+			flashTask = new FlashTask(plugin);
+			flashTask.scheduleSyncRepeating(0, plugin.config.editorFlashTicks);
+
+			player.sendMessage("Left-click to select a node.");
+			player.sendMessage("Right-click to to insert a node after the current one.");
+}
+		@Override void leave(State to) {
+			flashTask.cancel();
+			if (!flashTask.on) {
+				flashTask.run();
+			}
+		}
+
+		@Override void onSelectSegment() {
+			// Run flash task twice to make the flashing portion update instantly
+			if (flashTask.on) {
+				flashTask.run();
+				flashTask.run();
+			}
+		}
+
+		@Override void refreshSegment(int startIndex, int oldAmount, int newAmount) {
+			super.refreshSegment(startIndex, oldAmount, newAmount);
+
+			flashTask.reset();
+		}
+	};
+
+	public final State MOVE = new State() {
+		private ScheduledTask moveTask = new ScheduledTask(Routes.getInstance()) { @Override public void run() {
+			handleMove(player.getEyeLocation());
+		}};
+
+		private Node node;
+		private double moveDistance;
+
+		@Override void onPlayerClick(boolean rightClick) {
+			if (rightClick) {
+				changeState(MOVE_PAUSED);
+			}
+			else {
+				changeState(SELECT);
+			}
+		}
+
+		@Override void onPlayerMove(Location to) {
+			handleMove(to.add(new Vector(0, player.getEyeHeight(), 0)));
+		}
+
+		@Override void enter(State from) {
+			node = route.getNodes().get(segmentIndex);
+
+			final Vector diff = node.getPosition().subtract(player.getEyeLocation().getPosition());
+			moveDistance = diff.length();
+
+			final Location playerLocation = player.getLocation();
+			final Location newLocation = Location.fromEye(playerLocation.getWorld(), playerLocation.getPosition(), diff);
+
+			player.teleport(newLocation);
+
+			moveTask.scheduleSyncRepeating(0, 10);
+
+			player.sendMessage(String.format("You can now move the node with your editor tool.", segmentIndex, route.getName()));
+			player.sendMessage("Left-click returns to select mode. Right-click pauses moving.");
+		}
+		@Override void leave(State to) {
+			moveTask.cancel();
+			state = SELECT;
+		}
+
+		private void handleMove(Location eyeLocation) {
+			final Vector newPosition = eyeLocation.getDirection().multiply(moveDistance).add(eyeLocation.getPosition());
+
+			if (node.getPosition().equals(newPosition))
+				return;
+
+			node.setPosition(newPosition);
+			refreshNode(segmentIndex);
+		}
+	};
+
+	public final State MOVE_PAUSED = new State() {
+		@Override void onPlayerClick(boolean rightClick) {
+			if (rightClick) {
+				changeState(MOVE);
+			}
+			else {
+				changeState(SELECT);
+			}
+		}
+
+		@Override
+		void enter(State from) {
+			player.sendMessage(String.format("Paused moving.", segmentIndex, route.getName()));
+			player.sendMessage("Left-click returns to select mode. Right-click resumes moving.");
+		}
+	};
+
+	public final class FlashTask extends ScheduledTask {
+		private boolean on = true;
+		private int lastSegmentIndex;
+
+		public FlashTask(MetaPlugin plugin) {
+			super(plugin);
+		}
+
+		@Override
+		public void run() {
+			on = !on;
+
+			if (!on) {
+				// If we're turning it off, save the segment index so it'll be turned back on.
+				lastSegmentIndex = segmentIndex;
+			}
+
+			visualizedRoute.showSegment(lastSegmentIndex, on);
+		}
+
+		public void reset() {
+			if (!on) {
+				on = true;
+				run();
+			}
+		}
+	}
+
+	private static final double NODE_RADIUS = 1.2;
+	private static final double NODE_RADIUS_SQ = NODE_RADIUS * NODE_RADIUS;
+
+	private final Player player;
+	private final Route route;
+	private final VisualizedRoute visualizedRoute;
+	private int segmentIndex;
+
+	State state;
+
+	private void changeState(State newState) {
+		if (state == newState)
+			return;
+
+		final State oldState = state;
+
+		if (oldState != null) oldState.leave(newState);
+		state = newState;
+		if (newState != null) newState.enter(oldState);
+	}
+
+	public RouteEditSession(Player player, Route route) {
+		this.player = player;
+		this.route = route;
+		this.segmentIndex = route.getNodes().size() - 1;
+		this.visualizedRoute = new VisualizedRoute(route, Routes.getInstance().config.editorDotsPerMeter, player);
+
+		changeState(SELECT);
+	}
+
+	public Object getRoute() {
+		return route;
 	}
 
 	public void close() {
-		flashTask.cancel();
+		changeState(null);
 		visualizedRoute.removeEntities();
 	}
 
@@ -149,18 +265,11 @@ public class RouteEditSession {
 
 		segmentIndex = index;
 
-		// Run flash task twice to make the flashing portion update instantly
-		flashTask.run();
-		flashTask.run();
+		state.onSelectSegment();
 	}
 
 	private void refreshNode(int index) {
 		broadcastRefreshSegment(index - 2, 4, 4);
-	}
-
-	void refreshSegment(int startIndex, int oldAmount, int newAmount) {
-		visualizedRoute.refresh(startIndex, oldAmount, newAmount);
-		flashTask.reset();
 	}
 
 	private void broadcastRefreshSegment(int startIndex, int oldAmount, int newAmount) {
@@ -207,53 +316,16 @@ public class RouteEditSession {
 		context.sendFormattedMessage("Deleted node #%d from route '%s'", segmentIndex, route.getName());
 	}
 
-
-	private Node moveNode = null;
-	private double moveDistance;
-
 	@Command(names = { "routes_movenode", "routes_mvnode" }, permissions = "routes.edit")
 	public void routes_movenode(Context context) {
-		if (moveNode == null) {
-			moveNode = route.getNodes().get(segmentIndex);
-
-			final Vector diff = moveNode.getPosition().subtract(player.getEyeLocation().getPosition());
-			moveDistance = diff.length();
-
-			final Location playerLocation = player.getLocation();
-			final Location newLocation = Location.fromEye(playerLocation.getWorld(), playerLocation.getPosition(), diff);
-
-			player.teleport(newLocation);
-
-			moveTask.scheduleSyncRepeating(0, 10);
-
-			context.sendFormattedMessage("You can now move node #%d of route '%s' with your editor tool. Click to stop moving.", segmentIndex, route.getName());
+		if (state == SELECT) {
+			changeState(MOVE);
+		}
+		else if (state == MOVE || state == MOVE_PAUSED) {
+			changeState(SELECT);
 		}
 		else {
-			stopNodeMoving();
+			throw new CommandException("You cannot currently run this command.");
 		}
-	}
-
-	public void stopNodeMoving() {
-		moveTask.cancel();
-		moveNode = null;
-
-		player.sendMessage(String.format("No longer moving node #%d of route '%s'", segmentIndex, route.getName()));
-	}
-
-	void onPlayerMove(Event event) {
-		if (moveNode == null)
-			return;
-
-		handleMove(event.getLocation().add(new Vector(0, player.getEyeHeight(), 0)));
-	}
-
-	public void handleMove(Location eyeLocation) {
-		final Vector newPosition = eyeLocation.getDirection().multiply(moveDistance).add(eyeLocation.getPosition());
-
-		if (moveNode.getPosition().equals(newPosition))
-			return;
-
-		moveNode.setPosition(newPosition);
-		refreshNode(segmentIndex);
 	}
 }

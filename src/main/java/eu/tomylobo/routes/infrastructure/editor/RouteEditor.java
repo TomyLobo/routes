@@ -61,7 +61,7 @@ public class RouteEditor {
 			if (routeEditSession == null)
 				return;
 
-			routeEditSession.onPlayerClick(event);
+			routeEditSession.state.onPlayerClick(event.isRightClick());
 		}
 	}
 
@@ -78,7 +78,7 @@ public class RouteEditor {
 			if (routeEditSession == null)
 				return;
 
-			routeEditSession.onPlayerMove(event);
+			routeEditSession.state.onPlayerMove(event.getLocation());
 		}
 	}
 
@@ -124,7 +124,7 @@ public class RouteEditor {
 
 	public void broadcastRefreshRouteSegment(Route route, int startIndex, int oldAmount, int newAmount) {
 		for (Player player : editedRoutes.get(route)) {
-			routeEditSessions.get(player).refreshSegment(startIndex, oldAmount, newAmount);
+			routeEditSessions.get(player).state.refreshSegment(startIndex, oldAmount, newAmount);
 		}
 	}
 }
