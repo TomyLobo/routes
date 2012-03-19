@@ -72,6 +72,10 @@ public class RouteEditSession {
 	private int segmentIndex;
 	private FlashTask flashTask;
 
+	private ScheduledTask moveTask = new ScheduledTask(Routes.getInstance()) { @Override public void run() {
+		handleMove(player.getEyeLocation());
+	}};
+
 	public RouteEditSession(Player player, Route route) {
 		this.player = player;
 		this.route = route;
@@ -220,6 +224,8 @@ public class RouteEditSession {
 
 			player.teleport(newLocation);
 
+			moveTask.scheduleSyncRepeating(0, 10);
+
 			context.sendFormattedMessage("You can now move node #%d of route '%s' with your editor tool. Click to stop moving.", segmentIndex, route.getName());
 		}
 		else {
@@ -228,6 +234,7 @@ public class RouteEditSession {
 	}
 
 	public void stopNodeMoving() {
+		moveTask.cancel();
 		moveNode = null;
 
 		player.sendMessage(String.format("No longer moving node #%d of route '%s'", segmentIndex, route.getName()));
@@ -237,8 +244,14 @@ public class RouteEditSession {
 		if (moveNode == null)
 			return;
 
-		final Location location = event.getLocation().add(new Vector(0, player.getEyeHeight(), 0));
-		Vector newPosition = location.getDirection().multiply(moveDistance).add(location.getPosition());
+		handleMove(event.getLocation().add(new Vector(0, player.getEyeHeight(), 0)));
+	}
+
+	public void handleMove(Location eyeLocation) {
+		final Vector newPosition = eyeLocation.getDirection().multiply(moveDistance).add(eyeLocation.getPosition());
+
+		if (moveNode.getPosition().equals(newPosition))
+			return;
 
 		moveNode.setPosition(newPosition);
 		refreshNode(segmentIndex);
