@@ -64,7 +64,10 @@ public class FakeVehicle extends FakeEntity {
 			final FakeVehicle removed = list.remove(0);
 
 			if (removed != null) {
-				removed.teleport(location);
+				if (!removed.getLocation().equals(location)) {
+					removed.teleport(location);
+				}
+
 				return removed;
 			}
 		}
