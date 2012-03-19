@@ -127,6 +127,7 @@ public class RoutesCommands extends CommandContainer {
 		}
 		else if (!playersEditing.isEmpty()) {
 			context.sendFormattedMessage("The following players are already editing the route '%s'", routeName);
+
 			StringBuilder sb = new StringBuilder();
 			for (Player editingPlayer : playersEditing) {
 				if (sb.length() != 0)
@@ -134,6 +135,7 @@ public class RoutesCommands extends CommandContainer {
 
 				sb.append(editingPlayer.getName());
 			}
+			context.sendMessage(sb.toString());
 		}
 		else {
 			context.sendFormattedMessage("Editing the route '%s'.", routeName);
