@@ -8,3 +8,7 @@
 	- land creatures: drop to ground, add jumps
 	- dragons: add corkscrew climbs?
 	- spiders: climb?
+- add per-player, persistent terse mode, which shortens certain multi-line messages.
+	- maybe integrate with translation?
+- make use of the "usage" in command annotations
+- extend docgen to parse multi-line annotations
