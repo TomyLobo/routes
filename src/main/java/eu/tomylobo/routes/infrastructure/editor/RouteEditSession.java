@@ -277,6 +277,9 @@ public class RouteEditSession {
 	}
 
 
+	/**
+	 * Closes the route editor.
+	 */
 	@Command(permissions = "routes.edit")
 	public void routes_close(Context context) {
 		Routes.getInstance().routeEditor.close(player);
@@ -284,7 +287,10 @@ public class RouteEditSession {
 		context.sendMessage("Closed editor session.");
 	}
 
-	@Command(names = { "routes_nodeproperties", "routes_np" }, permissions = "routes.edit")
+	/**
+	 * Sets the properties of the currently selected node.
+	 */
+	@Command(names = { "routes_nodeproperties", "routes_np" }, usage = "<tension> <bias> <continuity>", permissions = "routes.edit")
 	public void routes_nodeproperties(Context context) {
 		// Tension     T = +1-->Tight             T = -1--> Round
 		// Bias        B = +1-->Post Shoot        B = -1--> Pre shoot
@@ -304,6 +310,9 @@ public class RouteEditSession {
 		context.sendFormattedMessage("Set node #%d properties: tension=%.2f", segmentIndex, tension, bias, continuity);
 	}
 
+	/**
+	 * Removes the currently selected node.
+	 */
 	@Command(names = { "routes_removenode", "routes_rmnode" }, permissions = "routes.edit")
 	public void routes_removenode(Context context) {
 		route.removeNode(segmentIndex);
@@ -316,6 +325,10 @@ public class RouteEditSession {
 		context.sendFormattedMessage("Deleted node #%d from route '%s'", segmentIndex, route.getName());
 	}
 
+	/**
+	 * Moves the currently selected node.<br />
+	 * Movement is controlled with the mouse.
+	 */
 	@Command(names = { "routes_movenode", "routes_mvnode" }, permissions = "routes.edit")
 	public void routes_movenode(Context context) {
 		if (state == SELECT) {

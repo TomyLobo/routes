@@ -27,6 +27,7 @@ import eu.tomylobo.routes.commands.system.Command;
 import eu.tomylobo.routes.commands.system.Context;
 import eu.tomylobo.routes.commands.system.CommandContainer;
 import eu.tomylobo.routes.commands.system.NestedCommand;
+import eu.tomylobo.routes.config.RoutesConfig;
 import eu.tomylobo.routes.fakeentity.FakeMob;
 import eu.tomylobo.routes.infrastructure.Route;
 import eu.tomylobo.routes.infrastructure.editor.RouteEditSession;
@@ -51,6 +52,9 @@ public class RoutesCommands extends CommandContainer {
 		}
 	}
 
+	/**
+	 * Reloads configuration.
+	 */
 	@Command(permissions = "routes.load")
 	public void routes_load(Context context) {
 		plugin.load();
@@ -58,6 +62,9 @@ public class RoutesCommands extends CommandContainer {
 		context.sendMessage("Reloaded routes.");
 	}
 
+	/**
+	 * Saves configuration.
+	 */
 	@Command(permissions = "routes.save")
 	public void routes_save(Context context) {
 		plugin.save();
@@ -65,7 +72,10 @@ public class RoutesCommands extends CommandContainer {
 		context.sendMessage("Saved routes.");
 	}
 
-	@Command(permissions = "routes.add")
+	/**
+	 * Creates a new route and opens the editor with it.
+	 */
+	@Command(usage = "<route>", permissions = "routes.add")
 	public void routes_add(Context context) {
 		final Player player = context.getPlayer();
 		final String routeName = context.getString(0);
@@ -78,7 +88,10 @@ public class RoutesCommands extends CommandContainer {
 		context.sendMessage("Starting a route named '"+routeName+"' here. Right-click with "+plugin.config.editorTool+" to add a waypoint.");
 	}
 
-	@Command(permissions = "routes.show")
+	/**
+	 * Shows the route for the amount of ticks specified with {@link RoutesConfig#showFlashTicks}.
+	 */
+	@Command(usage = "<route> [<segment>]", permissions = "routes.show")
 	public void routes_show(Context context) {
 		final String routeName = context.getString(0);
 		final Route route = plugin.transportSystem.getRoute(routeName);
@@ -114,7 +127,10 @@ public class RoutesCommands extends CommandContainer {
 		context.sendMessage("Showing the route '"+routeName+"'.");
 	}
 
-	@Command(permissions = "routes.edit")
+	/**
+	 * Opens the route editor for the specified route.
+	 */
+	@Command(usage = "<route> [<segment>]", permissions = "routes.edit")
 	public void routes_edit(Context context) {
 		final Player player = context.getPlayer();
 
@@ -147,7 +163,10 @@ public class RoutesCommands extends CommandContainer {
 		routeEditSession.selectSegment(segmentIndex);
 	}
 
-	@Command(permissions = "routes.test")
+	/**
+	 * Sends an unmanned dragon on the specified route.
+	 */
+	@Command(usage = "<route>", permissions = "routes.test")
 	public void routes_test(Context context) {
 		final String routeName = context.getString(0);
 		final Route route = plugin.transportSystem.getRoute(routeName);

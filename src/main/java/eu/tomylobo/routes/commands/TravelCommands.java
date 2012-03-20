@@ -31,7 +31,10 @@ import eu.tomylobo.routes.commands.system.CommandContainer;
  *
  */
 public class TravelCommands extends CommandContainer {
-	@Command(permissions = "routes.travel")
+	/**
+	 * Puts you on a dragon, travelling along the specified route.
+	 */
+	@Command(usage = "<route>", permissions = "routes.travel")
 	public void travel(Context context) {
 		final String routeName = context.getString(0);
 

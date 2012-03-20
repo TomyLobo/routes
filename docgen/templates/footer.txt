@@ -1,0 +1,9 @@
+<hr />
+<small>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;foo</code> - literal "foo"<br />
+<code>&nbsp;&nbsp;&nbsp;&nbsp;&lt;foo&gt;</code> - an argument is named "foo"<br />
+<code>&nbsp;&nbsp;&nbsp;&nbsp;&lbr;foo&rbr;</code> - literal, optional "foo"<br />
+<code>&nbsp;&nbsp;&nbsp;&nbsp;&lbr;&lt;foo&gt;&rbr;</code> - an optional argument named "foo"<br />
+</small>
+<hr />
+<small>This page was generated from version <a href="https://github.com/TomyLobo/routes/commit/{version}">{version}</a></small>

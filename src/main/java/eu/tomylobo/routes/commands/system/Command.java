@@ -51,4 +51,9 @@ public @interface Command {
 	 * as the command name.
 	 */
 	String[] names() default {};
+
+	/**
+	 * A usage string to display when the user passes wrong arguments.
+	 */
+	String usage() default "";
 }
