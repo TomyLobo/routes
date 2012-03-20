@@ -47,23 +47,26 @@ public class Invoker {
 		invokeInternal(context, instance);
 	}
 
-	protected void invokeInternal(Context context, Object instance)
-			throws IllegalAccessException, InvocationTargetException {
+	protected void invokeInternal(Context context, Object instance) throws IllegalAccessException, InvocationTargetException {
 		if (!hasPermission(context.getSender()))
 			throw new PermissionDeniedException();
+
 		try {
 			method.invoke(instance, context);
 		}
 		catch (InvocationTargetException e) {
 			if (!(e.getCause() instanceof CommandException))
 				throw e;
-			
+
 			throw (CommandException) e.getCause();
 		}
 	}
 
 	protected boolean hasPermission(CommandSender sender) {
 		for (String permission : permissions) {
+			if (permission.equals(Command.DISABLED))
+				return true;
+
 			if (sender.hasPermission(permission))
 				return true;
 		}
