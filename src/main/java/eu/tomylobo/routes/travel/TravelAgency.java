@@ -56,7 +56,7 @@ public class TravelAgency extends ScheduledTask {
 		scheduleSyncRepeating(0, 1);
 	}
 
-	public void addTravellerWithMount(String routeName, final Player player, EntityType entityType, String command) throws CommandException {
+	public void addTravellerWithMount(String routeName, final Player player, EntityType entityType, String command, double maxDistance) throws CommandException {
 		final Route route = plugin.transportSystem.getRoute(routeName);
 		if (route == null)
 			throw new CommandException("Route '"+routeName+"' not found.");
@@ -67,6 +67,8 @@ public class TravelAgency extends ScheduledTask {
 		player.setAllowFlight(true);
 
 		Location location = route.getLocation(0);
+		if (location.getPosition().distance(player.getLocation().getPosition()) > maxDistance)
+			throw new CommandException("Route '"+routeName+"' is too far away.");
 
 		final FakeEntity mount;
 		if (entityType instanceof MobType) {

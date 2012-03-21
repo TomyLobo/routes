@@ -38,7 +38,7 @@ public class TravelCommands extends CommandContainer {
 	public void travel(Context context) {
 		final String routeName = context.getString(0);
 
-		plugin.travelAgency.addTravellerWithMount(routeName, context.getPlayer(), MobType.ENDER_DRAGON, "travel");
+		plugin.travelAgency.addTravellerWithMount(routeName, context.getPlayer(), MobType.ENDER_DRAGON, "travel", plugin.config.travelMaxDistance);
 		context.sendMessage("Travelling on route '"+routeName+"'.");
 	}
 }

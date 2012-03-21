@@ -50,4 +50,10 @@ public class RoutesConfig extends Config {
 
 	@ConfigItem("show.ticks")
 	public long showTicks = 600;
+
+	@ConfigItem("travel.maxDistance")
+	public double travelMaxDistance = 16;
+
+	@ConfigItem("travel.signMaxDistance")
+	public double travelSignMaxDistance = 128;
 }
