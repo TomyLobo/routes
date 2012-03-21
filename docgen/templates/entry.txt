@@ -1,5 +1,5 @@
-<br><h3><a name="{name}" href="#{name}">{label}</a></h3>[
-<p>Usage: <code>{label} {usage}</code></p>]
+<br><h3><a name="{name}" href="#{name}">{label}</a></h3>
+<p>Usage: <code>{label}[ {usage}|]</code></p>
 <p>{comment}</p>[
 <p>Aliases: <code>{aliases}</code></p>][
 <p>Permissions: <code>{permissions}</code></p>]

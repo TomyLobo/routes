@@ -6,4 +6,4 @@
 <code>&nbsp;&nbsp;&nbsp;&nbsp;&lbr;&lt;foo&gt;&rbr;</code> - an optional argument named "foo"<br />
 </small>
 <hr />
-<small>This page was generated from version <a href="https://github.com/TomyLobo/routes/commit/{version}">{version}</a></small>
+<small>This page was generated [from version <a href="https://github.com/TomyLobo/routes/commit/{version}">{version}</a>|automatically].</small>

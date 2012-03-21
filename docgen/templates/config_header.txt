@@ -1,0 +1,8 @@
+<h1>Configuration</h1>
+Configuration is stored in <code>plugins/routes/config.txt</code>. The format is the well-known ini format:<br />
+<code>
+&lbr;section&rbr;
+key=value
+</code><br />
+<br />
+Changes can be reloaded with <code>/routes load</code><br />

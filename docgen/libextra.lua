@@ -86,4 +86,6 @@ function table.merge(target, source, map)
 			target[k] = v
 		end
 	end
+
+	return target
 end

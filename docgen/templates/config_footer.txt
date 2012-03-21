@@ -1,0 +1,1 @@
+<small>This page was generated [from version <a href="https://github.com/TomyLobo/routes/commit/{version}">{version}</a>|automatically].</small>
