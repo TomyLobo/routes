@@ -21,6 +21,7 @@ package eu.tomylobo.abstraction.platform.spout;
 
 import java.util.Arrays;
 
+import org.spout.api.command.Command;
 import org.spout.api.command.CommandSource;
 import org.spout.api.command.RawCommandExecutor;
 import org.spout.api.exception.CommandException;
@@ -63,9 +64,9 @@ public abstract class SpoutPlugin extends CommonPlugin implements FrameworkPlugi
 	}
 
 	@Override
-	public void execute(CommandSource source, String[] args, int baseIndex, boolean fuzzyLookup) throws CommandException {
+	public void execute(Command cmd, CommandSource source, String[] args, int baseIndex, boolean fuzzyLookup) throws CommandException {
 		final String label = args[0];
-		final String commandName = label; // TODO: spout
+		final String commandName = cmd.getPreferredName();
 		args = Arrays.copyOfRange(args, 1, args.length);
 		metaPlugin.onCommand(SpoutUtils.wrap(source), commandName, label, args);
 	}
