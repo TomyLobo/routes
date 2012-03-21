@@ -89,7 +89,7 @@ public class RoutesCommands extends CommandContainer {
 	}
 
 	/**
-	 * Shows the route for the amount of ticks specified with {@link RoutesConfig#showFlashTicks}.
+	 * Shows the route to everyone for the amount of ticks specified with {@link RoutesConfig#showFlashTicks}.
 	 */
 	@Command(usage = "<route> [<segment>]", permissions = "routes.show")
 	public void routes_show(Context context) {
