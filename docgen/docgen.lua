@@ -49,8 +49,8 @@ local function mergeGlobalsAndRecord(variables, globals, record)
 end
 
 -- This function reads all the javadoc comments followed by the specified annotation.
--- It optionally looks for a method after that and reads that too.
-local function scanfile(filename, records, annotationName, lookForMethod)
+-- It also looks for a method/variable after that and reads that too.
+local function scanfile(filename, records, annotationName)
 	local class = filename:match("("..JAVA_IDENTIFIER..")%.java")
 
 	local state = NONE
@@ -105,14 +105,10 @@ local function scanfile(filename, records, annotationName, lookForMethod)
 
 			records[#records+1] = record
 
-			if lookForMethod then
-				state = PARSE_METHOD_NAME
-			else
-				state = NONE
-			end
-		elseif state == PARSE_METHOD_NAME then
-			local method = line:match("^%s*public%s+void%s+("..JAVA_IDENTIFIER..")%s*%(%s*Context%s+"..JAVA_IDENTIFIER.."%s*%)")
-			if not method then
+			state = PARSE_ELEMENT_NAME
+		elseif state == PARSE_ELEMENT_NAME then
+			local elementType,elementName = line:match("^%s*public%s+("..JAVA_IDENTIFIER..")%s+("..JAVA_IDENTIFIER..")[ (]")
+			if not elementName then
 				if line:match("[;{]") then
 					state = NONE
 					records[#records] = nil
@@ -121,7 +117,9 @@ local function scanfile(filename, records, annotationName, lookForMethod)
 				break -- continue
 			end
 
-			records[#records].method = method
+			local record = records[#records]
+			record.elementType = elementType
+			record.elementName = elementName
 
 			state = NONE
 		end
@@ -147,8 +145,8 @@ local configs = {}
 for _,folder in ipairs(folders) do
 	for filename in io.listRecursive(folder) do
 		if filename:match("%.java$") then
-			scanfile(filename, commands, "Command", true)
-			scanfile(filename, configs, "ConfigItem", false)
+			scanfile(filename, commands, "Command")
+			scanfile(filename, configs, "ConfigItem")
 		end
 	end
 end
@@ -166,7 +164,7 @@ local output = { pcallTemplate(templates.header, globals) }
 for _,command in ipairs(commands) do
 	if command.names == nil or #command.names == 0 then
 		-- The names property was not given or is empty, so use the method name
-		command.names = { command.method }
+		command.names = { command.elementName }
 	elseif type(command.names) ~= "table" then
 		-- Braces were elided, so add them back :)
 		command.names = { command.names }
