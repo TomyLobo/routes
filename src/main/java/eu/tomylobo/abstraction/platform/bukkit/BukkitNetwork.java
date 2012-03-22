@@ -262,6 +262,7 @@ public class BukkitNetwork implements Network {
 		p24.f = (byte) ((int) (yaw * 256.0F / 360.0F));
 		p24.g = (byte) ((int) (pitch * 256.0F / 360.0F));
 		Utils.setPrivateValue(Packet24MobSpawn.class, p24, "h", new DataWatcher());
+		Utils.setPrivateValue(Packet24MobSpawn.class, p24, "i", new DataWatcher());
 		return p24;
 	}
 
