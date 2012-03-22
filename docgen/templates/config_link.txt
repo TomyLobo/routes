@@ -1,0 +1,1 @@
+<a href="../configuration/#{section}.{key}">{section}.{key}</a>

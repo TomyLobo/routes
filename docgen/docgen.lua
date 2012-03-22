@@ -17,6 +17,8 @@ local folders = {
 	"src/main/java/eu/tomylobo/routes"
 }
 
+local jdlinks = { }
+
 -- Converts a method name/@Command.names entry to a readable command.
 local function nameToLabel(name)
 	return "/"..name:gsub("_", " ")
@@ -24,8 +26,22 @@ end
 
 -- Accounts for javadoc's peculiarities
 local function parseJD(comment)
-	-- TODO: parse @links
-	return comment
+	return comment:gsub("{@link (.*#.+)}", function(element)
+		local jdlink = jdlinks[element]
+		if jdlink then return jdlink end
+
+		return "@@@unresolved "..element.."@@@"
+	end)
+end
+
+-- Resolves links that couldn't be resolved in the first pass
+local function reparseJD(comment)
+	return comment:gsub("@@@unresolved (.*#.+)@@@", function(element)
+		local jdlink = jdlinks[element]
+		if jdlink then return jdlink end
+
+		return element:gsub("#", ".")
+	end)
 end
 
 -- Precedence: variables > record > globals. record will be flattened and treated with string.htmlEntities.
@@ -159,8 +175,8 @@ local globals = {
 	version = io.readfile_popen("git describe"):trim(),
 }
 
--- Make an output array, initially containing the header. It is later concatenated and written to output.txt
-local output = { pcallTemplate(templates.header, globals) }
+-- Make an output array, initially containing the header. It is later concatenated and written to command_output.txt
+local command_output = { pcallTemplate(templates.command_header, globals) }
 for _,command in ipairs(commands) do
 	if command.names == nil or #command.names == 0 then
 		-- The names property was not given or is empty, so use the method name
@@ -198,13 +214,13 @@ for _,command in ipairs(commands) do
 	variables = mergeGlobalsAndRecord(variables, globals, command)
 
 	-- Finally, parse the template with the variables
-	output[#output+1] = pcallTemplate(templates.entry, variables, "<blockquote>Error parsing entry</blockquote>\n")
+	command_output[#command_output+1] = pcallTemplate(templates.command_entry, variables, "<blockquote>Error parsing entry</blockquote>\n")
+
+	-- Enable javadoc linking
+	jdlinks[command.class.."#"..command.elementName] = pcallTemplate(templates.command_link, variables, "<code>Error parsing link</code>\n")
 end
 -- Append the footer
-output[#output+1] = pcallTemplate(templates.footer, globals)
-
--- And finally write the whole thing into a text file.
-io.writefile("output.txt", table.concat(output))
+command_output[#command_output+1] = pcallTemplate(templates.command_footer, globals)
 
 
 -- make a table of the format { "sectionName", "sectionName", sectionName = part = { partpart, partpart, partpart } }
@@ -235,6 +251,9 @@ for _,configItem in ipairs(configs) do
 
 	-- Finally, parse the template with the variables
 	part[#part+1] = pcallTemplate(templates.config_entry, variables, "<blockquote>Error parsing entry</blockquote>\n")
+
+	-- Enable javadoc linking
+	jdlinks[configItem.class.."#"..configItem.elementName] = pcallTemplate(templates.config_link, variables, "<code>Error parsing link</code>\n")
 end
 
 -- Make an output array, initially containing the header. It is later concatenated and written to config_output.txt
@@ -257,5 +276,6 @@ end
 -- Append the footer
 config_output[#config_output+1] = pcallTemplate(templates.config_footer, globals)
 
--- And finally write the whole thing into a text file.
-io.writefile("config_output.txt", table.concat(config_output))
+-- And finally write the whole thing into text files.
+io.writefile("command_output.txt", reparseJD(table.concat(command_output)))
+io.writefile("config_output.txt", reparseJD(table.concat(config_output)))
