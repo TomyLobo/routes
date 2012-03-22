@@ -89,3 +89,7 @@ function table.merge(target, source, map)
 
 	return target
 end
+
+function table.clone(tbl)
+	return table.merge({}, tbl)
+end
