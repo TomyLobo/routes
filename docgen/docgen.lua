@@ -12,14 +12,44 @@ AFTER_COMMENT = 2
 -- constants that might show up in annotations
 Command = { DISABLED = "DISABLED" }
 
+-- folders to scan for commands and config items
 local folders = {
-	"src/main/java/eu/tomylobo"
+	"src/main/java/eu/tomylobo/routes"
 }
 
+-- Converts a method name/@Command.names entry to a readable command.
 local function nameToLabel(name)
 	return "/"..name:gsub("_", " ")
 end
 
+-- Accounts for javadoc's peculiarities
+local function parseJD(comment)
+	-- TODO: parse @links
+	return comment
+end
+
+-- Precedence: variables > record > globals. record will be flattened and treated with string.htmlEntities.
+local function mergeGlobalsAndRecord(variables, globals, record)
+	-- Initialize with the globals.
+	local ret = table.clone(globals)
+
+	-- Merge the record in, skipping existing entries, concatenating arrays and encoding special characters.
+	table.merge(ret, record, function(v, k)
+		if type(v) == "table" then
+			ret[k] = table.concat(v, ", ")
+		else
+			ret[k] = tostring(v):htmlEntities()
+		end
+	end)
+
+	-- Finally, write the specially handled variables.
+	table.merge(ret, variables)
+
+	return ret
+end
+
+-- This function reads all the javadoc comments followed by the specified annotation.
+-- It optionally looks for a method after that and reads that too.
 local function scanfile(filename, records, annotationName, lookForMethod)
 	local class = filename:match("("..JAVA_IDENTIFIER..")%.java")
 
@@ -102,6 +132,7 @@ local function scanfile(filename, records, annotationName, lookForMethod)
 	end
 end
 
+-- read templates
 local templates = {}
 for filename in io.listRecursive("docgen/templates") do
 	local name = filename:match("[/\\]([^/\\]+)%.txt$")
@@ -110,6 +141,7 @@ for filename in io.listRecursive("docgen/templates") do
 	end
 end
 
+-- parse source files
 local commands = {}
 local configs = {}
 for _,folder in ipairs(folders) do
@@ -124,93 +156,108 @@ end
 print(#commands.." commands found.")
 print(#configs.." configs found.")
 
+-- A table of global variables. Initially contains a version string obtained from git describe.
 local globals = {
 	version = io.readfile_popen("git describe"):trim(),
 }
 
+-- Make an output array, initially containing the header. It is later concatenated and written to output.txt
 local output = { pcallTemplate(templates.header, globals) }
 for _,command in ipairs(commands) do
 	if command.names == nil or #command.names == 0 then
+		-- The names property was not given or is empty, so use the method name
 		command.names = { command.method }
 	elseif type(command.names) ~= "table" then
+		-- Braces were elided, so add them back :)
 		command.names = { command.names }
 	end
-	if command.permissions == Command.DISABLED then
+
+	-- Handle explicitly disabled permissions
+	if command.permissions == Command.DISABLED or (type(command.permissions) == "table" and command.permissions[1] == Command.DISABLED) then
 		command.permissions = nil
 	end
 
-	local name = command.names[1]:htmlEntities()
+	-- A table of local variables to be used with the "entry" template.
 	local variables = {
-		name = name,
-		label = nameToLabel(name),
-		comment = command.comment, -- the comment field may contain html, so it's left unencoded
+		name = command.names[1], -- a clean identifier for the command
+		comment = parseJD(command.comment), -- the comment field may contain html, so it's left unencoded
 		permissions = command.permissions ~= Command.DISABLED and command.permissions or nil
 	}
+
+	-- Make readable names
 	for k,v in pairs(command.names) do
 		command.names[k] = nameToLabel(v)
 	end
+
+	-- Split up names into label (1st name) and aliases (the rest)
+	variables.label = command.names[1]
 
 	if #command.names > 1 then
 		variables.aliases = table.concat(command.names, ", ", 2)
 	end
 
-	table.merge(variables, command, function(v, k)
-		if variables[k] ~= nil then return nil end
-		if type(v) == "table" then
-			v = table.concat(v, ", ")
-		else
-			variables[k] = v:htmlEntities()
-		end
-	end)
+	-- Merge globals and the remaining ConfigItem annotation properties in
+	variables = mergeGlobalsAndRecord(variables, globals, command)
 
-	table.merge(variables, globals)
-
+	-- Finally, parse the template with the variables
 	output[#output+1] = pcallTemplate(templates.entry, variables, "<blockquote>Error parsing entry</blockquote>\n")
 end
+-- Append the footer
 output[#output+1] = pcallTemplate(templates.footer, globals)
 
+-- And finally write the whole thing into a text file.
 io.writefile("output.txt", table.concat(output))
 
 
-local parts = { }
+-- make a table of the format { "sectionName", "sectionName", sectionName = part = { partpart, partpart, partpart } }
+local sections = { }
 for _,configItem in ipairs(configs) do
-	table.dump(configItem)
+	-- parse the "value" property of the annotation into section and key
 	local section,key = configItem[1]:match("^([^.]*)%.(.*)$")
 
+	-- predefine the variables array with some entries that need special handling
 	local variables = {
 		section = section,
 		key = key,
-		comment = configItem.comment, -- the comment field may contain html, so it's left unencoded
+		comment = parseJD(configItem.comment), -- the comment field may contain html, so it's left unencoded
 	}
 
-	table.merge(variables, configItem, function(v, k)
-		if variables[k] ~= nil then return nil end
-		if type(v) == "table" then
-			v = table.concat(v, ", ")
-		else
-			variables[k] = v:htmlEntities()
-		end
-	end)
+	-- Merge globals and the remaining ConfigItem annotation properties in
+	variables = mergeGlobalsAndRecord(variables, globals, configItem)
 
-	table.merge(variables, globals)
-
-	local part = parts[section]
+	-- Retrieve the section to write into from the sections table
+	local part = sections[section]
 	if part == nil then
+		-- If it doesn't exist, create a new part and write it back into the sections table
 		part = {}
-		parts[section] = part
-		parts[#parts+1] = section
+		sections[section] = part
+		-- Make sure we can later retrieve these in order.
+		sections[#sections+1] = section
 	end
+
+	-- Finally, parse the template with the variables
 	part[#part+1] = pcallTemplate(templates.config_entry, variables, "<blockquote>Error parsing entry</blockquote>\n")
 end
 
-local output = { pcallTemplate(templates.config_header, globals) }
-for _,section in ipairs(parts) do
-	local part = parts[section]
-	output[#output+1] = pcallTemplate(templates.section_header, table.merge({ section = section }, globals))
+-- Make an output array, initially containing the header. It is later concatenated and written to config_output.txt
+local config_output = { pcallTemplate(templates.config_header, globals) }
+for _,section in ipairs(sections) do
+	-- retrieve the section contents
+	local part = sections[section]
+
+	-- Add the section header to the output
+	config_output[#config_output+1] = pcallTemplate(templates.section_header, table.merge({ section = section }, globals))
+
+	-- Add the already parsed section contents to the output
 	for _,partpart in ipairs(part) do
-		output[#output+1] = partpart
+		config_output[#config_output+1] = partpart
 	end
-	output[#output+1] = pcallTemplate(templates.section_footer, table.merge({ section = section }, globals))
+
+	-- Add the section footerto the output
+	config_output[#config_output+1] = pcallTemplate(templates.section_footer, table.merge({ section = section }, globals))
 end
-output[#output+1] = pcallTemplate(templates.config_footer, globals)
-io.writefile("config_output.txt", table.concat(output))
+-- Append the footer
+config_output[#config_output+1] = pcallTemplate(templates.config_footer, globals)
+
+-- And finally write the whole thing into a text file.
+io.writefile("config_output.txt", table.concat(config_output))
