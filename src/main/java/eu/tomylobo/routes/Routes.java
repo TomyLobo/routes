@@ -11,21 +11,21 @@ import eu.tomylobo.routes.sign.SignHandler;
 import eu.tomylobo.routes.travel.TravelAgency;
 
 public class Routes extends AbstractMetaPlugin {
-	public RoutesConfig config = new RoutesConfig();
-
-	public TravelAgency travelAgency;
-	public final TransportSystem transportSystem = new TransportSystem(this);
-	public SignHandler signHandler;
-	public RouteEditor routeEditor;
-
-	protected static AbstractMetaPlugin instance;
+	protected static Routes instance;
 	{
 		instance = this;
 	}
 
 	public static Routes getInstance() {
-		return (Routes) instance;
+		return instance;
 	}
+
+	public RoutesConfig config = new RoutesConfig(this);
+
+	public TravelAgency travelAgency;
+	public final TransportSystem transportSystem = new TransportSystem(this);
+	public SignHandler signHandler;
+	public RouteEditor routeEditor;
 
 	@Override
 	public void onEnable() {
