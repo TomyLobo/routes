@@ -117,4 +117,20 @@ public class Vector {
 		long bits = Double.doubleToLongBits(value);
 		return (int)(bits ^ (bits >>> 32));
 	}
+
+	public Vector floor() {
+		return new Vector(Math.floor(x), Math.floor(y), Math.floor(z));
+	}
+
+	public Vector setX(double x) {
+		return new Vector(x, y, z);
+	}
+
+	public Vector setY(double y) {
+		return new Vector(x, y, z);
+	}
+
+	public Vector setZ(double z) {
+		return new Vector(x, y, z);
+	}
 }
