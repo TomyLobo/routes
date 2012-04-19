@@ -23,6 +23,11 @@ import java.lang.reflect.Method;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
+import org.spout.api.geo.discrete.Point;
+import org.spout.api.geo.discrete.Transform;
+import org.spout.api.math.Quaternion;
+import org.spout.api.math.Vector3;
+
 import com.google.common.base.Equivalence;
 import com.google.common.base.Equivalences;
 import com.google.common.collect.MapMaker;
@@ -89,20 +94,7 @@ public class SpoutUtils {
 				0, 0
 		);
 	}
-	public static Location wrap(org.spout.api.entity.Position location) {
-		return new Location(
-				wrap(location.getPosition().getWorld()),
-				wrap((org.spout.api.math.Vector3) location.getPosition()),
-				location.getYaw(), location.getPitch()
-		);
-	}
 
-	public static org.spout.api.entity.Position unwrap(Location location) {
-		return new org.spout.api.entity.Position(
-				unwrapPoint(location),
-				location.getPitch(), location.getYaw(), 0
-		);
-	}		
 	public static org.spout.api.geo.discrete.Point unwrapPoint(Location location) {
 		return new org.spout.api.geo.discrete.Point(
 				unwrap(location.getPosition()),
@@ -167,5 +159,17 @@ public class SpoutUtils {
 			return unwrap((Player) sender);
 		
 		return ((SpoutCommandSender) sender).backend;
+	}
+
+	public static Location wrap(Transform transform) {
+		Vector3 axisAngles = transform.getRotation().getAxisAngles();
+		return wrap(transform.getPosition()).setAngles(axisAngles.getY(), axisAngles.getX());
+	}
+
+	public static Transform unwrapTransform(Location location, Vector3 scale) {
+		Point position = unwrapPoint(location);
+		Quaternion rotation = Quaternion.rotation(location.getPitch(), location.getYaw(), 0);
+
+		return new Transform(position, rotation, scale);
 	}
 }

@@ -19,8 +19,8 @@
 
 package eu.tomylobo.abstraction.platform.spout;
 
-import org.spout.api.entity.Position;
-import org.spout.vanilla.entity.VanillaEntity;
+import org.spout.api.geo.discrete.Transform;
+import org.spout.vanilla.controller.VanillaActionController;
 
 import eu.tomylobo.abstraction.entity.Entity;
 import eu.tomylobo.math.Location;
@@ -43,11 +43,8 @@ public class SpoutEntity implements Entity {
 	public void teleport(Location location, boolean withAngles, boolean notify) {
 		// TODO: spout
 		//if (withAngles) {
-			final Position position = unwrap(location);
-			backend.setPosition(position.getPosition());
-			backend.setPitch(position.getPitch());
-			backend.setYaw(position.getYaw());
-			backend.setRoll(position.getRoll());
+			final Transform transform = unwrapTransform(location, backend.getScale());
+			backend.setTransform(transform);
 			// TODO: implement notify=false
 		/*}
 		else {
@@ -69,8 +66,8 @@ public class SpoutEntity implements Entity {
 	@Override
 	public void setVelocity(Vector velocity) {
 		// TODO: spout
-		final VanillaEntity vanillaEntity = (VanillaEntity) backend.getController();
-		vanillaEntity.setVelocity(unwrap(velocity));
+		final VanillaActionController controller = (VanillaActionController) backend.getController();
+		controller.setVelocity(unwrap(velocity));
 	}
 
 	@Override

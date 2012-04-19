@@ -29,17 +29,17 @@ import eu.tomylobo.abstraction.platform.spout.event.SpoutDispatcher;
 public class SpoutEnvironment extends Environment {
 	@Override
 	protected SpoutWorld getWorldImpl(String worldName) {
-		return SpoutUtils.wrap(org.spout.api.Spout.getGame().getWorld(worldName));
+		return SpoutUtils.wrap(org.spout.api.Spout.getEngine().getWorld(worldName));
 	}
 
 	@Override
 	protected SpoutPlayer getPlayerImpl(String playerName) {
-		return SpoutUtils.wrap(org.spout.api.Spout.getGame().getPlayer(playerName, true));
+		return SpoutUtils.wrap(org.spout.api.Spout.getEngine().getPlayer(playerName, true));
 	}
 
 	@Override
 	protected List<Player> getPlayersImpl() {
-		final org.spout.api.player.Player[] players = org.spout.api.Spout.getGame().getOnlinePlayers();
+		final org.spout.api.player.Player[] players = org.spout.api.Spout.getEngine().getOnlinePlayers();
 		final List<Player> ret = new ArrayList<Player>(players.length);
 		for (org.spout.api.player.Player player : players) {
 			ret.add(SpoutUtils.wrap(player));

@@ -40,7 +40,7 @@ public class SpoutEventUtils {
 	static Event wrap(org.spout.api.event.block.BlockEvent backend) {
 		final Event event = wrap((org.spout.api.event.block.BlockEvent) backend);
 
-		final eu.tomylobo.math.Location location = SpoutUtils.wrap(backend.getBlock().getBase());
+		final eu.tomylobo.math.Location location = SpoutUtils.wrap(backend.getBlock().getPosition());
 
 		event.setLocation(location);
 		event.setBlockState(location.getBlockState());
