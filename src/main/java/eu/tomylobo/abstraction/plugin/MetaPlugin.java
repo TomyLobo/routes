@@ -19,6 +19,8 @@
 
 package eu.tomylobo.abstraction.plugin;
 
+import java.io.File;
+
 import eu.tomylobo.abstraction.CommandSender;
 import eu.tomylobo.routes.commands.system.CommandSystem;
 
@@ -30,4 +32,5 @@ public interface MetaPlugin {
 	boolean onCommand(CommandSender sender, String commandName, String label, String[] args);
 	void setFrameworkPlugin(FrameworkPlugin plugin);
 	CommandSystem getCommandSystem();
+	File getDataFolder();
 }

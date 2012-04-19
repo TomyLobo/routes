@@ -33,6 +33,7 @@ public abstract class AbstractMetaPlugin implements MetaPlugin {
 		return getCommandSystem().dispatch(sender, commandName, label, args);
 	}
 
+	@Override
 	public File getDataFolder() {
 		return frameworkPlugin.getDataFolder();
 	}
