@@ -26,6 +26,7 @@ import eu.tomylobo.abstraction.World;
 import eu.tomylobo.abstraction.block.BlockState;
 import eu.tomylobo.abstraction.block.Sign;
 import eu.tomylobo.abstraction.entity.Player;
+import eu.tomylobo.math.Location;
 import eu.tomylobo.math.Vector;
 
 public class BukkitWorld implements World {
@@ -107,5 +108,10 @@ public class BukkitWorld implements World {
 	@Override
 	public int getBlockData(Vector position) {
 		return backend.getBlockAt((int) position.getX(), (int) position.getY(), (int) position.getZ()).getData();
+	}
+
+	@Override
+	public Location getSpawnLocation() {
+		return BukkitUtils.wrap(backend.getSpawnLocation());
 	}
 }

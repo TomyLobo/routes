@@ -23,6 +23,7 @@ import java.util.List;
 
 import eu.tomylobo.abstraction.block.BlockState;
 import eu.tomylobo.abstraction.entity.Player;
+import eu.tomylobo.math.Location;
 import eu.tomylobo.math.Vector;
 
 public interface World {
@@ -34,4 +35,5 @@ public interface World {
 	int getBlockData(Vector position);
 
 	void setBlockState(Vector position, BlockState blockState);
+	Location getSpawnLocation();
 }

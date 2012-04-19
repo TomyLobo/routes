@@ -26,6 +26,7 @@ import java.util.Set;
 import eu.tomylobo.abstraction.World;
 import eu.tomylobo.abstraction.block.BlockState;
 import eu.tomylobo.abstraction.entity.Player;
+import eu.tomylobo.math.Location;
 import eu.tomylobo.math.Vector;
 
 public class SpoutWorld implements World {
@@ -111,5 +112,10 @@ public class SpoutWorld implements World {
 	@Override
 	public int getBlockData(Vector position) {
 		return backend.getBlockData((int) position.getX(), (int) position.getY(), (int) position.getZ());
+	}
+
+	@Override
+	public Location getSpawnLocation() {
+		return SpoutUtils.wrap(backend.getSpawnPoint());
 	}
 }
