@@ -77,7 +77,7 @@ public class Vector {
 		return divide(length());
 	}
 
-	private Vector divide(double f) {
+	public Vector divide(double f) {
 		return multiply(1 / f);
 	}
 
