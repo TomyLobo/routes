@@ -1,9 +1,7 @@
 author: TomyLobo
-database: false
 description: Allows creating horse/boat/dragon routes
 main: eu.tomylobo.routes.BukkitRoutes
 name: routes
-startup: postworld
 url: https://github.com/TomyLobo/routes
 version: 'maven-version-number'
 
