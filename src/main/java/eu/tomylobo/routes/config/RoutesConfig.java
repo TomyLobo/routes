@@ -19,8 +19,14 @@
 
 package eu.tomylobo.routes.config;
 
+import eu.tomylobo.abstraction.plugin.MetaPlugin;
+
 @ConfigFile("config.txt")
 public class RoutesConfig extends Config {
+	public RoutesConfig(MetaPlugin plugin) {
+		super(plugin);
+	}
+
 	// [editor]
 
 	/**

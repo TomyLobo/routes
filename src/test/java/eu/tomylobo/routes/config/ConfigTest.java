@@ -19,26 +19,25 @@
 
 package eu.tomylobo.routes.config;
 
+import java.io.File;
+
 import org.junit.*;
 
 import eu.tomylobo.abstraction.entity.MobType;
 import eu.tomylobo.abstraction.entity.VehicleType;
-import eu.tomylobo.routes.Routes;
-import eu.tomylobo.routes.util.Utils;
-
+import eu.tomylobo.abstraction.plugin.AbstractMetaPlugin;
 import static org.junit.Assert.*;
 
 public class ConfigTest {
 	@Test
 	public void configTest() {
-		Utils.setPrivateValue(Routes.class, null, "instance", new Routes() {
+		final TestConfig config = new TestConfig(new AbstractMetaPlugin() {
 			@Override
-			public String getConfigFileName(String baseFileName) {
-				return baseFileName;
+			public File getDataFolder() {
+				return new File(".");
 			}
 		});
 
-		final TestConfig config = new TestConfig();
 		config.save();
 		config.test = "falsch";
 		config.test2 = -1;

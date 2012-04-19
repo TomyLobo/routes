@@ -21,9 +21,14 @@ package eu.tomylobo.routes.config;
 
 import eu.tomylobo.abstraction.entity.EntityType;
 import eu.tomylobo.abstraction.entity.MobType;
+import eu.tomylobo.abstraction.plugin.MetaPlugin;
 
 @ConfigFile("testconfig.txt")
 public class TestConfig extends Config {
+	public TestConfig(MetaPlugin plugin) {
+		super(plugin);
+	}
+
 	@ConfigItem("testsection.teststring")
 	public String test = "testvalue";
 

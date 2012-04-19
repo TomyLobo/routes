@@ -32,10 +32,16 @@ import com.google.common.collect.Multimap;
 import eu.tomylobo.abstraction.entity.EntityType;
 import eu.tomylobo.abstraction.entity.MobType;
 import eu.tomylobo.abstraction.entity.VehicleType;
-import eu.tomylobo.routes.Routes;
+import eu.tomylobo.abstraction.plugin.MetaPlugin;
 import eu.tomylobo.routes.util.Ini;
 
 public class Config {
+	private final MetaPlugin plugin;
+
+	public Config(MetaPlugin plugin) {
+		this.plugin = plugin;
+	}
+
 	public class Entry {
 		public String sectionName;
 		public String key;
@@ -108,11 +114,15 @@ public class Config {
 			section.put(key, convertFrom(value));
 		}
 
-		Ini.save(Routes.getInstance().getConfigFileName(configFileName), sections);
+		Ini.save(getConfigFileName(), sections);
+	}
+
+	private String getConfigFileName() {
+		return plugin.getDataFolder() + "/" + configFileName;
 	}
 
 	public void load() {
-		final Multimap<String, Multimap<String, String>> sections = Ini.load(Routes.getInstance().getConfigFileName(configFileName));
+		final Multimap<String, Multimap<String, String>> sections = Ini.load(getConfigFileName());
 		if (sections == null) {
 			System.out.println("Config file missing, creating default.");
 			save();
