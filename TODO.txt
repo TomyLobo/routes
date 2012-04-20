@@ -10,3 +10,6 @@
 	- maybe integrate with translation?
 - make use of the "usage" in command annotations
 - extend docgen to parse multi-line annotations
+- add scriptable waypoints
+	- pause
+	- trigger redstone (open/close doors)
