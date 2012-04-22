@@ -34,9 +34,7 @@ import eu.tomylobo.routes.util.Ini;
  * @author TomyLobo
  *
  */
-public class Node {
-	private Route route;
-
+public class Node extends AbstractDirtyable {
 	private Vector position;
 
 	private double tension;
@@ -62,7 +60,7 @@ public class Node {
 
 	public void setPosition(Vector position) {
 		this.position = position;
-		setRouteDirty();
+		setDirty();
 	}
 
 	public double getTension() {
@@ -71,7 +69,7 @@ public class Node {
 
 	public void setTension(double tension) {
 		this.tension = tension;
-		setRouteDirty();
+		setDirty();
 	}
 
 	public double getBias() {
@@ -80,7 +78,7 @@ public class Node {
 
 	public void setBias(double bias) {
 		this.bias = bias;
-		setRouteDirty();
+		setDirty();
 	}
 
 	public double getContinuity() {
@@ -89,7 +87,7 @@ public class Node {
 
 	public void setContinuity(double continuity) {
 		this.continuity = continuity;
-		setRouteDirty();
+		setDirty();
 	}
 
 
@@ -113,14 +111,5 @@ public class Node {
 		tension = Ini.getOnlyDouble(nodeSection.get("tension"));
 		bias = Ini.getOnlyDouble(nodeSection.get("bias"));
 		continuity = Ini.getOnlyDouble(nodeSection.get("continuity"));
-	}
-
-	public void setRoute(Route route) {
-		this.route = route;
-	}
-
-
-	private void setRouteDirty() {
-		route.setDirty();
 	}
 }

@@ -45,12 +45,11 @@ import eu.tomylobo.routes.util.ScheduledTask;
  * @author TomyLobo
  *
  */
-public final class Route {
+public final class Route extends AbstractDirtyable {
 	private final String name;
 	private World world;
 
 	private final List<Node> nodes = new ArrayList<Node>();
-	private boolean nodesDirty = false;
 
 	//private Interpolation interpolation = new LinearInterpolation();
 	private Interpolation interpolation = new ReparametrisingInterpolation(new KochanekBartelsInterpolation());
@@ -65,8 +64,9 @@ public final class Route {
 	private VisualizedRoute visualizedRoute;
 
 	public Route(String name) {
-		super();
 		this.name = name;
+
+		addDirtyClient(Routes.getInstance().transportSystem);
 	}
 
 	public List<Node> getNodes() {
@@ -104,7 +104,7 @@ public final class Route {
 		}
 		this.nodes.addAll(index, Arrays.asList(nodes));
 		for (Node node : nodes) {
-			node.setRoute(this);
+			node.addDirtyClient(this);
 		}
 		setDirty();
 	}
@@ -117,14 +117,6 @@ public final class Route {
 			return null;
 
 		return Location.fromEye(world, vec, interpolation.get1stDerivative(position));
-	}
-
-	private void ensureClean() {
-		if (nodesDirty) {
-			interpolation.setNodes(nodes);
-			nodesDirty = false;
-			Routes.getInstance().transportSystem.save();
-		}
 	}
 
 	public Vector getVelocity(double position) {
@@ -188,10 +180,6 @@ public final class Route {
 		}
 	}
 
-	void setDirty() {
-		nodesDirty = true;
-	}
-
 	public double getArcLength(double positionA, double positionB) {
 		return interpolation.arcLength(positionA, positionB);
 	}
@@ -220,5 +208,14 @@ public final class Route {
 	public void removeNode(int index) {
 		nodes.remove(index);
 		setDirty();
+	}
+
+
+	@Override
+	public void ensureClean() {
+		if (isDirty()) {
+			interpolation.setNodes(nodes);
+		}
+		super.ensureClean();
 	}
 }

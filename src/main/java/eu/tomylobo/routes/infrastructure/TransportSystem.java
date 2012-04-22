@@ -35,7 +35,7 @@ import eu.tomylobo.routes.util.Ini;
  * @author TomyLobo
  *
  */
-public class TransportSystem {
+public class TransportSystem extends AbstractDirtyable {
 	private final Routes plugin;
 	private final Map<String, Route> routes = new HashMap<String, Route>();
 
@@ -80,5 +80,13 @@ public class TransportSystem {
 
 			addRoute(route);
 		}
+	}
+
+	@Override
+	public void ensureClean() {
+		if (isDirty()) {
+			save();
+		}
+		super.ensureClean();
 	}
 }
