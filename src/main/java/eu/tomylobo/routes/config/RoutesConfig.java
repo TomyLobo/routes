@@ -19,6 +19,8 @@
 
 package eu.tomylobo.routes.config;
 
+import eu.tomylobo.abstraction.entity.EntityType;
+import eu.tomylobo.abstraction.entity.MobType;
 import eu.tomylobo.abstraction.plugin.MetaPlugin;
 
 @ConfigFile("config.txt")
@@ -93,4 +95,10 @@ public class RoutesConfig extends Config {
 	 */
 	@ConfigItem("travel.signPrefix")
 	public String signsRoutePrefix = "@@";
+
+	/**
+	 * The entity type to be used with /routes test.
+	 */
+	@ConfigItem("test.entityType")
+	public EntityType testEntityType = MobType.ENDER_DRAGON;
 }

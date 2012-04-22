@@ -21,14 +21,13 @@ package eu.tomylobo.routes.commands;
 
 import java.util.Collection;
 
-import eu.tomylobo.abstraction.entity.MobType;
 import eu.tomylobo.abstraction.entity.Player;
 import eu.tomylobo.routes.commands.system.Command;
 import eu.tomylobo.routes.commands.system.Context;
 import eu.tomylobo.routes.commands.system.CommandContainer;
 import eu.tomylobo.routes.commands.system.NestedCommand;
 import eu.tomylobo.routes.config.RoutesConfig;
-import eu.tomylobo.routes.fakeentity.FakeMob;
+import eu.tomylobo.routes.fakeentity.FakeEntity;
 import eu.tomylobo.routes.infrastructure.Route;
 import eu.tomylobo.routes.infrastructure.editor.RouteEditSession;
 import eu.tomylobo.routes.infrastructure.editor.VisualizedRoute;
@@ -164,17 +163,17 @@ public class RoutesCommands extends CommandContainer {
 	}
 
 	/**
-	 * Sends an unmanned dragon on the specified route.
+	 * Sends an unmanned entity on the specified route.
 	 */
 	@Command(usage = "<route>", permissions = "routes.test")
 	public void routes_test(Context context) {
 		final String routeName = context.getString(0);
 		final Route route = plugin.transportSystem.getRoute(routeName);
 
-		final FakeMob dragon = new FakeMob(route.getLocation(0), MobType.ENDER_DRAGON);
-		dragon.send();
+		final FakeEntity entity = FakeEntity.create(route.getLocation(0), plugin.config.testEntityType);
+		entity.send();
 
-		plugin.travelAgency.addTraveller(route, dragon, 5.0, new Remover(dragon));
+		plugin.travelAgency.addTraveller(route, entity, 5.0, new Remover(entity));
 
 		context.sendMessage("Testing route '"+routeName+"'.");
 	}
