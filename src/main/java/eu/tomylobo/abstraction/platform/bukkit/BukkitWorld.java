@@ -114,4 +114,9 @@ public class BukkitWorld implements World {
 	public Location getSpawnLocation() {
 		return BukkitUtils.wrap(backend.getSpawnLocation());
 	}
+
+	@Override
+	public double getMaxY() {
+		return backend.getMaxHeight() - 1;
+	}
 }

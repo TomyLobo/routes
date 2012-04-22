@@ -120,4 +120,9 @@ public class SpoutWorld implements World {
 	public Location getSpawnLocation() {
 		return SpoutUtils.wrap(backend.getSpawnPoint());
 	}
+
+	@Override
+	public double getMaxY() {
+		return backend.getHeight() - 1;
+	}
 }

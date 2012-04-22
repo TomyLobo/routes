@@ -36,4 +36,5 @@ public interface World {
 
 	void setBlockState(Vector position, BlockState blockState);
 	Location getSpawnLocation();
+	double getMaxY();
 }
