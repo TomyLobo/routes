@@ -45,6 +45,14 @@ public class Node extends AbstractDirtyable {
 		this(new Vector(0, 0, 0));
 	}
 
+	public Node(Node other) {
+		this.position = other.position;
+
+		this.tension = other.tension;
+		this.bias = other.bias;
+		this.continuity = other.continuity;
+	}
+
 	public Node(Vector position) {
 		this.position = position;
 	}
