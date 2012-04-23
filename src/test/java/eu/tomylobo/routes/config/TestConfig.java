@@ -23,6 +23,7 @@ import eu.tomylobo.abstraction.entity.EntityType;
 import eu.tomylobo.abstraction.entity.MobType;
 import eu.tomylobo.abstraction.plugin.MetaPlugin;
 
+@org.junit.Ignore
 @ConfigFile("testconfig.txt")
 public class TestConfig extends Config {
 	public TestConfig(MetaPlugin plugin) {
