@@ -36,7 +36,7 @@ import eu.tomylobo.routes.infrastructure.editor.VisualizedRoute;
 import eu.tomylobo.routes.infrastructure.interpolation.Interpolation;
 import eu.tomylobo.routes.infrastructure.interpolation.KochanekBartelsInterpolation;
 import eu.tomylobo.routes.infrastructure.interpolation.ReparametrisingInterpolation;
-import eu.tomylobo.routes.infrastructure.nodefilter.DropToFloorNodeFilter;
+import eu.tomylobo.routes.infrastructure.nodefilter.IdentityNodeFilter;
 import eu.tomylobo.routes.infrastructure.nodefilter.NodeFilter;
 import eu.tomylobo.routes.util.Ini;
 import eu.tomylobo.routes.util.ScheduledTask;
@@ -56,7 +56,7 @@ public final class Route extends AbstractDirtyable {
 
 	//private Interpolation interpolation = new LinearInterpolation();
 	private Interpolation interpolation = new ReparametrisingInterpolation(new KochanekBartelsInterpolation());
-	private NodeFilter nodeFilter = new DropToFloorNodeFilter();
+	private NodeFilter nodeFilter = IdentityNodeFilter.getInstance();
 
 	private ScheduledTask task = new ScheduledTask(Routes.getInstance()) {
 		@Override
@@ -219,6 +219,15 @@ public final class Route extends AbstractDirtyable {
 	public void removeNode(int index) {
 		nodes.remove(index);
 		setDirty();
+	}
+
+	public NodeFilter getFilter() {
+		return nodeFilter;
+	}
+
+	public void setFilter(NodeFilter nodeFilter) {
+		this.nodeFilter = nodeFilter;
+		filteredNodes = null;
 	}
 
 

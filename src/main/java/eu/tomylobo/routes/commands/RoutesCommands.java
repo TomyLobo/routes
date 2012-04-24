@@ -31,6 +31,9 @@ import eu.tomylobo.routes.fakeentity.FakeEntity;
 import eu.tomylobo.routes.infrastructure.Route;
 import eu.tomylobo.routes.infrastructure.editor.RouteEditSession;
 import eu.tomylobo.routes.infrastructure.editor.VisualizedRoute;
+import eu.tomylobo.routes.infrastructure.nodefilter.DropToFloorNodeFilter;
+import eu.tomylobo.routes.infrastructure.nodefilter.IdentityNodeFilter;
+import eu.tomylobo.routes.infrastructure.nodefilter.NodeFilter;
 import eu.tomylobo.routes.util.Remover;
 import eu.tomylobo.routes.util.ScheduledTask;
 
@@ -176,5 +179,27 @@ public class RoutesCommands extends CommandContainer {
 		plugin.travelAgency.addTraveller(route, entity, 5.0, new Remover(entity));
 
 		context.sendMessage("Testing route '"+routeName+"'.");
+	}
+
+	/**
+	 * Sets the node filter to use.
+	 */
+	@Command(usage = "<route> [<filter>]", permissions = "routes.setfilter")
+	public void routes_setfilter(Context context) {
+		final String routeName = context.getString(0);
+		final Route route = plugin.transportSystem.getRoute(routeName);
+
+		final String filterName = context.getString(1, null);
+		final NodeFilter filter;
+		if (filterName == null) {
+			filter = IdentityNodeFilter.getInstance();
+		}
+		else {
+			filter = DropToFloorNodeFilter.valueOf(filterName.toUpperCase());
+		}
+
+		route.setFilter(filter);
+
+		context.sendMessage("Route filter set to '"+filterName+"'.");
 	}
 }

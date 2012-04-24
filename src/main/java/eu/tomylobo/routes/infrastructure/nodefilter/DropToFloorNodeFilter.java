@@ -26,8 +26,14 @@ import eu.tomylobo.abstraction.World;
 import eu.tomylobo.math.Vector;
 import eu.tomylobo.routes.infrastructure.Node;
 
-public class DropToFloorNodeFilter implements NodeFilter {
-	private static final double yOffset = 0;
+public enum DropToFloorNodeFilter implements NodeFilter {
+	PIG(0);
+
+	private final double yOffset;
+
+	private DropToFloorNodeFilter(double yOffset) {
+		this.yOffset = yOffset;
+	}
 
 	@Override
 	public List<Node> filter(World world, List<Node> nodes) {
