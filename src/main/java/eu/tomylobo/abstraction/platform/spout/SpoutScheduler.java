@@ -21,6 +21,7 @@ package eu.tomylobo.abstraction.platform.spout;
 
 import org.spout.api.Spout;
 import org.spout.api.plugin.Plugin;
+import org.spout.api.scheduler.TaskPriority;
 
 import eu.tomylobo.abstraction.Scheduler;
 import eu.tomylobo.abstraction.plugin.MetaPlugin;
@@ -28,7 +29,7 @@ import eu.tomylobo.abstraction.plugin.MetaPlugin;
 public class SpoutScheduler implements Scheduler {
 	@Override
 	public Object scheduleSyncDelayedTask(MetaPlugin plugin, Runnable task, long delay) {
-		int taskId = Spout.getScheduler().scheduleSyncDelayedTask((Plugin) plugin.getFrameworkPlugin(), task, delay);
+		int taskId = Spout.getScheduler().scheduleSyncDelayedTask((Plugin) plugin.getFrameworkPlugin(), task, delay, TaskPriority.NORMAL);
 		if (taskId == -1)
 			return null;
 
@@ -37,7 +38,7 @@ public class SpoutScheduler implements Scheduler {
 
 	@Override
 	public Object scheduleSyncDelayedTask(MetaPlugin plugin, Runnable task) {
-		int taskId = Spout.getScheduler().scheduleSyncDelayedTask((Plugin) plugin.getFrameworkPlugin(), task);
+		int taskId = Spout.getScheduler().scheduleSyncDelayedTask((Plugin) plugin.getFrameworkPlugin(), task, TaskPriority.NORMAL);
 		if (taskId == -1)
 			return null;
 
@@ -46,7 +47,7 @@ public class SpoutScheduler implements Scheduler {
 
 	@Override
 	public Object scheduleSyncRepeatingTask(MetaPlugin plugin, Runnable task, long delay, long period) {
-		int taskId = Spout.getScheduler().scheduleSyncRepeatingTask((Plugin) plugin.getFrameworkPlugin(), task, delay, period);
+		int taskId = Spout.getScheduler().scheduleSyncRepeatingTask((Plugin) plugin.getFrameworkPlugin(), task, delay, period, TaskPriority.NORMAL);
 		if (taskId == -1)
 			return null;
 
@@ -55,7 +56,7 @@ public class SpoutScheduler implements Scheduler {
 
 	@Override
 	public Object scheduleAsyncDelayedTask(MetaPlugin plugin, Runnable task, long delay) {
-		int taskId = Spout.getScheduler().scheduleAsyncDelayedTask((Plugin) plugin.getFrameworkPlugin(), task, delay);
+		int taskId = Spout.getScheduler().scheduleAsyncDelayedTask((Plugin) plugin.getFrameworkPlugin(), task, delay, TaskPriority.NORMAL);
 		if (taskId == -1)
 			return null;
 
@@ -64,7 +65,7 @@ public class SpoutScheduler implements Scheduler {
 
 	@Override
 	public Object scheduleAsyncDelayedTask(MetaPlugin plugin, Runnable task) {
-		int taskId = Spout.getScheduler().scheduleAsyncDelayedTask((Plugin) plugin.getFrameworkPlugin(), task);
+		int taskId = Spout.getScheduler().scheduleAsyncDelayedTask((Plugin) plugin.getFrameworkPlugin(), task, TaskPriority.NORMAL);
 		if (taskId == -1)
 			return null;
 
@@ -73,7 +74,7 @@ public class SpoutScheduler implements Scheduler {
 
 	@Override
 	public Object scheduleAsyncRepeatingTask(MetaPlugin plugin, Runnable task, long delay, long period) {
-		int taskId = Spout.getScheduler().scheduleAsyncRepeatingTask((Plugin) plugin.getFrameworkPlugin(), task, delay, period);
+		int taskId = Spout.getScheduler().scheduleAsyncRepeatingTask((Plugin) plugin.getFrameworkPlugin(), task, delay, period, TaskPriority.NORMAL);
 		if (taskId == -1)
 			return null;
 

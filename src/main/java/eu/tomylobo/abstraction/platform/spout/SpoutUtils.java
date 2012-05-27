@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.spout.api.geo.discrete.Point;
 import org.spout.api.geo.discrete.Transform;
+import org.spout.api.math.MathHelper;
 import org.spout.api.math.Quaternion;
 import org.spout.api.math.Vector3;
 
@@ -168,7 +169,7 @@ public class SpoutUtils {
 
 	public static Transform unwrapTransform(Location location, Vector3 scale) {
 		Point position = unwrapPoint(location);
-		Quaternion rotation = Quaternion.rotation(location.getPitch(), location.getYaw(), 0);
+		Quaternion rotation = MathHelper.rotation(location.getPitch(), location.getYaw(), 0);
 
 		return new Transform(position, rotation, scale);
 	}

@@ -34,7 +34,7 @@ import org.spout.vanilla.protocol.msg.EntityRotationMessage;
 import org.spout.vanilla.protocol.msg.EntityStatusMessage;
 import org.spout.vanilla.protocol.msg.EntityTeleportMessage;
 import org.spout.vanilla.protocol.msg.EntityVelocityMessage;
-import org.spout.vanilla.protocol.msg.PositionMessage;
+import org.spout.vanilla.protocol.msg.PlayerPositionMessage;
 import org.spout.vanilla.protocol.msg.SpawnMobMessage;
 import org.spout.vanilla.protocol.msg.SpawnVehicleMessage;
 import org.spout.vanilla.protocol.msg.UpdateSignMessage;
@@ -406,10 +406,10 @@ public class SpoutNetwork implements Network {
 	}
 
 
-	private PositionMessage createPlayerPositionPacket(double x, double y, double z) {
+	private PlayerPositionMessage createPlayerPositionPacket(double x, double y, double z) {
 		final double stance = y;
 		y += 1.62;
-		return new PositionMessage(x, y, z, stance, false);
+		return new PlayerPositionMessage(x, y, z, stance, false);
 	}
 
 	@Override

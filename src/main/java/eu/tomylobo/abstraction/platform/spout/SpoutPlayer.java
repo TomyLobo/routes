@@ -21,6 +21,7 @@ package eu.tomylobo.abstraction.platform.spout;
 
 import org.spout.api.entity.PlayerController;
 import org.spout.api.inventory.ItemStack;
+import org.spout.vanilla.controller.living.player.VanillaPlayer;
 
 import eu.tomylobo.abstraction.Environment;
 import eu.tomylobo.abstraction.entity.Player;
@@ -45,7 +46,8 @@ public class SpoutPlayer extends SpoutEntity implements Player {
 
 	@Override
 	public int getItemTypeInHand() {
-		final ItemStack currentItem = backend.getEntity().getInventory().getCurrentItem();
+		final VanillaPlayer vanillaPlayer = (VanillaPlayer) backend.getEntity().getController();
+		final ItemStack currentItem = vanillaPlayer.getInventory().getCurrentItem();
 		if (currentItem == null)
 			return 0;
 
