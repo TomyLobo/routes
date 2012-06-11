@@ -19,7 +19,7 @@
 
 package eu.tomylobo.abstraction.platform.spout;
 
-import org.spout.api.entity.PlayerController;
+import org.spout.api.entity.component.controller.PlayerController;
 import org.spout.api.inventory.ItemStack;
 import org.spout.vanilla.controller.living.player.VanillaPlayer;
 

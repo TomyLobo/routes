@@ -24,8 +24,8 @@ import java.lang.reflect.Method;
 
 import org.spout.api.Source;
 import org.spout.api.Spout;
-import org.spout.api.entity.Controller;
-import org.spout.api.entity.PlayerController;
+import org.spout.api.entity.component.Controller;
+import org.spout.api.entity.component.controller.PlayerController;
 import org.spout.api.event.Cancellable;
 import org.spout.api.event.Order;
 import org.spout.api.event.block.BlockChangeEvent;

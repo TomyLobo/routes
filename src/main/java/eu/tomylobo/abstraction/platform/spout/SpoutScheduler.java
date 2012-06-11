@@ -68,7 +68,7 @@ public class SpoutScheduler implements Scheduler {
 
 	@Override
 	public Object scheduleAsyncDelayedTask(MetaPlugin plugin, Runnable task) {
-		int taskId = Spout.getScheduler().scheduleAsyncDelayedTask((Plugin) plugin.getFrameworkPlugin(), task, TaskPriority.NORMAL);
+		int taskId = Spout.getScheduler().scheduleAsyncTask((Plugin) plugin.getFrameworkPlugin(), task);
 		if (taskId == -1)
 			return null;
 
