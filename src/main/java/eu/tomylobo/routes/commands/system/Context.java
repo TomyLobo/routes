@@ -44,9 +44,9 @@ public class Context {
 	}
 
 	/**
-	 * Casts the command sender to a {@link Player}. Throws an exception if it fails.
+	 * Returns the command sender contained in this Context.
 	 *
-	 * @return the command sender as a {@link Player}.
+	 * @return the command sender.
 	 */
 	public CommandSender getSender() {
 		return sender;
