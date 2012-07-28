@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.spout.api.Source;
+import org.spout.api.material.BlockMaterial;
 import org.spout.api.material.Material;
 import org.spout.api.material.MaterialRegistry;
 
@@ -89,10 +91,8 @@ public class SpoutWorld implements World {
 	@Override
 	public void setBlockState(Vector position, BlockState blockState) {
 		// TODO: spout
-		final org.spout.api.geo.cuboid.Block block = backend.getBlock((int) position.getX(), (int) position.getY(), (int) position.getZ());
-
 		final Material material = MaterialRegistry.get((short) blockState.getType());
-		block.setMaterial(material, (short) blockState.getData());
+		backend.setBlockMaterial((int) position.getX(), (int) position.getY(), (int) position.getZ(), (BlockMaterial) material, (short) blockState.getData(), (Source) null);
 
 		/*if (blockState instanceof Sign) {
 			String[] lines = ((Sign) blockState).getLines();

@@ -197,7 +197,7 @@ public class SignHandler {
 		@EventHandler
 		public void onSpoutEvent(PlayerInteractEvent event) {
 			final Point point = event.getInteractedPoint();
-			Block block = point.getWorld().getBlock(point);
+			Block block = point.getWorld().getBlock(point, (org.spout.api.plugin.Plugin) plugin.getFrameworkPlugin());
 			event.getPlayer().sendMessage("Stop messing with that "+block.getMaterial()+"!");
 		}
 	}

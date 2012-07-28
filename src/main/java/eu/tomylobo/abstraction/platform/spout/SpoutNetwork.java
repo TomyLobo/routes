@@ -431,6 +431,6 @@ public class SpoutNetwork implements Network {
 	}
 
 	private static void sendPacket(final Player player, final Message message) {
-		SpoutUtils.unwrap(player).getSession().send(message);
+		SpoutUtils.unwrap(player).getSession().send(false, message);
 	}
 }

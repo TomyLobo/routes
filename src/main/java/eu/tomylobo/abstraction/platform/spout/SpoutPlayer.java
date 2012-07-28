@@ -47,7 +47,7 @@ public class SpoutPlayer extends SpoutEntity implements Player {
 	@Override
 	public int getItemTypeInHand() {
 		final VanillaPlayer vanillaPlayer = (VanillaPlayer) backend.getEntity().getController();
-		final ItemStack currentItem = vanillaPlayer.getInventory().getCurrentItem();
+		final ItemStack currentItem = vanillaPlayer.getInventory().getQuickbar().getCurrentItem();
 		if (currentItem == null)
 			return 0;
 
